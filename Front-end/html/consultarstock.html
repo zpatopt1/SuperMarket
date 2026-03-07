@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SuperMart • Consultar Stock</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../estilos/styles.css" />
+</head>
+
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <a href="../index.html"><div class="logo">S</div></a>
+        <a href="../index.html"><div class="name">SuperMart</div></a>
+      </div>
+
+      <nav class="nav">
+        <div class="nav-section">
+          <div class="nav-label">Dashboard</div>
+          <a class="nav-item" href="../index.html">Dashboard</a>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-label">Gestão de Produtos</div>
+          <a class="nav-item" href="registar.html">Registar Produto</a>
+          <a class="nav-item" href="rececao.html">Receção de Encomenda</a>
+          <a class="nav-item" href="movimentar.html">Movimentar para Loja</a>
+          <a class="nav-item active" href="consultarstock.html">Consultar Stock</a>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-label">Vendas</div>
+          <a class="nav-item" href="vendas.html">Iniciar Venda</a>
+          <a class="nav-item" href="cancelar.html">Cancelar Venda</a>
+          <a class="nav-item" href="reembolso.html">Reembolso</a>
+        </div>
+
+
+        <div class="nav-section">
+          <div class="nav-label">Sistema</div>
+          <a class="nav-item" href="../admin/index.html">Gestão de Utilizadores</a>
+          <a class="nav-item" href="../admin/promocoes.html">Gerir Promoções</a>
+        </div>
+      </nav>
+
+      <button class="logout" type="button" onclick="location.href='logout.html'">Terminar Sessão</button>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <!-- Topbar -->
+      <header class="topbar">
+        <h1>Gestão de Produtos</h1>
+
+        <div class="topbar-right">
+          <div class="select">
+            <span class="muted">Visualizar:</span>
+            <button type="button">Mensal ▾</button>
+          </div>
+
+          <div class="user">
+            <div class="avatar">JM</div>
+            <div>
+              <div class="user-name">José Moreira</div>
+              <div class="user-role">Administrador</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="content">
+        <!-- Page header -->
+        <div class="pagehead">
+          <div>
+            <h2 class="page-title">Consultar Stock</h2>
+            <p class="page-subtitle">Gestão e consulta de inventário</p>
+          </div>
+
+          <button class="btn-primary" type="button">Exportar Relatório</button>
+        </div>
+
+        <!-- KPIs -->
+        <div class="kpis kpis-stock">
+          <div class="kpi">
+            <div class="kpi-label">Total Produtos</div>
+            <div class="kpi-value">8</div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-label">Stock Baixo</div>
+            <div class="kpi-value">3</div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-label">Stock Loja</div>
+            <div class="kpi-value">200</div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-label">Valor Total</div>
+            <div class="kpi-value">1913.32 <span>€</span></div>
+          </div>
+        </div>
+
+        <!-- Search + filter -->
+        <div class="card">
+          <div class="toolbar">
+            <div class="search">
+              <span class="search-ico" aria-hidden="true">⌕</span>
+              <input type="text" placeholder="Pesquisar por nome ou código..." />
+            </div>
+
+            <button class="filterbtn" type="button">Todas as Categorias ▾</button>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <section class="card">
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Produto</th>
+                  <th>Categoria</th>
+                  <th>Stock Loja</th>
+                  <th>Stock Armazém</th>
+                  <th>Stock Mínimo</th>
+                  <th>Localização</th>
+                  <th>Preço</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td>MER001</td>
+                  <td>Arroz Carolino 1kg</td>
+                  <td><span class="pill">Mercearia</span></td>
+                  <td>45</td>
+                  <td>120</td>
+                  <td>20</td>
+                  <td>A-12</td>
+                  <td>1.99€</td>
+                  <td><span class="badge ok">Normal</span></td>
+                </tr>
+
+                <tr>
+                  <td>MER002</td>
+                  <td>Azeite Virgem Extra 750ml</td>
+                  <td><span class="pill">Mercearia</span></td>
+                  <td>8</td>
+                  <td>35</td>
+                  <td>10</td>
+                  <td>A-15</td>
+                  <td>5.49€</td>
+                  <td><span class="badge low">Stock Baixo</span></td>
+                </tr>
+
+                <tr>
+                  <td>LAC001</td>
+                  <td>Leite Meio Gordo 1L</td>
+                  <td><span class="pill">Lacticínios</span></td>
+                  <td>32</td>
+                  <td>80</td>
+                  <td>25</td>
+                  <td>B-03</td>
+                  <td>0.89€</td>
+                  <td><span class="badge ok">Normal</span></td>
+                </tr>
+
+                <tr>
+                  <td>LAC002</td>
+                  <td>Iogurte Natural Pack 4</td>
+                  <td><span class="pill">Lacticínios</span></td>
+                  <td>5</td>
+                  <td>15</td>
+                  <td>15</td>
+                  <td>B-05</td>
+                  <td>2.29€</td>
+                  <td><span class="badge low">Stock Baixo</span></td>
+                </tr>
+
+                <tr>
+                  <td>BEB001</td>
+                  <td>Cerveja Super Bock 6un</td>
+                  <td><span class="pill">Bebidas</span></td>
+                  <td>28</td>
+                  <td>95</td>
+                  <td>20</td>
+                  <td>C-08</td>
+                  <td>4.99€</td>
+                  <td><span class="badge ok">Normal</span></td>
+                </tr>
+
+                <tr>
+                  <td>BEB002</td>
+                  <td>Água Mineral 1.5L</td>
+                  <td><span class="pill">Bebidas</span></td>
+                  <td>67</td>
+                  <td>200</td>
+                  <td>40</td>
+                  <td>C-02</td>
+                  <td>0.49€</td>
+                  <td><span class="badge ok">Normal</span></td>
+                </tr>
+
+                <tr>
+                  <td>LIM001</td>
+                  <td>Detergente Roupa 2L</td>
+                  <td><span class="pill">Limpeza</span></td>
+                  <td>12</td>
+                  <td>45</td>
+                  <td>10</td>
+                  <td>D-10</td>
+                  <td>6.99€</td>
+                  <td><span class="badge ok">Normal</span></td>
+                </tr>
+
+                <tr>
+                  <td>HIG001</td>
+                  <td>Papel Higiénico 12 rolos</td>
+                  <td><span class="pill">Higiene</span></td>
+                  <td>3</td>
+                  <td>8</td>
+                  <td>15</td>
+                  <td>D-15</td>
+                  <td>5.49€</td>
+                  <td><span class="badge low">Stock Baixo</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <button class="help" type="button" aria-label="Ajuda" onclick="location.href='Ajuda.html'">?</button>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
