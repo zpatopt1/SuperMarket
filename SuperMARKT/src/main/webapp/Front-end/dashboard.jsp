@@ -1,0 +1,143 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SuperMart â¢ Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/styles.css" />
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- Sidebar -->
+	<jsp:include page="/Front-end/pages/components/sidebar.jsp" />
+
+    <!-- Main -->
+    <main class="main">
+ 	<!-- Topbar -->
+ 	<jsp:include page="/Front-end/pages/components/topbar.jsp" />
+
+      <section class="content">
+        <!-- KPIs -->
+        <div class="kpis">
+          <div class="kpi">
+            <div class="kpi-label">Vendas Mensais</div>
+            <div class="kpi-value">104 <span>vendas</span></div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-label">Receita</div>
+            <div class="kpi-value">1.342 <span>â¬</span></div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-label">Stock Baixo</div>
+            <div class="kpi-value">12 <span>produtos</span></div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-label">FuncionÃ¡rios</div>
+            <div class="kpi-value">35 <span>pessoas</span></div>
+          </div>
+        </div>
+
+        <!-- Linha + InventÃ¡rio -->
+        <div class="grid grid-top">
+          <section class="card">
+            <div class="card-head">
+              <div class="tabs">
+                <button class="tab active" type="button">Produtos Mais Vendidos</button>
+                <button class="tab" type="button">Alertas de Stock</button>
+                <button class="tab" type="button">Novos Produtos</button>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="chart-line" aria-hidden="true"></div>
+              <div class="xlabels">
+                <span>Jan</span><span>Fev</span><span>Mar</span><span>Abr</span><span>Mai</span><span>Jun</span>
+                <span>Jul</span><span>Ago</span><span>Set</span><span>Out</span><span>Nov</span><span>Dez</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card-head simple">
+              <h2>GestÃ£o de InventÃ¡rio</h2>
+            </div>
+
+            <div class="card-body">
+              <div class="metric">
+                <div class="metric-top">
+                  <span class="metric-label">Stock Atual</span>
+                  <strong>2504</strong>
+                </div>
+                <div class="progress"><span style="width: 88%"></span></div>
+              </div>
+
+              <div class="metric">
+                <div class="metric-top">
+                  <span class="metric-label">Produtos a Encomendar</span>
+                  <strong>50</strong>
+                </div>
+                <div class="progress"><span style="width: 35%"></span></div>
+              </div>
+
+              <div class="metric">
+                <div class="metric-top">
+                  <span class="metric-label">Produtos Devolvidos</span>
+                  <strong>10</strong>
+                </div>
+                <div class="progress"><span style="width: 18%"></span></div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- Barras + Donut -->
+        <div class="grid grid-bottom">
+          <section class="card">
+            <div class="card-head simple"><h2>Vendas Semanais</h2></div>
+            <div class="card-body">
+              <div class="chart-bars" aria-hidden="true">
+                <span style="height:38%"></span>
+                <span style="height:48%"></span>
+                <span style="height:66%"></span>
+                <span style="height:56%"></span>
+                <span style="height:50%"></span>
+                <span style="height:84%"></span>
+                <span style="height:92%"></span>
+              </div>
+              <div class="xlabels xlabels-7">
+                <span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>SÃ¡b</span><span>Dom</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card-head simple"><h2>GestÃ£o de Clientes</h2></div>
+            <div class="card-body split">
+              <div class="donut" aria-hidden="true"></div>
+
+              <div class="legend">
+                <div class="row"><span class="dot a"></span> Novos Clientes <strong>203</strong></div>
+                <div class="row"><span class="dot b"></span> Clientes FiÃ©is <strong>50</strong></div>
+                <div class="row"><span class="dot c"></span> Feedback Recente <strong>20</strong></div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <button class="help" type="button" aria-label="Ajuda" onclick="location.href='html/Ajuda.html'">?</button>
+      </section>
+    </main>
+  </div>
+  <script type="module" src="/SuperMARKT/Front-end/js/pages/dashboard.js"></script>
+  
+</body>
+</html>
