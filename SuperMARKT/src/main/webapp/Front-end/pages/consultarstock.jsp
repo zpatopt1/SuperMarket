@@ -1,4 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
+<%@ page import="model.Produto" %>
+<%@ page import="model.ProdutoDAO" %>
+<%@ page import="model.Categoria" %>
+<%--<%@ page import="model.CategoriaDAO" %> --%>
+
 <!doctype html>
 <html lang="pt-PT">
 <head>
@@ -10,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="../styles/styles.css" />
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/Front-end/styles/styles.css" />
 </head>
 <body>
   <div class="app">
@@ -41,7 +47,7 @@
           </div>
 
           <div class="kpi">
-            <div class="kpi-label">Stock Baixo</div>
+            <div class="kpi-label">Stock Armazem</div>
             <div class="kpi-value">3</div>
           </div>
 
@@ -56,141 +62,97 @@
           </div>
         </div>
 
-        <!-- Search + filter -->
-        <div class="card">
-          <div class="toolbar">
-            <div class="search">
-              <span class="search-ico" aria-hidden="true">â</span>
-              <input type="text" placeholder="Pesquisar por nome ou cÃ³digo..." />
-            </div>
+        <!-- Search + filter -->		
+		<form action="${pageContext.request.contextPath}/ProdutoServlet" method="get" class="toolbar">
+		    <div class="search">
+		      <span class="search-ico" aria-hidden="true">⌕</span>
+		      <input type="text" name="txtNome" placeholder="Pesquisar por nome..." 
+		             value="<%= request.getParameter("txtNome") != null ? request.getParameter("txtNome") : "" %>" />
+		    </div>
+		    
+		    
+		    
+<%-- 
+    <select name="selCategoria" class="filterbtn" onchange="this.form.submit()">
+        <option value="0">Todas as Categorias</option>
+        <%
+            CategoriaDAO catDao = new CategoriaDAO();
+            List<Categoria> listaCategorias = catDao.getAllCategorias();
+            String catSelecionada = request.getParameter("selCategoria");
 
-            <button class="filterbtn" type="button">Todas as Categorias â¾</button>
-          </div>
-        </div>
+            for (Categoria c : listaCategorias) {
+                String selectedAttr = String.valueOf(c.getIdCategoria()).equals(catSelecionada) ? "selected" : "";
+        %>
+            <option value="<%= c.getIdCategoria() %>" <%= selectedAttr %>>
+                <%= c.getNome() %>
+            </option>
+        <%
+            }
+        %>
+    </select>
+--%>
+		    <button type="submit" class="btn-primary" >Filtrar</button>
+		  </form>
 
         <!-- Table -->
-        <section class="card">
+		<section class="card">
           <div class="table-wrap">
             <table class="table">
               <thead>
                 <tr>
-                  <th>CÃ³digo</th>
+                  <th>Código</th>
                   <th>Produto</th>
                   <th>Categoria</th>
-                  <th>Stock Loja</th>
-                  <th>Stock ArmazÃ©m</th>
-                  <th>Stock MÃ­nimo</th>
-                  <th>LocalizaÃ§Ã£o</th>
-                  <th>PreÃ§o</th>
-                  <th>Estado</th>
+                  <th>Marca</th>
+                  <th>Unidade</th>
+                  <th>Código de Barras</th>
+                  <th>Preço</th>
                 </tr>
-              </thead>
-
-              <tbody>
-                <tr>
-                  <td>MER001</td>
-                  <td>Arroz Carolino 1kg</td>
-                  <td><span class="pill">Mercearia</span></td>
-                  <td>45</td>
-                  <td>120</td>
-                  <td>20</td>
-                  <td>A-12</td>
-                  <td>1.99â¬</td>
-                  <td><span class="badge ok">Normal</span></td>
-                </tr>
-
-                <tr>
-                  <td>MER002</td>
-                  <td>Azeite Virgem Extra 750ml</td>
-                  <td><span class="pill">Mercearia</span></td>
-                  <td>8</td>
-                  <td>35</td>
-                  <td>10</td>
-                  <td>A-15</td>
-                  <td>5.49â¬</td>
-                  <td><span class="badge low">Stock Baixo</span></td>
-                </tr>
-
-                <tr>
-                  <td>LAC001</td>
-                  <td>Leite Meio Gordo 1L</td>
-                  <td><span class="pill">LacticÃ­nios</span></td>
-                  <td>32</td>
-                  <td>80</td>
-                  <td>25</td>
-                  <td>B-03</td>
-                  <td>0.89â¬</td>
-                  <td><span class="badge ok">Normal</span></td>
-                </tr>
-
-                <tr>
-                  <td>LAC002</td>
-                  <td>Iogurte Natural Pack 4</td>
-                  <td><span class="pill">LacticÃ­nios</span></td>
-                  <td>5</td>
-                  <td>15</td>
-                  <td>15</td>
-                  <td>B-05</td>
-                  <td>2.29â¬</td>
-                  <td><span class="badge low">Stock Baixo</span></td>
-                </tr>
-
-                <tr>
-                  <td>BEB001</td>
-                  <td>Cerveja Super Bock 6un</td>
-                  <td><span class="pill">Bebidas</span></td>
-                  <td>28</td>
-                  <td>95</td>
-                  <td>20</td>
-                  <td>C-08</td>
-                  <td>4.99â¬</td>
-                  <td><span class="badge ok">Normal</span></td>
-                </tr>
-
-                <tr>
-                  <td>BEB002</td>
-                  <td>Ãgua Mineral 1.5L</td>
-                  <td><span class="pill">Bebidas</span></td>
-                  <td>67</td>
-                  <td>200</td>
-                  <td>40</td>
-                  <td>C-02</td>
-                  <td>0.49â¬</td>
-                  <td><span class="badge ok">Normal</span></td>
-                </tr>
-
-                <tr>
-                  <td>LIM001</td>
-                  <td>Detergente Roupa 2L</td>
-                  <td><span class="pill">Limpeza</span></td>
-                  <td>12</td>
-                  <td>45</td>
-                  <td>10</td>
-                  <td>D-10</td>
-                  <td>6.99â¬</td>
-                  <td><span class="badge ok">Normal</span></td>
-                </tr>
-
-                <tr>
-                  <td>HIG001</td>
-                  <td>Papel HigiÃ©nico 12 rolos</td>
-                  <td><span class="pill">Higiene</span></td>
-                  <td>3</td>
-                  <td>8</td>
-                  <td>15</td>
-                  <td>D-15</td>
-                  <td>5.49â¬</td>
-                  <td><span class="badge low">Stock Baixo</span></td>
-                </tr>
-              </tbody>
+              	</thead>  
+				<tbody>
+			    <%
+			      // Tenta apanhar a lista que a Servlet enviou
+			      List<Produto> produtos = (List<Produto>) request.getAttribute("produtos");
+			
+			      // Se for nulo (acesso direto ao JSP), carregamos tudo por segurança
+			      if (produtos == null) {
+			          ProdutoDAO daoDefault = new ProdutoDAO();
+			          produtos = daoDefault.getAllProdutos();
+			      }
+		            
+                  if (produtos != null && !produtos.isEmpty()) {
+                      for (Produto p : produtos) {
+                      
+			    %>
+			    <tr>
+			      <td><%= p.getIdProduto() %></td>
+			      <td><%= p.getNome() %></td>
+			      <td>
+			        <span class="pill"><%= p.getCategoria().getNome() %></span>
+			      </td>
+			      <td><%= p.getMarca() %></td>
+			      <td><%= p.getUnidadeMedida() %></td>
+			      <td><%= p.getCodBarras() %></td>
+			      <td><%= String.format("%.2f", p.getPreco()) %>€</td>
+			    </tr>
+			    <%
+                      }
+                  } else {
+			    %>
+			    <tr><td colspan="7" style="text-align:center;">Nenhum produto encontrado.</td></tr>
+			    <% 
+			    } 
+			    %>
+			</tbody>
             </table>
           </div>
         </section>
-
-        <button class="help" type="button" aria-label="Ajuda" onclick="location.href='Ajuda.html'">?</button>
-      </section>
+        
     </main>
   </div>
 </body>
-<script type="module" src="w/SuperMARKT/Front-end/js/pages/dashboard.js"></script>
+<script type="module" src="/SuperMARKT/Front-end/js/pages/dashboard.js"></script>
 </html>
+
+
+

@@ -3,6 +3,8 @@ package model;
 import java.sql.Connection;
 import java.sql.*;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
+import java.util.List;
 
 import DBconnection.DBconnection;
 
@@ -35,5 +37,77 @@ public class ProdutoDAO {
 		    throw new RuntimeException(e); 
 
 		}
+	}
+	public List<Produto> getAllProdutos() {
+	    List<Produto> produtos = new ArrayList<>();
+	    // O SQL agora junta as duas tabelas usando o ID comum
+	    String sql = "SELECT p.*, c.nome AS nome_categoria " +
+	                 "FROM produto p " +
+	                 "INNER JOIN categoria c ON p.id_categoria = c.id_categoria";
+
+	    try (Connection conn = DBconnection.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql);
+	         ResultSet rs = stmt.executeQuery()) {
+
+	        while (rs.next()) {
+	            Categoria cat = new Categoria();
+	            cat.setIdCategoria(rs.getInt("id_categoria"));
+	            // Agora podes preencher o nome porque o SQL trouxe-o!
+	            cat.setNome(rs.getString("nome_categoria")); 
+
+	            Produto p = new Produto();
+	            p.setIdProduto(rs.getInt("id_produto"));
+	            p.setCategoria(cat); // Associa o objeto categoria completo ao produto
+	            p.setNome(rs.getString("nome"));
+	            p.setMarca(rs.getString("marca"));
+	            p.setUnidadeMedida(rs.getString("unidade_medida"));
+	            p.setCodBarras(rs.getString("cod_barras"));
+	            p.setPreco(rs.getFloat("preco"));
+
+	            produtos.add(p);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw new RuntimeException(e);
+	    }
+	    return produtos;
+	}
+	
+	public List<Produto> getSearchProdutos(String nomePesquisa) {
+	    List<Produto> produtos = new ArrayList<>();
+	    
+	    String sql = "SELECT p.*, c.nome AS nome_categoria " +
+	                 "FROM produto p " +
+	                 "INNER JOIN categoria c ON p.id_categoria = c.id_categoria " + 
+	                 "WHERE p.nome LIKE ?";
+
+	    try (Connection conn = DBconnection.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql)) { 
+
+	        stmt.setString(1, "%" + (nomePesquisa != null ? nomePesquisa : "") + "%");
+
+	        try (ResultSet rs = stmt.executeQuery()) {
+	            while (rs.next()) {
+	                Categoria cat = new Categoria();
+	                cat.setIdCategoria(rs.getInt("id_categoria"));
+	                cat.setNome(rs.getString("nome_categoria")); 
+
+	                Produto p = new Produto();
+	                p.setIdProduto(rs.getInt("id_produto"));
+	                p.setCategoria(cat);
+	                p.setNome(rs.getString("nome"));
+	                p.setMarca(rs.getString("marca"));
+	                p.setUnidadeMedida(rs.getString("unidade_medida"));
+	                p.setCodBarras(rs.getString("cod_barras"));
+	                p.setPreco(rs.getFloat("preco"));
+
+	                produtos.add(p);
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw new RuntimeException(e);
+	    }
+	    return produtos;
 	}
 }

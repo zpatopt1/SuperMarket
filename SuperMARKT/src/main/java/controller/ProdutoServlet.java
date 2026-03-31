@@ -10,6 +10,7 @@ import model.Produto;
 import model.ProdutoDAO;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Servlet implementation class ProdutoServlet
@@ -29,11 +30,26 @@ public class ProdutoServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ProdutoDAO dao = new ProdutoDAO();
+        List<Produto> produtos;
 
+        // 1. Capturar o parâmetro de pesquisa do formulário
+        String nomePesquisa = request.getParameter("txtNome");
+
+        // 2. Lógica de decisão: Pesquisar ou Listar todos
+        if (nomePesquisa != null && !nomePesquisa.trim().isEmpty()) {
+            produtos = dao.getSearchProdutos(nomePesquisa);
+        } else {
+            produtos = dao.getAllProdutos();
+        }
+
+        // 3. Pendurar a lista no "cabide" (Request Attribute)
+        request.setAttribute("produtos", produtos);
+
+        // 4. Encaminhar para o JSP
+        request.getRequestDispatcher("/Front-end/pages/consultarstock.jsp").forward(request, response);
+    }
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
