@@ -62,14 +62,17 @@
           </div>
         </div>
 
+		<div class="card">
         <!-- Search + filter -->		
 		<form action="${pageContext.request.contextPath}/ProdutoServlet" method="get" class="toolbar">
-		    <div class="search">
-		      <span class="search-ico" aria-hidden="true">⌕</span>
-		      <input type="text" name="txtNome" placeholder="Pesquisar por nome..." 
-		             value="<%= request.getParameter("txtNome") != null ? request.getParameter("txtNome") : "" %>" />
-		    </div>
-		    
+        <div class="search">
+            <span class="search-ico" aria-hidden="true">⌕</span>
+            <input type="text" name="txtNome" placeholder="Pesquisar por nome..." 
+                   value="<%= request.getParameter("txtNome") != null ? request.getParameter("txtNome") : "" %>" />
+        </div>
+        <button type="submit" class="btn-primary"">Filtrar</button>
+        </form>
+        </div>
 		    
 		    
 <%-- 
@@ -91,8 +94,7 @@
         %>
     </select>
 --%>
-		    <button type="submit" class="btn-primary" >Filtrar</button>
-		  </form>
+
 
         <!-- Table -->
 		<section class="card">
