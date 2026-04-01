@@ -17,7 +17,7 @@
 
     <div class="nav-section">
       <div class="nav-label">Gestão de Produtos</div>
-      <a class="nav-item" href="/SuperMARKT/Front-end/pages/registar.jsp">Registar Produto</a>
+      <a class="nav-item" href="${pageContext.request.contextPath}/Front-end/pages/registar_produto.jsp">Registar Produto</a>
       <a class="nav-item" href="/SuperMARKT/Front-end/pages/rececao.jsp">Receção de Encomenda</a>
       <a class="nav-item" href="/SuperMARKT/Front-end/pages/movimentar.jsp">Movimentar para Loja</a>
       <a class="nav-item" href="/SuperMARKT/Front-end/pages/consultarstock.jsp">Consultar Stock</a>
