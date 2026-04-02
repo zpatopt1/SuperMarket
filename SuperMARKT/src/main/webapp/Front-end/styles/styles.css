@@ -615,8 +615,6 @@ body {
   white-space: nowrap;
 }
 
-
-
 .table tbody td {
   padding: 11px 12px;
   border-bottom: 1px solid rgba(15, 23, 42, .06);
@@ -988,4 +986,93 @@ body {
     background-color: #f0f0f0;
     color: #aaa;
     pointer-events: none;
+}
+}
+
+/* ESTILOS DA PÁGINA DE REGISTO DE PRODUTOS*/
+
+.registo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.registo-card {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); 
+    width: 100%;
+    max-width: 650px; 
+}
+
+.registo-card h2 {
+    color: #0f172a; 
+    text-align: center;
+    margin-bottom: 30px;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Criar uma grelha para ter 2 colunas */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* Ocupar a linha inteira quando necessário */
+.full-width {
+    grid-column: span 2;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-size: 14px;
+    color: #4a4a4a;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+}
+
+.input-group input {
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Efeito azul quando clicas para escrever na caixa */
+.input-group input:focus {
+    outline: none;
+    border-color: #285196;
+    box-shadow: 0 0 0 3px rgba(40, 81, 150, 0.2);
+}
+
+.button-group {
+    margin-top: 15px;
+}
+
+.btn-guardar {
+    width: 100%;
+    padding: 14px;
+    background-color: #1a56db; /* Azul do login */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.btn-guardar:hover {
+    background-color: #113f99; /* Azul mais escuro ao passar o rato */
 }
