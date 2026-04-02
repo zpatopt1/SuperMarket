@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/Front-end/styles/styles.css" />
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/Front-end/styles/styles.css" />
 </head>
 
 <body>

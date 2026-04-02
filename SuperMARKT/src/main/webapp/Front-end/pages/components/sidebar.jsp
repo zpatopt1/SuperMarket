@@ -20,7 +20,7 @@
       <a class="nav-item" href="/SuperMARKT/Front-end/pages/registar.jsp">Registar Produto</a>
       <a class="nav-item" href="/SuperMARKT/Front-end/pages/rececao.jsp">Receção de Encomenda</a>
       <a class="nav-item" href="/SuperMARKT/Front-end/pages/movimentar.jsp">Movimentar para Loja</a>
-      <a class="nav-item" href="/SuperMARKT/Front-end/pages/consultarstock.jsp">Consultar Stock</a>
+      <a class="nav-item" href="/SuperMARKT/ProdutoServlet">Consultar Stock</a>
     </div>
 
     <div class="nav-section">

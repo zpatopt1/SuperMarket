@@ -31,23 +31,32 @@ public class ProdutoServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	int currentPage = 1;
+    	int pageSize = 5; // 20 produtos por página
+
+    	try {
+    		currentPage = Integer.parseInt(request.getParameter("page"));
+    	} catch (Exception e) { }
+    	
+    	int offset = (currentPage - 1) * pageSize;
+
         ProdutoDAO dao = new ProdutoDAO();
-        List<Produto> produtos;
-
-        // 1. Capturar o parâmetro de pesquisa do formulário
         String nomePesquisa = request.getParameter("txtNome");
+        String orderBy = request.getParameter("orderBy");
+        String orderDir = request.getParameter("orderDir");
 
-        // 2. Lógica de decisão: Pesquisar ou Listar todos
-        if (nomePesquisa != null && !nomePesquisa.trim().isEmpty()) {
-            produtos = dao.getSearchProdutos(nomePesquisa);
-        } else {
-            produtos = dao.getAllProdutos();
-        }
+        List<Produto> produtos = dao.getProdutos(nomePesquisa, orderBy, orderDir, pageSize, offset);
+        
+        int totalProdutos = dao.getTotalProdutos(nomePesquisa); 
 
-        // 3. Pendurar a lista no "cabide" (Request Attribute)
+        int totalPages = (int) Math.ceil((double) totalProdutos / pageSize);
+        
         request.setAttribute("produtos", produtos);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalProdutos", totalProdutos);
+        request.setAttribute("totalPages", totalPages);
 
-        // 4. Encaminhar para o JSP
+        //  Encaminhar para o JSP
         request.getRequestDispatcher("/Front-end/pages/consultarstock.jsp").forward(request, response);
     }
 	/**
