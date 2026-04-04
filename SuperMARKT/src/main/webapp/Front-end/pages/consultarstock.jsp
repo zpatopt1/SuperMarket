@@ -68,7 +68,7 @@
             <input type="text" name="txtNome" placeholder="Pesquisar por nome..." 
                    value="<%= request.getParameter("txtNome") != null ? request.getParameter("txtNome") : "" %>" />
         </div>
-        <button type="submit" class="btn-primary"">Filtrar</button>
+        <button type="submit" class="btn-primary">Filtrar</button>
         </form>
         </div>
 		    
