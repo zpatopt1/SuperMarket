@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SuperMart â¢ Dashboard</title>
+  <title>SuperMart - Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -32,16 +32,11 @@
 
           <div class="kpi">
             <div class="kpi-label">Receita</div>
-            <div class="kpi-value">1.342 <span>â¬</span></div>
+            <div class="kpi-value">1.342 <span>€</span></div>
           </div>
 
           <div class="kpi">
-            <div class="kpi-label">Stock Baixo</div>
-            <div class="kpi-value">12 <span>produtos</span></div>
-          </div>
-
-          <div class="kpi">
-            <div class="kpi-label">FuncionÃ¡rios</div>
+            <div class="kpi-label">Funcionários</div>
             <div class="kpi-value">35 <span>pessoas</span></div>
           </div>
         </div>
@@ -68,7 +63,7 @@
 
           <section class="card">
             <div class="card-head simple">
-              <h2>GestÃ£o de InventÃ¡rio</h2>
+              <h2>Gestão de Inventário</h2>
             </div>
 
             <div class="card-body">
@@ -120,13 +115,13 @@
           </section>
 
           <section class="card">
-            <div class="card-head simple"><h2>GestÃ£o de Clientes</h2></div>
+            <div class="card-head simple"><h2>Gestão de Clientes</h2></div>
             <div class="card-body split">
               <div class="donut" aria-hidden="true"></div>
 
               <div class="legend">
                 <div class="row"><span class="dot a"></span> Novos Clientes <strong>203</strong></div>
-                <div class="row"><span class="dot b"></span> Clientes FiÃ©is <strong>50</strong></div>
+                <div class="row"><span class="dot b"></span> Clientes Fiéis <strong>50</strong></div>
                 <div class="row"><span class="dot c"></span> Feedback Recente <strong>20</strong></div>
               </div>
             </div>

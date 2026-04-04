@@ -56,7 +56,7 @@
 
           <div class="kpi">
             <div class="kpi-label">Valor Total</div>
-            <div class="kpi-value">1913.32 $</div>
+            <div class="kpi-value">1913.32 €</div>
           </div>
         </div>
 

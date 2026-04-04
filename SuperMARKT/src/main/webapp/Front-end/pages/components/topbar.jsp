@@ -10,14 +10,13 @@
 
   <div class="topbar-right">
     <div class="select">
-      <span class="muted">Visualizar:</span>
-      <button type="button">Mensal ▾</button>
+      <span class="muted"> </span>
     </div>
 
     <div class="user">
       <div class="avatar">JM</div>
       <div>
-        <div class="user-name">José Moreira</div>
+        <div class="user-name">Jos� Moreira</div>
         <div class="user-role">Administrador</div>
       </div>
     </div>
