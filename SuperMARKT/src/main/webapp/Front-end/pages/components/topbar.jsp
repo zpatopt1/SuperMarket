@@ -1,5 +1,12 @@
 <header class="topbar">
-  <h1>Dashboard</h1>
+  <button id="toggleBtn" class="toggle-btn">
+  <div class="brand no-padding" >
+    <div class="logo">S</div>
+    <div class="name">SuperMart</div>
+  </div>
+</button>
+  <h1 id="mostrar"class="mostrar">Dashboard</h1>
+  
 
   <div class="topbar-right">
     <div class="select">
@@ -16,4 +23,3 @@
     </div>
   </div>
 </header>
-

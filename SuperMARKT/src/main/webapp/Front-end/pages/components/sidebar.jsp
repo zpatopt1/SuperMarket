@@ -6,10 +6,12 @@
     <a href="/SuperMARKT/Front-end/dashboard.jsp">
       <div class="name">SuperMart</div>
     </a>
-  </div>
-
+<button id="toggleBtn-inside" class="toggle-btn left">
+  <img src="${pageContext.request.contextPath}/Front-end/assets/sidebar-2.svg" alt="Toggle Sidebar" width="32px">
+</button>
+    
+    </div>  
   <nav class="nav">
-
     <div class="nav-section">
       <div class="nav-label">Dashboard</div>
       <a class="nav-item" href="/SuperMARKT/Front-end/dashboard.jsp">Dashboard</a>
@@ -17,10 +19,10 @@
 
     <div class="nav-section">
       <div class="nav-label">Gestão de Produtos</div>
-      <a class="nav-item" href="${pageContext.request.contextPath}/Front-end/pages/registar_produto.jsp">Registar Produto</a>
+      <a class="nav-item" href="${pageContext.request.contextPath}/ProdutoServlet">Registar Produto</a>
       <a class="nav-item" href="/SuperMARKT/Front-end/pages/rececao.jsp">Receção de Encomenda</a>
       <a class="nav-item" href="/SuperMARKT/Front-end/pages/movimentar.jsp">Movimentar para Loja</a>
-      <a class="nav-item" href="/SuperMARKT/ProdutoServlet">Consultar Stock</a>
+      <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarStockServlet">Consultar Stock</a>
     </div>
 
     <div class="nav-section">
@@ -42,3 +44,5 @@
     Terminar Sessão
   </button>
 </aside>
+<script type="module" src="/SuperMARKT/Front-end/js/pages/dashboard.js"></script>
+

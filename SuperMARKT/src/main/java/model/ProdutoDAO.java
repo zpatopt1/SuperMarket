@@ -202,4 +202,100 @@
 	
 		    return total;
 		}
+		
+		
+		public boolean deleteProduto(int id_Produto) {
+			String sql = "DELETE FROM produto where id_produto = ?";
+
+			
+			try (Connection conn = DBconnection.getConnection();
+			    	PreparedStatement stmt = conn.prepareStatement(sql)){
+				
+		        stmt.setInt(1, id_Produto);
+	
+	            
+	            int rows = stmt.executeUpdate(); 
+	            
+	            if (rows > 0) {
+	                System.out.println("Produto eliminado com sucesso!");
+	                
+	            } else {
+	                System.out.println("Nenhum produto encontrado com esse ID!");
+	            }
+	            return rows > 0;
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+		        throw new RuntimeException(e);
+
+			}
+		
+			
+		}
+		
+		public Produto selectProduto(int id_Produto) {
+			String sql = "Select * FROM produto where id_produto = ?";
+		    Produto p = null;
+
+			try (Connection conn = DBconnection.getConnection();
+			    	PreparedStatement stmt = conn.prepareStatement(sql)){
+				
+		        stmt.setInt(1, id_Produto);
+	
+	            
+	            try (ResultSet rs = stmt.executeQuery()) {
+		            if (rs.next()) {
+		            	
+		                Categoria cat = new Categoria();
+		                cat.setIdCategoria(rs.getInt("id_categoria"));
+
+		                p = new Produto();
+		                p.setIdProduto(rs.getInt("id_produto"));
+		                p.setCategoria(cat);
+		                p.setNome(rs.getString("nome"));
+		                p.setMarca(rs.getString("marca"));
+		                p.setUnidadeMedida(rs.getString("unidade_medida"));
+		                p.setCodBarras(rs.getString("cod_barras"));
+		                p.setPreco(rs.getFloat("preco"));
+		            }
+
+		        }
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+		        throw new RuntimeException(e);
+			}
+			return p;
+		}
+
+		
+		public boolean updateProduto(Produto produto) {
+		    String sql = "UPDATE produto SET id_categoria=?, unidade_medida=?, marca=?, nome=?, cod_barras=?, preco=? WHERE id_produto=?";
+
+		    try (Connection conn = DBconnection.getConnection();
+		         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+		        stmt.setInt(1, produto.getCategoria().getIdCategoria());
+		        stmt.setString(2, produto.getUnidadeMedida());
+		        stmt.setString(3, produto.getMarca());
+		        stmt.setString(4, produto.getNome());
+		        stmt.setString(5, produto.getCodBarras());
+		        stmt.setFloat(6, produto.getPreco());
+		        stmt.setInt(7, produto.getIdProduto());
+		        int rows = stmt.executeUpdate();
+
+		        return rows > 0;
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		        throw new RuntimeException(e);
+		    }
+		}
+		
 	}
+	
+	
+
+	
+	
+	
+	

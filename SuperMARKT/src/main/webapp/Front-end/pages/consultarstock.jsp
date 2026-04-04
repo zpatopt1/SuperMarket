@@ -62,7 +62,7 @@
 
 		<div class="card">
         <!-- Search + filter -->		
-		<form action="${pageContext.request.contextPath}/ProdutoServlet" method="get" class="toolbar">
+		<form action="${pageContext.request.contextPath}/ConsularStockServlet" method="get" class="toolbar">
         <div class="search">
             <span class="search-ico" aria-hidden="true">⌕</span>
             <input type="text" name="txtNome" placeholder="Pesquisar por nome..." 
@@ -98,6 +98,31 @@
             <table class="table">
             <thead>
 			<tr>
+			 <!--Explicação -->
+			 <!--Adiciona parametros no url do search, orderby, e orderDirection "ASC" "DESC" E ADICIONA UMA SETINHA  -->
+			<th class="<% if ("id_produto".equals(request.getParameter("orderBy"))) { %>active<% } %>">
+			    <a href="?txtNome=<% 
+			            if (request.getParameter("txtNome") != null) { 
+			        %><%= request.getParameter("txtNome") %><% 
+			            } 
+			        %>&orderBy=id_produto&orderDir=<%
+			            if ("id_produto".equals(request.getParameter("orderBy")) && "ASC".equals(request.getParameter("orderDir"))) {
+			        %>DESC<%
+			            } else { 
+			        %>ASC<%
+			            } 
+			        %>">
+			        Código
+			        <% if ("id_produto".equals(request.getParameter("orderBy"))) { 
+			                if ("ASC".equals(request.getParameter("orderDir"))) { %>
+			                    ▲
+			                <% } else { %>
+			                    ▼
+			                <% } 
+			           } %>
+			    </a>
+			</th>
+    		</th>
 			<th class="<%= "id_produto".equals(request.getParameter("orderBy")) ? "active" : "" %>">
 			    <a href="?txtNome=<%= request.getParameter("txtNome") != null ? request.getParameter("txtNome") : "" %>&orderBy=id_produto&orderDir=<%= "id_produto".equals(request.getParameter("orderBy")) && "ASC".equals(request.getParameter("orderDir")) ? "DESC" : "ASC" %>">
 			        Código
@@ -181,48 +206,48 @@
 			</tbody>
             </table>
           </div>
-<!-- Pagination buttons -->
-<div class="pagination">
-    <% 
-        Integer currentPage = (Integer) request.getAttribute("currentPage");
-        Integer totalPages = (Integer) request.getAttribute("totalPages");
-        String txtNome = request.getParameter("txtNome") != null ? request.getParameter("txtNome") : "";
-        String orderBy = request.getParameter("orderBy") != null ? request.getParameter("orderBy") : "";
-        String orderDir = request.getParameter("orderDir") != null ? request.getParameter("orderDir") : "";
-        
-        if (totalPages != null && totalPages > 1) {
-    %>
-    
-    <!-- Botão Anterior -->
-    <% if (currentPage > 1) { %>
-        <a class="page-btn" href="?txtNome=<%= txtNome %>&orderBy=<%= orderBy %>&orderDir=<%= orderDir %>&page=<%= currentPage - 1 %>">« Anterior</a>
-    <% } else { %>
-        <span class="page-btn disabled">« Anterior</span>
-    <% } %>
-
-    <!-- Botões de página  -->
-    <%
-        int startPage = Math.max(1, currentPage - 2);
-        int endPage = Math.min(totalPages, currentPage + 2);
-        for (int i = startPage; i <= endPage; i++) {
-            if (i == currentPage) {
-    %>
-        <span class="page-btn current"><%= i %></span>
-    <%  } else { %>
-        <a class="page-btn" href="?txtNome=<%= txtNome %>&orderBy=<%= orderBy %>&orderDir=<%= orderDir %>&page=<%= i %>"><%= i %></a>
-    <%      }
-        }
-    %>
-
-    <!-- Botão Próximo -->
-    <% if (currentPage < totalPages) { %>
-        <a class="page-btn" href="?txtNome=<%= txtNome %>&orderBy=<%= orderBy %>&orderDir=<%= orderDir %>&page=<%= currentPage + 1 %>">Próximo »</a>
-    <% } else { %>
-        <span class="page-btn disabled">Próximo »</span>
-    <% } %>
-
-    <% } %>
-</div>
+		<!-- Pagination buttons -->
+		<div class="pagination">
+		    <% 
+		        Integer currentPage = (Integer) request.getAttribute("currentPage");
+		        Integer totalPages = (Integer) request.getAttribute("totalPages");
+		        String txtNome = request.getParameter("txtNome") != null ? request.getParameter("txtNome") : "";
+		        String orderBy = request.getParameter("orderBy") != null ? request.getParameter("orderBy") : "";
+		        String orderDir = request.getParameter("orderDir") != null ? request.getParameter("orderDir") : "";
+		        
+		        if (totalPages != null && totalPages > 1) {
+		    %>
+		    
+		    <!-- Botão Anterior -->
+		    <% if (currentPage > 1) { %>
+		        <a class="page-btn" href="?txtNome=<%= txtNome %>&orderBy=<%= orderBy %>&orderDir=<%= orderDir %>&page=<%= currentPage - 1 %>">« Anterior</a>
+		    <% } else { %>
+		        <span class="page-btn disabled">« Anterior</span>
+		    <% } %>
+		
+		    <!-- Botões de página  -->
+		    <%
+		        int startPage = Math.max(1, currentPage - 2);
+		        int endPage = Math.min(totalPages, currentPage + 2);
+		        for (int i = startPage; i <= endPage; i++) {
+		            if (i == currentPage) {
+		    %>
+		        <span class="page-btn current"><%= i %></span>
+		    <%  } else { %>
+		        <a class="page-btn" href="?txtNome=<%= txtNome %>&orderBy=<%= orderBy %>&orderDir=<%= orderDir %>&page=<%= i %>"><%= i %></a>
+		    <%      }
+		        }
+		    %>
+		
+		    <!-- Botão Próximo -->
+		    <% if (currentPage < totalPages) { %>
+		        <a class="page-btn" href="?txtNome=<%= txtNome %>&orderBy=<%= orderBy %>&orderDir=<%= orderDir %>&page=<%= currentPage + 1 %>">Próximo »</a>
+		    <% } else { %>
+		        <span class="page-btn disabled">Próximo »</span>
+		    <% } %>
+		
+		    <% } %>
+		</div>
  
         </section>
         
