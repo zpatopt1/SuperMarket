@@ -32,9 +32,9 @@ public class ProdutoServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.sendRedirect(request.getContextPath() + "/Front-end/pages/registar_produto.jsp");
-
-    }
+    	request.getRequestDispatcher("/Front-end/pages/registar_produto.jsp")
+        .forward(request, response);    
+    	}
     
     
 	/**

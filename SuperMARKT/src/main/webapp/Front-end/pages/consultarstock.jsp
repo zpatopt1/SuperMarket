@@ -60,17 +60,8 @@
           </div>
         </div>
 
-		<div class="card">
-        <!-- Search + filter -->		
-		<form action="${pageContext.request.contextPath}/ConsularStockServlet" method="get" class="toolbar">
-        <div class="search">
-            <span class="search-ico" aria-hidden="true">⌕</span>
-            <input type="text" name="txtNome" placeholder="Pesquisar por nome..." 
-                   value="<%= request.getParameter("txtNome") != null ? request.getParameter("txtNome") : "" %>" />
-        </div>
-        <button type="submit" class="btn-primary">Filtrar</button>
-        </form>
-        </div>
+
+
 		    
 		    
 <%-- 
@@ -92,8 +83,18 @@
         %>
     </select>
 --%>
-        <!-- Table -->
 		<section class="card">
+        <!-- Search + filter -->		
+		<form action="${pageContext.request.contextPath}/ConsultarStockServlet" method="get" class="toolbar">
+        <div class="search">
+            <span class="search-ico" aria-hidden="true">⌕</span>
+            <input type="text" name="txtNome" placeholder="Pesquisar por nome..." 
+                   value="<%= request.getParameter("txtNome") != null ? request.getParameter("txtNome") : "" %>" />
+        </div>
+        <button type="submit" class="btn-primary">Filtrar</button>
+        </form>
+        
+        <!-- Table -->
           <div class="table-wrap">
             <table class="table">
             <thead>
@@ -121,17 +122,7 @@
 			                <% } 
 			           } %>
 			    </a>
-			</th>
-    		</th>
-			<th class="<%= "id_produto".equals(request.getParameter("orderBy")) ? "active" : "" %>">
-			    <a href="?txtNome=<%= request.getParameter("txtNome") != null ? request.getParameter("txtNome") : "" %>&orderBy=id_produto&orderDir=<%= "id_produto".equals(request.getParameter("orderBy")) && "ASC".equals(request.getParameter("orderDir")) ? "DESC" : "ASC" %>">
-			        Código
-			        <% if ("id_produto".equals(request.getParameter("orderBy"))) { %>
-			            <%= "ASC".equals(request.getParameter("orderDir")) ? "▲" : "▼" %>
-			        <% } %>
-			    </a>
-			  </th>
-			
+			</th>	
 			<th class="<%= "nome".equals(request.getParameter("orderBy")) ? "active" : "" %>">
 			    <a href="?txtNome=<%= request.getParameter("txtNome") != null ? request.getParameter("txtNome") : "" %>&orderBy=nome&orderDir=<%= "nome".equals(request.getParameter("orderBy")) && "ASC".equals(request.getParameter("orderDir")) ? "DESC" : "ASC" %>">
 			        Produto

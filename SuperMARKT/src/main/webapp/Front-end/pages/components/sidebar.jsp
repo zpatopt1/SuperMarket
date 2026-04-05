@@ -21,6 +21,7 @@
       <div class="nav-label">Gestão de Produtos</div>
       <a class="nav-item" href="${pageContext.request.contextPath}/ProdutoServlet">Registar Produto</a>
       <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarStockServlet">Consultar Stock</a>
+      <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarCategoriaServlet">Consultar Categorias</a>
     </div>
 
     <div class="nav-section">
