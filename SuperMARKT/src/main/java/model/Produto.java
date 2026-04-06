@@ -2,7 +2,7 @@ package model;
 
 public class Produto {
     private int idProduto;
-    private Categoria categoria; // Relacionamento
+    private Categoria idCategoria; // Relacionamento
     private String unidadeMedida;
     private String marca;
     private String nome;
@@ -13,10 +13,9 @@ public class Produto {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Produto(int idProduto, Categoria categoria, String unidadeMedida, String marca, String nome,
-			String codBarras, float preco) {
+	public Produto(int idProduto, Categoria idCategoria, String unidadeMedida, String marca, String nome, String codBarras, float preco) {
 		this.idProduto = idProduto;
-		this.categoria = categoria;
+		this.idCategoria = idCategoria;
 		this.unidadeMedida = unidadeMedida;
 		this.marca = marca;
 		this.nome = nome;
@@ -37,12 +36,12 @@ public class Produto {
 
 
 	public Categoria getCategoria() {
-		return categoria;
+		return idCategoria;
 	}
 
 
 	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
+		this.idCategoria = categoria;
 	}
 
 

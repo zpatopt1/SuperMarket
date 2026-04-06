@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SuperMart â¢ Consultar Stock</title>
+  <title>Gerir Promoções</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,8 +29,8 @@
         <!-- Page header -->
         <div class="pagehead">
           <div>
-            <h2 class="page-title">PromoÃ§Ãµes</h2>
-            <p class="page-subtitle">Lista de promoÃ§Ãµes ativas</p>
+            <h2 class="page-title">Promoções</h2>
+            <p class="page-subtitle">Lista de promoções ativas</p>
           </div>
 
         
