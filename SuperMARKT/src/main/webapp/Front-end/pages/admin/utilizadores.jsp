@@ -4,6 +4,7 @@
 <html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Gestão de Utilizadores</title>
     
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
@@ -25,13 +26,12 @@
             <div class="pagehead">
               <div>
                 <h2 class="page-title">Gestão de Utilizadores</h2>
-                <p class="page-subtitle">Lista de funcionários com acesso ao sistema (Consulta)</p>
+                <p class="page-subtitle">Lista de funcionários com acesso ao sistema</p>
               </div>
             </div>
 
             <section class="card">
-                <div class="toolbar" style="display: flex; justify-content: space-between; align-items: stretch; gap: 15px;">
-                    
+                <div class="toolbar" style="display: flex; justify-content: space-between; align-items: stretch; gap: 15px; margin-bottom: 20px;">
                     <div class="search" style="flex: 1;">
                         <span class="search-ico" aria-hidden="true">⌕</span>
                         <input type="text" placeholder="Pesquisar utilizadores..." id="searchInput">
@@ -45,7 +45,6 @@
                         </select>
                         <button class="btn-primary" id="btnFiltrar">Filtrar</button>
                     </div>
-                    
                 </div>
                 
                 <div class="table-wrap">
@@ -60,3 +59,43 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <tr>
+                                <td>#001</td>
+                                <td>Ahmed Al-Majmaie</td>
+                                <td>ahmed.maj@supermart.pt</td>
+                                <td>Operador de Caixa</td>
+                                <td style="color: #059669; font-weight: 600;">Ativo</td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+    </main>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script>
+      $(document).ready(function() {
+          var table = $('#utilizadoresTable').DataTable({
+              "pageLength": 10,
+              "dom": 't<"pagination-wrapper d-flex justify-center"p>',
+              "language": {
+                  "zeroRecords": "Nenhum utilizador encontrado",
+                  "paginate": { "previous": "«", "next": "»" }
+              }
+          });
+
+          $('#searchInput').on('keyup', function() {
+              table.search(this.value).draw();
+          });
+
+          $('#btnFiltrar').on('click', function() {
+              table.column(3).search($('#cargoFilter').val()).draw();
+          });
+      });
+  </script>
+</body>
+</html>

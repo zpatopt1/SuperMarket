@@ -12,7 +12,6 @@
   	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Front-end/styles/styles.css" />
-    
 </head>
 <body>
   <div class="app">
@@ -56,6 +55,8 @@
                     <th>ID</th>
                     <th>Nome</th>
                     <th>Descrição</th>
+                    <th>Editar</th>
+                    <th>Apagar</th>
                 </tr>
             </thead>
             <tbody>
@@ -68,7 +69,20 @@
                     <td><%= c.getIdCategoria() %></td>
                     <td><%= c.getNome() %></td>
                     <td><%= c.getDescricao() %></td>
+					<td>
+				    <button type="button" class="btn-guardar"
+                            onclick="abrirModal(<%=c.getIdCategoria()%>, '<%=c.getNome()%>', '<%=c.getDescricao()%>')"
+                            style="background-color:gray;">Editar</button>		
+					</td>
+					<td>
+					<form method="post" action="${pageContext.request.contextPath}/ConsultarCategoriaServlet" style="display:inline;">
+					    <input type="hidden" name="delete_id_categoria" value="<%= c.getIdCategoria() %>">
+					    <input type="hidden" name="action" value="delete">
+					    <button type="submit" class="btn-guardar" style="background-color:red;">Apagar</button>
+					</form>
+					</td>
                 </tr>
+                
                 <%  
                         }
                     }
@@ -76,8 +90,37 @@
             </tbody>
         </table>
     </div>
+    
+    
     </section>
     
+
+          <!-- Modal Editar Categoria -->
+		  <div id="modal" class="modal">
+			  <div class="registo-card">
+    				<span class="close" onclick="fecharModal()">x</span>
+    				<h3>Editar Categoria</h3>
+                    <form action="${pageContext.request.contextPath}/ConsultarCategoriaServlet" method="POST">
+                        <input type="hidden" name="action" value="update">
+                        <input type="hidden" id="modal_id_categoria" name="id_categoria">
+
+                        <div class="input-group full-width">
+                            <label>Nome</label>
+                            <input type="text" id="modal_nome" name="nome" required>
+                        </div>
+
+                        <div class="input-group full-width">
+                            <label>Descrição</label>
+                            <input type="text" id="modal_descricao" name="descricao">
+                        </div>
+
+                        <div class="button-group full-width">
+                            <button type="submit" class="btn-guardar">Atualizar Categoria</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
 
     <!-- DataTables JS -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
@@ -103,6 +146,18 @@
                 table.search(this.value).draw();
             });
         });
+        
+        // Funções modal
+        function abrirModal(id, nome, descricao) {
+            document.getElementById("modal").style.display = "flex";
+            document.getElementById("modal_id_categoria").value = id;
+            document.getElementById("modal_nome").value = nome;
+            document.getElementById("modal_descricao").value = descricao;
+        }
+        function fecharModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+        
     </script>
 
 </div>

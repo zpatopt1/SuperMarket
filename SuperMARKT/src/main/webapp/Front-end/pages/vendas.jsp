@@ -7,6 +7,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SuperMart • Iniciar Venda</title>
+  <title>Iniciar Venda</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,7 +34,10 @@
           <section class="card">
             <div class="toolbar">
               <div class="search">
+
                 <span class="search-ico">⌕</span>
+
+                <span class="search-ico">  </span>
                 <input type="text" placeholder="Código de barras ou código do produto..." />
               </div>
               <button class="btn-primary">Adicionar</button>
@@ -50,7 +54,11 @@
                   <tr>
                     <th>Produto</th>
                     <th>Quantidade</th>
+
                     <th>Preço Unit.</th>
+
+                    <th>Preço Uni</th>
+
                     <th>Total</th>
                     <th></th>
                   </tr>
@@ -68,9 +76,15 @@
                       <span>1</span>
                       <button>+</button>
                     </td>
+
                     <td>4.99€</td>
                     <td>4.99€</td>
                     <td class="remove" style="cursor: pointer; color: #dc2626; font-weight: bold;">×</td>
+
+                    <td>4.99 €</td>
+                    <td>4.99 €</td>
+                    <td class="remove"> </td>
+
                   </tr>
 
                   <tr>
@@ -85,9 +99,15 @@
                       <span>1</span>
                       <button>+</button>
                     </td>
+
                     <td>0.89€</td>
                     <td>0.89€</td>
                     <td class="remove" style="cursor: pointer; color: #dc2626; font-weight: bold;">×</td>
+
+                    <td>0.89 €</td>
+                    <td>0.89 €</td>
+                    <td class="remove"> </td>
+
                   </tr>
 
                   <tr>
@@ -102,9 +122,15 @@
                       <span>1</span>
                       <button>+</button>
                     </td>
+
                     <td>2.29€</td>
                     <td>2.29€</td>
                     <td class="remove" style="cursor: pointer; color: #dc2626; font-weight: bold;">×</td>
+
+                    <td>2.29 €</td>
+                    <td>2.29 €</td>
+                    <td class="remove"> </td>
+
                   </tr>
                 </tbody>
               </table>
@@ -116,9 +142,15 @@
               <h3 class="side-title">Resumo da Venda</h3>
 
               <div class="summary">
+
                 <div><span>Subtotal</span><strong>8.17€</strong></div>
                 <div><span>IVA (23%)</span><strong>1.88€</strong></div>
                 <div class="total"><span>Total</span><strong>10.05€</strong></div>
+
+                <div><span>Subtotal</span><strong>8.17 €</strong></div>
+                <div><span>IVA (23%)</span><strong>1.88 €</strong></div>
+                <div class="total"><span>Total</span><strong>10.05 €</strong></div>
+
               </div>
 
               <button class="btn-success">Finalizar Venda</button>
@@ -128,12 +160,21 @@
 
               <h3 class="side-title">Produtos Rápidos</h3>
               <div class="quick-products">
+
                 <button>Arroz Carolino 1kg<br><span>1.99€</span></button>
                 <button>Azeite Virgem Extra 750ml<br><span>5.49€</span></button>
                 <button>Leite Meio Gordo 1L<br><span>0.89€</span></button>
                 <button>Iogurte Natural Pack 4<br><span>2.29€</span></button>
                 <button>Cerveja Super Bock 6un<br><span>4.99€</span></button>
                 <button>Água Mineral 1.5L<br><span>0.49€</span></button>
+
+                <button>Arroz Carolino 1kg<br><span>1.99 €</span></button>
+                <button>Azeite Virgem Extra 750ml<br><span>5.49 €</span></button>
+                <button>Leite Meio Gordo 1L<br><span>0.89 €</span></button>
+                <button>Iogurte Natural Pack 4<br><span>2.29 €</span></button>
+                <button>Cerveja Super Bock 6un<br><span>4.99 €</span></button>
+                <button>Ãgua Mineral 1.5L<br><span>0.49 €</span></button>
+
               </div>
             </div>
           </aside>

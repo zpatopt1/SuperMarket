@@ -5,7 +5,6 @@
 <%@ page import="model.Produto" %>
 <%@ page import="model.ProdutoDAO" %>
 <%@ page import="model.Categoria" %>
-<%--<%@ page import="model.CategoriaDAO" %> --%>
 
 <!doctype html>
 <html lang="pt-PT">
@@ -37,8 +36,7 @@
           </div>
 
           <button class="btn-primary" type="button">Exportar Relatorio</button>
-        </div>
-		
+        </div>		
         <!-- KPIs -->
         <div class="kpis kpis-stock">
           <div class="kpi">
@@ -62,193 +60,218 @@
           </div>
         </div>
 
-
-
-		    
-		    
-<%-- 
-    <select name="selCategoria" class="filterbtn" onchange="this.form.submit()">
-        <option value="0">Todas as Categorias</option>
         <%
-            CategoriaDAO catDao = new CategoriaDAO();
-            List<Categoria> listaCategorias = catDao.getAllCategorias();
-            String catSelecionada = request.getParameter("selCategoria");
+          String txtNome = (String) request.getAttribute("txtNome");
+          String orderBy = (String) request.getAttribute("orderBy");
+          String orderDir = (String) request.getAttribute("orderDir");
+        %>
 
-            for (Categoria c : listaCategorias) {
-                String selectedAttr = String.valueOf(c.getIdCategoria()).equals(catSelecionada) ? "selected" : "";
-        %>
-            <option value="<%= c.getIdCategoria() %>" <%= selectedAttr %>>
-                <%= c.getNome() %>
-            </option>
-        <%
-            }
-        %>
-    </select>
---%>
-		<section class="card">
-        <!-- Search + filter -->		
-		<form action="${pageContext.request.contextPath}/ConsultarStockServlet" method="get" class="toolbar">
-        <div class="search">
-            <span class="search-ico" aria-hidden="true">⌕</span>
-            <input type="text" name="txtNome" placeholder="Pesquisar por nome..." 
-                   value="<%= request.getParameter("txtNome") != null ? request.getParameter("txtNome") : "" %>" />
-        </div>
-        <button type="submit" class="btn-primary">Filtrar</button>
-        </form>
-        
-        <!-- Table -->
+        <section class="card">
+          <!-- Search + filter -->   
+          <form action="${pageContext.request.contextPath}/ConsultarStockServlet" method="get" class="toolbar">
+            <div class="search">
+              <span class="search-ico" aria-hidden="true">⌕</span>
+              <input type="text" name="txtNome" placeholder="Pesquisar por nome..." value="<%=txtNome %>" />
+            </div>
+            <button type="submit" class="btn-primary">Filtrar</button>
+          </form>
+
+          <!-- Table -->
           <div class="table-wrap">
             <table class="table">
-            <thead>
-			<tr>
-			 <!--Explicação -->
-			 <!--Adiciona parametros no url do search, orderby, e orderDirection "ASC" "DESC" E ADICIONA UMA SETINHA  -->
-			<th class="<% if ("id_produto".equals(request.getParameter("orderBy"))) { %>active<% } %>">
-			    <a href="?txtNome=<% 
-			            if (request.getParameter("txtNome") != null) { 
-			        %><%= request.getParameter("txtNome") %><% 
-			            } 
-			        %>&orderBy=id_produto&orderDir=<%
-			            if ("id_produto".equals(request.getParameter("orderBy")) && "ASC".equals(request.getParameter("orderDir"))) {
-			        %>DESC<%
-			            } else { 
-			        %>ASC<%
-			            } 
-			        %>">
-			        Código
-			        <% if ("id_produto".equals(request.getParameter("orderBy"))) { 
-			                if ("ASC".equals(request.getParameter("orderDir"))) { %>
-			                    ▲
-			                <% } else { %>
-			                    ▼
-			                <% } 
-			           } %>
-			    </a>
-			</th>	
-			<th class="<%= "nome".equals(request.getParameter("orderBy")) ? "active" : "" %>">
-			    <a href="?txtNome=<%= request.getParameter("txtNome") != null ? request.getParameter("txtNome") : "" %>&orderBy=nome&orderDir=<%= "nome".equals(request.getParameter("orderBy")) && "ASC".equals(request.getParameter("orderDir")) ? "DESC" : "ASC" %>">
-			        Produto
-			        <% if ("nome".equals(request.getParameter("orderBy"))) { %>
-			            <%= "ASC".equals(request.getParameter("orderDir")) ? "▲" : "▼" %>
-			        <% } %>
-			    </a>
-			  </th>
-			
-			  <th>Categoria</th> 
-			
-			<th class="<%= "marca".equals(request.getParameter("orderBy")) ? "active" : "" %>">
-			    <a href="?txtNome=<%= request.getParameter("txtNome") != null ? request.getParameter("txtNome") : "" %>&orderBy=marca&orderDir=<%= "marca".equals(request.getParameter("orderBy")) && "ASC".equals(request.getParameter("orderDir")) ? "DESC" : "ASC" %>">
-			        Marca
-			        <% if ("marca".equals(request.getParameter("orderBy"))) { %>
-			            <%= "ASC".equals(request.getParameter("orderDir")) ? "▲" : "▼" %>
-			        <% } %>
-			    </a>
-			  </th>
-			
-			<th class="<%= "unidade_medida".equals(request.getParameter("orderBy")) ? "active" : "" %>">
-			    <a href="?txtNome=<%= request.getParameter("txtNome") != null ? request.getParameter("txtNome") : "" %>&orderBy=unidade_medida&orderDir=<%= "unidade_medida".equals(request.getParameter("orderBy")) && "ASC".equals(request.getParameter("orderDir")) ? "DESC" : "ASC" %>">
-			        Unidade
-			        <% if ("unidade_medida".equals(request.getParameter("orderBy"))) { %>
-			            <%= "ASC".equals(request.getParameter("orderDir")) ? "▲" : "▼" %>
-			        <% } %>
-			    </a>
-			  </th>
-			
-			<th class="<%= "cod_barras".equals(request.getParameter("orderBy")) ? "active" : "" %>">
-			    <a href="?txtNome=<%= request.getParameter("txtNome") != null ? request.getParameter("txtNome") : "" %>&orderBy=cod_barras&orderDir=<%= "cod_barras".equals(request.getParameter("orderBy")) && "ASC".equals(request.getParameter("orderDir")) ? "DESC" : "ASC" %>">
-			        Código de Barras
-			        <% if ("cod_barras".equals(request.getParameter("orderBy"))) { %>
-			            <%= "ASC".equals(request.getParameter("orderDir")) ? "▲" : "▼" %>
-			        <% } %>
-			    </a>
-			  </th>
-			
-			<th class="<%= "preco".equals(request.getParameter("orderBy")) ? "active" : "" %>">
-			    <a href="?txtNome=<%= request.getParameter("txtNome") != null ? request.getParameter("txtNome") : "" %>&orderBy=preco&orderDir=<%= "preco".equals(request.getParameter("orderBy")) && "ASC".equals(request.getParameter("orderDir")) ? "DESC" : "ASC" %>">
-			        Preço
-			        <% if ("preco".equals(request.getParameter("orderBy"))) { %>
-			            <%= "ASC".equals(request.getParameter("orderDir")) ? "▲" : "▼" %>
-			        <% } %>
-			    </a>
-			  </th>
-			</tr>
-			</thead>
-			<tbody>
-			   <%
-				List<Produto> produtos = (List<Produto>) request.getAttribute("produtos");
-				if (produtos != null && !produtos.isEmpty()) {
-				    for (Produto p : produtos) {
-				%>
-				<tr>
-				  <td><%= p.getIdProduto() %></td>
-				  <td><%= p.getNome() %></td>
-				  <td><span class="pill"><%= p.getCategoria().getNome() %></span></td>
-				  <td><%= p.getMarca() %></td>
-				  <td><%= p.getUnidadeMedida() %></td>
-				  <td><%= p.getCodBarras() %></td>
-				  <td><%= String.format("%.2f", p.getPreco()) %>€</td>
-				</tr>
-				<%
-				    }
-				} else {
-				%>
-				<tr><td colspan="7" style="text-align:center;">Nenhum produto encontrado.</td></tr>
-				<%
-				}
-				%>
-			</tbody>
+              <thead>
+                <tr>
+                  <th class="<%="id_produto".equals(orderBy)?"active":""%>">
+                    <a href="?txtNome=<%=txtNome%>&orderBy=id_produto&orderDir=<%=("id_produto".equals(orderBy)&&"ASC".equals(orderDir))?"DESC":"ASC"%>">
+                      Código <%= "id_produto".equals(orderBy)?("ASC".equals(orderDir)?"▲":"▼"):"" %>
+                    </a>
+                  </th>
+                  <th class="<%= "nome".equals(orderBy)?"active":"" %>">
+                    <a href="?txtNome=<%=txtNome%>&orderBy=nome&orderDir=<%=("nome".equals(orderBy)&&"ASC".equals(orderDir))?"DESC":"ASC"%>">
+                      Produto <%= "nome".equals(orderBy)?("ASC".equals(orderDir)?"▲":"▼"):"" %>
+                    </a>
+                  </th>
+                  <th>Categoria</th>
+                  <th class="<%= "marca".equals(orderBy)?"active":"" %>">
+                    <a href="?txtNome=<%=txtNome%>&orderBy=marca&orderDir=<%=("marca".equals(orderBy)&&"ASC".equals(orderDir))?"DESC":"ASC"%>">
+                      Marca <%= "marca".equals(orderBy)?("ASC".equals(orderDir)?"▲":"▼"):"" %>
+                    </a>
+                  </th>
+                  <th class="<%= "unidade_medida".equals(orderBy)?"active":"" %>">
+                    <a href="?txtNome=<%=txtNome%>&orderBy=unidade_medida&orderDir=<%=("unidade_medida".equals(orderBy)&&"ASC".equals(orderDir))?"DESC":"ASC"%>">
+                      Unidade <%= "unidade_medida".equals(orderBy)?("ASC".equals(orderDir)?"▲":"▼"):"" %>
+                    </a>
+                  </th>
+                  <th class="<%= "cod_barras".equals(orderBy)?"active":"" %>">
+                    <a href="?txtNome=<%=txtNome%>&orderBy=cod_barras&orderDir=<%=("cod_barras".equals(orderBy)&&"ASC".equals(orderDir))?"DESC":"ASC"%>">
+                      Código de Barras <%= "cod_barras".equals(orderBy)?("ASC".equals(orderDir)?"▲":"▼"):"" %>
+                    </a>
+                  </th>
+                  <th class="<%= "preco".equals(orderBy)?"active":"" %>">
+                    <a href="?txtNome=<%=txtNome%>&orderBy=preco&orderDir=<%=("preco".equals(orderBy)&&"ASC".equals(orderDir))?"DESC":"ASC"%>">
+                      Preço <%= "preco".equals(orderBy)?("ASC".equals(orderDir)?"▲":"▼"):"" %>
+                    </a>
+                  </th>
+                  <th>Editar</th>
+                  <th>Deletar</th>
+                </tr>
+              </thead>
+              <tbody>
+              <%
+                List<Produto> produtos = (List<Produto>) request.getAttribute("produtos");
+                if (produtos != null && !produtos.isEmpty()) {
+                    for (Produto p : produtos) {
+              %>
+                <tr>
+                  <td><%= p.getIdProduto() %></td>
+                  <td><%= p.getNome() %></td>
+                  <td><span class="pill"><%= p.getCategoria().getNome() %></span></td>
+                  <td><%= p.getMarca() %></td>
+                  <td><%= p.getUnidadeMedida() %></td>
+                  <td><%= p.getCodBarras() %></td>
+                  <td><%= String.format("%.2f", p.getPreco()) %>€</td>
+
+                  <!-- Botão Editar -->
+                  <td>
+                    <button type="button" class="btn-guardar"  style="background-color:gray;"
+                      onclick="abrirModal(
+                        '<%= p.getIdProduto() %>',
+                        '<%= p.getCategoria().getIdCategoria() %>',
+                        '<%= p.getNome() %>',
+                        '<%= p.getMarca() %>',
+                        '<%= p.getUnidadeMedida() %>',
+                        '<%= p.getCodBarras() %>',
+                        '<%= p.getPreco() %>'
+                      )">
+                      Editar
+                    </button>
+                  </td>
+
+                  <!-- Botão Deletar -->
+                  <td>
+                    <form action="${pageContext.request.contextPath}/ConsultarStockServlet" method="POST">
+                      <input type="hidden" name="action" value="delete" />
+                      <input type="hidden" name="page" value="${currentPage}">
+                      <input type="hidden" name="txtNome" value="${txtNome}">
+                      <input type="hidden" name="orderBy" value="${orderBy}">
+                      <input type="hidden" name="orderDir" value="${orderDir}">
+                      <input type="hidden" name="delete_id_produto" value="<%= p.getIdProduto() %>" />
+                      <button type="submit" class="btn-guardar" style="background-color:red;">Apagar</button>
+                    </form>
+                  </td>
+                </tr>
+              <%
+                    }
+                } else {
+              %>
+                <tr><td colspan="9" style="text-align:center;">Nenhum produto encontrado.</td></tr>
+              <%
+                }
+              %>
+              </tbody>
             </table>
           </div>
-		<!-- Pagination buttons -->
-		<div class="pagination">
-		    <% 
-		        Integer currentPage = (Integer) request.getAttribute("currentPage");
-		        Integer totalPages = (Integer) request.getAttribute("totalPages");
-		        String txtNome = request.getParameter("txtNome") != null ? request.getParameter("txtNome") : "";
-		        String orderBy = request.getParameter("orderBy") != null ? request.getParameter("orderBy") : "";
-		        String orderDir = request.getParameter("orderDir") != null ? request.getParameter("orderDir") : "";
-		        
-		        if (totalPages != null && totalPages > 1) {
-		    %>
-		    
-		    <!-- Botão Anterior -->
-		    <% if (currentPage > 1) { %>
-		        <a class="page-btn" href="?txtNome=<%= txtNome %>&orderBy=<%= orderBy %>&orderDir=<%= orderDir %>&page=<%= currentPage - 1 %>">« Anterior</a>
-		    <% } else { %>
-		        <span class="page-btn disabled">« Anterior</span>
-		    <% } %>
-		
-		    <!-- Botões de página  -->
-		    <%
-		        int startPage = Math.max(1, currentPage - 2);
-		        int endPage = Math.min(totalPages, currentPage + 2);
-		        for (int i = startPage; i <= endPage; i++) {
-		            if (i == currentPage) {
-		    %>
-		        <span class="page-btn current"><%= i %></span>
-		    <%  } else { %>
-		        <a class="page-btn" href="?txtNome=<%= txtNome %>&orderBy=<%= orderBy %>&orderDir=<%= orderDir %>&page=<%= i %>"><%= i %></a>
-		    <%      }
-		        }
-		    %>
-		
-		    <!-- Botão Próximo -->
-		    <% if (currentPage < totalPages) { %>
-		        <a class="page-btn" href="?txtNome=<%= txtNome %>&orderBy=<%= orderBy %>&orderDir=<%= orderDir %>&page=<%= currentPage + 1 %>">Próximo »</a>
-		    <% } else { %>
-		        <span class="page-btn disabled">Próximo »</span>
-		    <% } %>
-		
-		    <% } %>
-		</div>
- 
+
+          <!-- Pagination -->
+          <div class="pagination">
+            <% 
+              Integer currentPage = (Integer) request.getAttribute("currentPage");
+              Integer totalPages = (Integer) request.getAttribute("totalPages");
+              if (totalPages != null && totalPages > 1) {
+            %>
+              <% if (currentPage > 1) { %>
+                <a class="page-btn" href="?txtNome=<%= txtNome %>&orderBy=<%= orderBy %>&orderDir=<%= orderDir %>&page=<%= currentPage - 1 %>">« Anterior</a>
+              <% } else { %>
+                <span class="page-btn disabled">« Anterior</span>
+              <% } %>
+              <%
+                int startPage = Math.max(1, currentPage - 2);
+                int endPage = Math.min(totalPages, currentPage + 2);
+                for (int i = startPage; i <= endPage; i++) {
+                  if (i == currentPage) {
+              %>
+                <span class="page-btn current"><%= i %></span>
+              <% } else { %>
+                <a class="page-btn" href="?txtNome=<%= txtNome %>&orderBy=<%= orderBy %>&orderDir=<%= orderDir %>&page=<%= i %>"><%= i %></a>
+              <%  }
+                }
+              %>
+              <% if (currentPage < totalPages) { %>
+                <a class="page-btn" href="?txtNome=<%= txtNome %>&orderBy=<%= orderBy %>&orderDir=<%= orderDir %>&page=<%= currentPage + 1 %>">Próximo »</a>
+              <% } else { %>
+                <span class="page-btn disabled">Próximo »</span>
+              <% } %>
+            <% } %>
+          </div>
+
         </section>
-        
-    </main>
+
+  <!-- Modal -->
+<div id="modal" class="modal">
+  <div class="registo-card">
+    <span class="close" onclick="fecharModal()">x</span>
+    <h3>Editar Produto</h3>
+    <form action="${pageContext.request.contextPath}/ConsultarStockServlet" method="POST" class="form-grid">
+      <input type="hidden" name="action" value="update">
+      <input type="hidden" id="modal_id_produto" name="id_produto">
+
+      <div class="input-group full-width">
+        <label>Categoria</label>
+        <input type="text" id="modal_id_categoria" name="id_categoria" required>
+
+      </div>
+
+      <div class="input-group full-width">
+        <label>Nome</label>
+        <input type="text" id="modal_nome" name="nome" required>
+      </div>
+
+      <div class="input-group">
+        <label>Marca</label>
+        <input type="text" id="modal_marca" name="marca">
+      </div>
+
+      <div class="input-group">
+        <label>Unidade</label>
+		<input type="text" id="modal_unidade" name="unidade">
+      </div>
+
+      <div class="input-group">
+        <label>Código Barras</label>
+        <input type="text" id="modal_cod_barras" name="cod_barras">
+      </div>
+
+      <div class="input-group">
+        <label>Preço</label>
+        <input type="number" step="0.01" id="modal_preco" name="preco" required>
+      </div>
+
+      <div class="button-group full-width">
+        <button type="submit" class="btn-guardar">Atualizar Produto</button>
+      </div>
+    </form>
   </div>
+</div>
+
+      </main>
+  </div>
+
+  <script>
+    function abrirModal(id, idCat, nome, marca, unidade, codBarras, preco) {
+        document.getElementById("modal").style.display = "flex";
+        document.getElementById("modal_id_produto").value = id;
+        document.getElementById("modal_id_categoria").value = idCat;
+        document.getElementById("modal_nome").value = nome;
+        document.getElementById("modal_marca").value = marca;
+        document.getElementById("modal_unidade").value = unidade;
+        document.getElementById("modal_cod_barras").value = codBarras;
+        document.getElementById("modal_preco").value = preco;
+    }
+    function fecharModal() {
+        document.getElementById("modal").style.display = "none";
+    }
+  </script>
+
+  <script type="module" src="/SuperMARKT/Front-end/js/pages/dashboard.js"></script>
 </body>
-<script type="module" src="/SuperMARKT/Front-end/js/pages/dashboard.js"></script>
 </html>
-
-
-

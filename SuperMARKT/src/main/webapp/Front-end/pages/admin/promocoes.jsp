@@ -4,6 +4,7 @@
 <html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Gerir Promoções</title>
     
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
@@ -30,8 +31,7 @@
             </div>
 
             <section class="card">
-                <div class="toolbar" style="display: flex; justify-content: space-between; align-items: stretch; gap: 15px;">
-                    
+                <div class="toolbar" style="display: flex; justify-content: space-between; align-items: stretch; gap: 15px; margin-bottom: 20px;">
                     <div class="search" style="flex: 1;">
                         <span class="search-ico" aria-hidden="true">⌕</span>
                         <input type="text" placeholder="Pesquisar campanha..." id="searchInput">
@@ -45,7 +45,6 @@
                         </select>
                         <button class="btn-primary" id="btnFiltrar">Filtrar</button>
                     </div>
-                    
                 </div>
                 
                 <div class="table-wrap">
@@ -87,30 +86,20 @@
   <script>
       $(document).ready(function() {
           var table = $('#promocoesTable').DataTable({
-              "pageLength": 5,
+              "pageLength": 10,
+              "dom": 't<"pagination-wrapper d-flex justify-center"p>',
               "language": {
-                  "search": "Pesquisar:",
-                  "lengthMenu": "Mostrar _MENU_ promoções",
-                  "info": "Mostrando _START_ a _END_ de _TOTAL_ promoções",
-                  "paginate": {
-                      "previous": "« Anterior",
-                      "next": "Próximo »"
-                  },
-                  "zeroRecords": "Nenhuma promoção encontrada"
-              },
-              "dom": '<"table-wrap"t><"pagination-wrapper d-flex justify-center"p>'
+                  "zeroRecords": "Nenhuma promoção encontrada",
+                  "paginate": { "previous": "«", "next": "»" }
+              }
           });
 
-          // Ligar a barra de pesquisa de texto
           $('#searchInput').on('keyup', function() {
               table.search(this.value).draw();
           });
 
-          // Ligar o botão de Filtrar ao Dropdown de Estados
-          // Procura na coluna 4 (Estado)
           $('#btnFiltrar').on('click', function() {
-              var estado = $('#estadoFilter').val();
-              table.column(4).search(estado).draw();
+              table.column(4).search($('#estadoFilter').val()).draw();
           });
       });
   </script>
