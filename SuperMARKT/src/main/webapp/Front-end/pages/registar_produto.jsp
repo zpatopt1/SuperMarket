@@ -3,7 +3,7 @@
 <html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
-    <title>SuperMart - Registar Produto</title>
+    <title>Registar Produto</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
