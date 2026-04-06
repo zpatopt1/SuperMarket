@@ -42,6 +42,7 @@
                             <option value="">Todos os Cargos</option>
                             <option value="Administrador">Administrador</option>
                             <option value="Operador de Caixa">Operador de Caixa</option>
+                            <option value="Gestor do Sistema">Gestor do Sistema</option>
                         </select>
                         <button class="btn-primary" id="btnFiltrar">Filtrar</button>
                     </div>
@@ -66,7 +67,20 @@
                                 <td>Operador de Caixa</td>
                                 <td style="color: #059669; font-weight: 600;">Ativo</td>
                             </tr>
-                            
+                            <tr>
+                                <td>#002</td>
+                                <td>José Pedro Moreira</td>
+                                <td>jose.moreira@supermart.pt</td>
+                                <td>Administrador</td>
+                                <td style="color: #059669; font-weight: 600;">Ativo</td>
+                            </tr>
+                            <tr>
+                                <td>#003</td>
+                                <td>Pedro Marques</td>
+                                <td>pedro.marques@supermart.pt</td>
+                                <td>Gestor do Sistema</td>
+                                <td style="color: #059669; font-weight: 600;">Ativo</td>
+                            </tr>                                                           
                         </tbody>
                     </table>
                 </div>
