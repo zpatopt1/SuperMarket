@@ -34,7 +34,7 @@
           <button class="btn-primary" type="button">Exportar Relatorio</button>
         </div>
 		
-<<<<<<< HEAD
+
         <!-- KPIs -->
         <div class="kpis kpis-stock">
           <div class="kpi">
@@ -57,9 +57,6 @@
             <div class="kpi-value">1913.32 €</div>
           </div>
         </div>
-=======
-       
->>>>>>> branch 'main' of https://github.com/zpatopt1/SuperMarket.git
 
 	<section class="card">
 	 <!-- Search + filter -->
@@ -198,8 +195,11 @@
             document.getElementById("modal").style.display = "none";
         }
         
+        
     </script>
 
 </div>
+ <script type="module" src="/SuperMARKT/Front-end/js/pages/dashboard.js"></script>
+
 </body>
 </html>

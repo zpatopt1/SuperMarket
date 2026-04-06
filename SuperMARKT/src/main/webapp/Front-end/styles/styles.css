@@ -1317,6 +1317,7 @@ table.dataTable tbody tr:hover {
 .btn-outline-white:hover {
     background-color: #ffffff;
     color: #1a56db; 
+}
 
 .modal {
     display: none;
@@ -1335,5 +1336,4 @@ table.dataTable tbody tr:hover {
 	float: right;
 	font-size: 24px;
 	cursor: pointer;
-	branch 'main' of https://github.com/zpatopt1/SuperMarket.git
 }
