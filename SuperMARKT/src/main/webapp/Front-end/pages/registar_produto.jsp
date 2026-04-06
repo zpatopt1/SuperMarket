@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+<%@ page import="model.Produto" %>
+
 <html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
@@ -22,65 +24,64 @@
 
             <div class="registo-container">
             <div class="registo-card">
-            <h2>Registar Novo Produto</h2>
-
-                    
+			<%
+			    Produto produto = (Produto) request.getAttribute("produto");
+			
+			    // Se produto não for nulo, atribuir valores a variáveis
+			    int idProduto = produto != null ? produto.getIdProduto() : 0;
+			    int idCategoria = produto != null ? produto.getCategoria().getIdCategoria() : 0;
+			    String nome = produto != null ? produto.getNome() : "";
+			    String marca = produto != null ? produto.getMarca() : "";
+			    String unidade = produto != null ? produto.getUnidadeMedida() : "";
+			    String codBarras = produto != null ? produto.getCodBarras() : "";
+			    float preco = produto != null ? produto.getPreco() : 0.0f;
+			%>
+			            
+            <h2><%= produto != null ? "Atualizar Produto" : "Registar Novo Produto" %></h2>
+            		 
 		<form action="${pageContext.request.contextPath}/ProdutoServlet" method="POST" class="form-grid">
 		
 		    <div class="input-group">
 		        <label>ID Produto</label>
-		        <input type="number" name="id_produto"
-		        value="${produto != null ? produto.idProduto : ''}"
-		        ${produto != null ? 'readonly' : ''}
-		        required>
+                <input type="number" name="id_produto" value="<%= idProduto != 0 ? idProduto : "" %>" 
+                <%= produto != null ? "readonly" : "" %> required>
 		    </div>
 		
 		    <div class="input-group">
 		        <label>ID Categoria</label>
-		        <input type="number" name="id_categoria"
-		        value="${produto != null ? produto.categoria.idCategoria : ''}"
-		        required>
+                <input type="number" name="id_categoria" value="<%= idCategoria != 0 ? idCategoria : "" %>" required>
 		    </div>
 		
 		    <div class="input-group full-width">
 		        <label>Nome</label>
-		        <input type="text" name="nome"
-		        value="${produto != null ? produto.nome : ''}"
-		        required>
+                <input type="text" name="nome" value="<%= nome %>" required>
+
 		    </div>
 		
 		    <div class="input-group">
 		        <label>Marca</label>
-		        <input type="text" name="marca"
-		        value="${produto != null ? produto.marca : ''}">
+                <input type="text" name="marca" value="<%= marca %>">
 		    </div>
 		
 		    <div class="input-group">
 		        <label>Unidade</label>
-		        <input type="text" name="unidade"
-		        value="${produto != null ? produto.unidadeMedida : ''}">
+                <input type="text" name="unidade" value="<%= unidade %>">
+
 		    </div>
 		
 		    <div class="input-group">
 		        <label>Código Barras</label>
-		        <input type="text" name="cod_barras"
-		        value="${produto != null ? produto.codBarras : ''}">
+                <input type="text" name="cod_barras" value="<%= codBarras %>">
 		    </div>
 		
 		    <div class="input-group">
 		        <label>Preço</label>
-		        <input type="number" step="0.01" name="preco"
-		        value="${produto != null ? produto.preco : ''}"
-		        required>
+                <input type="number" step="0.01" name="preco" value="<%= preco != 0.0f ? preco : "" %>" required>
 		    </div>
 		
-		    <div class="button-group full-width">
-		        <button type="submit" name="action"
-		        value="${produto != null ? 'update' : 'insert'}"
-		        class="btn-guardar">
-		
-		        ${produto != null ? 'Atualizar Produto' : 'Guardar Produto'}
-		
+		    <div class="button-group full-width">		        
+                <button type="submit" name="action" value="<%= produto != null ? "update" : "insert" %>" class="btn-guardar">
+                   <%= produto != null ? "Atualizar Produto" : "Guardar Produto" %>
 		        </button>
 		    </div>
 		

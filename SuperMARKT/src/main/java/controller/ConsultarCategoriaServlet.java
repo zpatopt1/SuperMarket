@@ -39,9 +39,34 @@ public class ConsultarCategoriaServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
+        CategoriaDAO dao = new CategoriaDAO();
+
+        try {
+            if ("delete".equals(action)) {
+                int id = Integer.parseInt(request.getParameter("delete_id_categoria"));
+                dao.deleteCategoria(id);
+                response.sendRedirect("ConsultarCategoriaServlet");
+
+            } else if ("update".equals(action)) {
+                int id = Integer.parseInt(request.getParameter("id_categoria"));
+                String nome = request.getParameter("nome");
+                String descricao = request.getParameter("descricao");
+
+                Categoria c = new Categoria();
+                c.setIdCategoria(id);
+                c.setNome(nome);
+                c.setDescricao(descricao);
+
+                dao.updateCategoria(c);
+                response.sendRedirect("ConsultarCategoriaServlet");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("msg", "Erro ao processar a ação");
+            doGet(request, response);
+        }
+    }
 
 }
