@@ -5,9 +5,7 @@
     <div class="name">SuperMart</div>
   </div>
 </button>
-  <h1 id="mostrar"class="mostrar">Dashboard</h1>
-  
-
+  <h1 id="mostrar" class="mostrar"><%= (request.getAttribute("seccao") != null) ? request.getAttribute("seccao") : "SuperMart" %></h1>
   <div class="topbar-right">
     <div class="select">
       <span class="muted"> </span>

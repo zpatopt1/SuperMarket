@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<% request.setAttribute("seccao", "Gestão de Produtos"); %>
 <%@ page import="java.util.List" %>
 <%@ page import="model.Categoria" %>
 <!DOCTYPE html>
@@ -27,35 +28,14 @@
         <!-- Page header -->
         <div class="pagehead">
           <div>
-            <h2 class="page-title">Consultar Stock</h2>
-            <p class="page-subtitle">Gestão e consulta de inventário</p>
+            <h2 class="page-title">Consultar Categorias</h2>
+            <p class="page-subtitle">Gestão e consulta de Categorias</p>
           </div>
 
           <button class="btn-primary" type="button">Exportar Relatorio</button>
         </div>
 		
-        <!-- KPIs -->
-        <div class="kpis kpis-stock">
-          <div class="kpi">
-            <div class="kpi-label">Total Produtos</div>
-            <div class="kpi-value"><%= request.getAttribute("totalProdutos")%></div>
-          </div>
-
-          <div class="kpi">
-            <div class="kpi-label">Stock Armazem</div>
-            <div class="kpi-value">3</div>
-          </div>
-
-          <div class="kpi">
-            <div class="kpi-label">Stock Loja</div>
-            <div class="kpi-value">200</div>
-          </div>
-
-          <div class="kpi">
-            <div class="kpi-label">Valor Total</div>
-            <div class="kpi-value">1913.32 €</div>
-          </div>
-        </div>
+       
 
 	<section class="card">
 	 <!-- Search + filter -->

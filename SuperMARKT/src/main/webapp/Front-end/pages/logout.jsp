@@ -1,47 +1,31 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-PT">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SuperMart â¢ Consultar Stock</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="../styles/styles.css" />
+    <meta charset="UTF-8">
+    <title>SuperMart - Sessão Terminada</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/Front-end/styles/styles.css" />
 </head>
-<body>
-  <div class="app">
-	<!-- Sidebar -->
-	<jsp:include page="/Front-end/pages/components/sidebar.jsp" />
+<body class="logout-bg"> 
+    
+    <div class="logout-wrapper">
+        <div class="logout-icon">
+            <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+        </div>
 
-    <!-- Main -->
-    <main class="main">
+        <h2 class="logout-title">Sessão Terminada</h2>
+        <p class="logout-message">Obrigado por utilizar o sistema SuperMart. A sua sessão foi encerrada com segurança.</p>
 
-	<!-- Topbar -->
-	<jsp:include page="/Front-end/pages/components/topbar.jsp" />
-      <section class="content">
-        <!-- Page header -->
-        <div class="pagehead">
-          <div>
-            <h2 class="page-title">Logout</h2>
-            <p class="page-subtitle">Logout</p>
-          </div>
+        <a href="${pageContext.request.contextPath}/Front-end/pages/login.jsp" class="btn-outline-white">VOLTAR AO LOGIN</a>
+    </div>
 
-
-          <div class="logout-image" style="margin: auto; padding-top: 100px;">
-                <img src="../assets/images/logout.png" style="width: 50%;" alt="Logout">
-          </div>
-
-
-        </div>        
-       
-        <button class="help" type="button" aria-label="Ajuda" onclick="location.href='Ajuda.html'">?</button>
-      </section>
-    </main>
-  </div>
 </body>
-<script type="module" src="/SuperMARKT/Front-end/js/pages/dashboard.js"></script>
 </html>

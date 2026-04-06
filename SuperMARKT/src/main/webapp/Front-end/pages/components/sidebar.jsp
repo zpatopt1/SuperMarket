@@ -27,7 +27,7 @@
     <div class="nav-section">
       <div class="nav-label">Vendas</div>
       <a class="nav-item" href="/SuperMARKT/Front-end/pages/vendas.jsp">Iniciar Venda</a>
-      <a class="nav-item" href="/SuperMARKT/Front-end/pages/cancelar.jsp">Cancelar Venda</a>
+      <a class="nav-item" href="/SuperMARKT/Front-end/pages/cancelar.jsp">Anular Venda</a>
       <a class="nav-item" href="/SuperMARKT/Front-end/pages/reembolso.jsp">Reembolso</a>
     </div>
 

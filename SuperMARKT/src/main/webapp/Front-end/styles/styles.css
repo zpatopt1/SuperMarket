@@ -1256,3 +1256,64 @@ table.dataTable tbody tr:hover {
     background: rgba(37, 99, 235, .05);
 
 }
+
+/* ========================================= */
+/* --- ESTILOS DA PÁGINA DE LOGOUT --- */
+/* ========================================= */
+
+.logout-bg {
+    background: linear-gradient(135deg, #1a56db 0%, #113f99 100%);
+    margin: 0;
+    padding: 0;
+}
+
+.logout-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    padding: 20px;
+}
+
+.logout-icon {
+    margin-bottom: 20px;
+}
+
+.logout-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+
+.logout-message {
+    font-size: 16px;
+    font-weight: 400;
+    margin-bottom: 40px;
+    opacity: 0.85;
+    max-width: 400px;
+    line-height: 1.5;
+}
+
+.btn-outline-white {
+    display: inline-block;
+    padding: 12px 40px;
+    border: 2px solid #ffffff;
+    border-radius: 6px;
+    background: transparent;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-white:hover {
+    background-color: #ffffff;
+    color: #1a56db; 
+}
