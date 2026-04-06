@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<% request.setAttribute("seccao", "Gestão de Produtos"); %>
 <%@ page import="java.util.List" %>
 <%@ page import="model.Categoria" %>
 <!DOCTYPE html>
@@ -26,13 +27,14 @@
         <!-- Page header -->
         <div class="pagehead">
           <div>
-            <h2 class="page-title">Consultar Stock</h2>
-            <p class="page-subtitle">Gestão e consulta de inventário</p>
+            <h2 class="page-title">Consultar Categorias</h2>
+            <p class="page-subtitle">Gestão e consulta de Categorias</p>
           </div>
 
           <button class="btn-primary" type="button">Exportar Relatorio</button>
         </div>
 		
+<<<<<<< HEAD
         <!-- KPIs -->
         <div class="kpis kpis-stock">
           <div class="kpi">
@@ -55,6 +57,9 @@
             <div class="kpi-value">1913.32 €</div>
           </div>
         </div>
+=======
+       
+>>>>>>> branch 'main' of https://github.com/zpatopt1/SuperMarket.git
 
 	<section class="card">
 	 <!-- Search + filter -->
