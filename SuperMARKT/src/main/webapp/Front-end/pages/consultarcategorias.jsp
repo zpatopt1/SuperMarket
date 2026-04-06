@@ -36,8 +36,8 @@
         <!-- KPIs -->
         <div class="kpis kpis-stock">
           <div class="kpi">
-            <div class="kpi-label">Total Produtos</div>
-            <div class="kpi-value"><%= request.getAttribute("totalProdutos")%></div>
+			<div class="kpi-label">Categorias (filtradas)</div>
+    		<div class="kpi-value" id="totalFiltrado">0</div>
           </div>
 
           <div class="kpi">
@@ -161,12 +161,27 @@
                 },
                 "dom": '<"table-wrap"t><"pagination-wrapper d-flex justify-center"p>'            });
 
+            // Atualizar KPIs
+            function atualizarKPIs() {
+                var total = table.data().count();
+                var filtrado = table.rows({ search: 'applied' }).count();
+
+                $('#totalFiltrado').text(filtrado);
+            }
+            // Inicial
+            atualizarKPIs();
+            
             // Ligando input customizado com DataTables
             $('#searchInput').on('keyup', function() {
                 table.search(this.value).draw();
             });
+            
+            // Sempre que a tabela muda
+            table.on('draw', function() {
+                atualizarKPIs();
+            }); 
         });
-        
+
         // Funções modal
         function abrirModal(id, nome, descricao) {
             document.getElementById("modal").style.display = "flex";
