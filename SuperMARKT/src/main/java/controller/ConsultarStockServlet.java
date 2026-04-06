@@ -140,7 +140,7 @@ public class ConsultarStockServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("msg", "Erro");
-            request.getRequestDispatcher("/Front-end/pages/consultarstock.jsp")
+            request.getRequestDispatcher("ConsultarStockServlet.jsp")
                    .forward(request, response);
         }
     }
