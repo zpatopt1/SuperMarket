@@ -2,16 +2,16 @@ package model;
 
 public class Zona {
     private int idZona;
-    private Local idLocal;
+    private Local local;
     private String nome;
     
     public Zona() {
     	// TODO Auto-generated constructor stub
     }
     
-    public Zona(int idZona, Local idLocal, String nome) {
+    public Zona(int idZona, Local local, String nome) {
     	this.idZona = idZona;
-    	this.idLocal = idLocal;
+    	this.local = local;
     	this.nome = nome;
     }
 
@@ -23,12 +23,12 @@ public class Zona {
 		this.idZona = idZona;
 	}
 
-	public Local getIdLocal() {
-		return idLocal;
+	public Local getLocal() {
+		return local;
 	}
 
-	public void setIdLocal(Local idLocal) {
-		this.idLocal = idLocal;
+	public void setLocal(Local local) {
+		this.local = local;
 	}
 
 	public String getNome() {

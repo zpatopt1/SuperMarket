@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Categoria;
-import model.CategoriaDAO;
+import DAO.CategoriaDAO;
 
 import java.io.IOException;
 import java.util.List;
@@ -47,6 +47,17 @@ public class ConsultarCategoriaServlet extends HttpServlet {
             if ("delete".equals(action)) {
                 int id = Integer.parseInt(request.getParameter("delete_id_categoria"));
                 dao.deleteCategoria(id);
+                response.sendRedirect("ConsultarCategoriaServlet");
+
+            } else if ("insert".equals(action)) {
+                String nome = request.getParameter("nome_categoria");
+                String descricao = request.getParameter("descricao_categoria");
+                if (nome != null && !nome.trim().isEmpty()) {
+                    Categoria c = new Categoria();
+                    c.setNome(nome.trim());
+                    c.setDescricao(descricao != null ? descricao.trim() : "");
+                    dao.insertCategoria(c);
+                }
                 response.sendRedirect("ConsultarCategoriaServlet");
 
             } else if ("update".equals(action)) {

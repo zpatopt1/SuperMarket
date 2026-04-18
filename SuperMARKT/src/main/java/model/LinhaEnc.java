@@ -1,62 +1,75 @@
 package model;
 
+import java.util.Date;
+
 public class LinhaEnc {
-	private int idLinhaOrder;
-	private Encomenda idMovimentos;
-	private Produto idProduto;
-	private int quantidade;
-	private float precoEncomenda;
-	
-	public LinhaEnc() {
-		
-	}
-	
-	public LinhaEnc(int idLinhaOrder, Encomenda idMovimentos, Produto idProduto, int quantidade, float precoEncomenda) {
-		this.idLinhaOrder = idLinhaOrder;
-		this.idMovimentos = idMovimentos;
-		this.idProduto = idProduto;
-		this.quantidade = quantidade;
-		this.precoEncomenda = precoEncomenda;
-	}
 
-	public int getIdLinhaOrder() {
-		return idLinhaOrder;
-	}
+    private int idLinhaOrder;
+    private Encomenda encomenda;
+    private Produto produto;
+    private int quantidade;
+    private float precoEncomenda;
+    
+    private Date dataValidade;
 
-	public void setIdLinhaOrder(int idLinhaOrder) {
-		this.idLinhaOrder = idLinhaOrder;
-	}
+    public LinhaEnc() {
+    }
 
-	public Encomenda getIdMovimentos() {
-		return idMovimentos;
-	}
+    public LinhaEnc(int idLinhaOrder, Encomenda encomenda, Produto produto,
+                    int quantidade, float precoEncomenda, Date dataValidade) {
+        this.idLinhaOrder = idLinhaOrder;
+        this.encomenda = encomenda;
+        this.produto = produto;
+        this.quantidade = quantidade;
+        this.precoEncomenda = precoEncomenda;
+        this.dataValidade = dataValidade;
+    }
 
-	public void setIdMovimentos(Encomenda idMovimentos) {
-		this.idMovimentos = idMovimentos;
-	}
+    public int getIdLinhaOrder() {
+        return idLinhaOrder;
+    }
 
-	public Produto getIdProduto() {
-		return idProduto;
-	}
+    public void setIdLinhaOrder(int idLinhaOrder) {
+        this.idLinhaOrder = idLinhaOrder;
+    }
 
-	public void setIdProduto(Produto idProduto) {
-		this.idProduto = idProduto;
-	}
+    public Encomenda getEncomenda() {
+        return encomenda;
+    }
 
-	public int getQuantidade() {
-		return quantidade;
-	}
+    public void setEncomenda(Encomenda encomenda) {
+        this.encomenda = encomenda;
+    }
 
-	public void setQuantidade(int quantidade) {
-		this.quantidade = quantidade;
-	}
+    public Produto getProduto() {
+        return produto;
+    }
 
-	public float getPrecoEncomenda() {
-		return precoEncomenda;
-	}
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
 
-	public void setPrecoEncomenda(float precoEncomenda) {
-		this.precoEncomenda = precoEncomenda;
-	}
-	
+    public int getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public float getPrecoEncomenda() {
+        return precoEncomenda;
+    }
+
+    public void setPrecoEncomenda(float precoEncomenda) {
+        this.precoEncomenda = precoEncomenda;
+    }
+
+    public Date getDataValidade() {
+        return dataValidade;
+    }
+
+    public void setDataValidade(Date dataValidade) {
+        this.dataValidade = dataValidade;
+    }
 }

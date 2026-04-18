@@ -1,4 +1,4 @@
-package model;
+package DAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import DBconnection.DBconnection;
+import model.Categoria;
 
 public class CategoriaDAO {
 
@@ -92,4 +93,20 @@ public class CategoriaDAO {
 	    }
 	}
 	
-}
+
+	public void insertCategoria(Categoria categoria) {
+    	String sql = "INSERT INTO categoria (nome, descricao) VALUES (?, ?)";
+
+    	try (Connection conn = DBconnection.getConnection();
+    	     PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+    	    stmt.setString(1, categoria.getNome());
+    	    stmt.setString(2, categoria.getDescricao());
+    	    stmt.executeUpdate();
+
+    	} catch (Exception e) {
+    	    e.printStackTrace();
+    	    throw new RuntimeException(e);
+    	}
+	}
+	}
