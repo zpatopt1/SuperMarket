@@ -23,7 +23,7 @@
       <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarLocalServlet">Locais</a>
       <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarCategoriaServlet">Consultar Categorias</a>
       <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarZonaServlet">Consultar Zonas</a>
-      <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarStockLocalServlet">Consultar stock</a>
+      <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarStockLocalServlet">Consultar Stock</a>
 
       
     </div>
