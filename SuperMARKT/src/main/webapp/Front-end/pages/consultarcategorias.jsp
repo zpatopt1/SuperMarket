@@ -64,10 +64,11 @@
         <div class="search">
              <!--  <span class="search-ico">&#128269;</span> -->
             <span class="search-ico" aria-hidden="true">⌕</span>
-            <input type="text" placeholder="Pesquisar categorias..." id="searchInput">
+            <input type="text" placeholder="Pesquisar categorias" id="searchInput">
         </div>
         <!-- <button class="filterbtn">Filtrar</button> -->
         <button class="btn-primary">Filtrar</button>
+        <button type="button" class="btn-primary" onclick="abrirModalAddCategoria()">Adicionar Categoria</button>
         </div>
         
     <div class="table-wrap">
@@ -144,13 +145,38 @@
             </div>
 
 
+    <!-- Modal Adicionar Categoria -->
+    <div id="modalAddCategoria" class="modal">
+      <div class="registo-card">
+        <span class="close" onclick="fecharModalAddCategoria()">x</span>
+        <h3>Adicionar Categoria</h3>
+        <form action="${pageContext.request.contextPath}/ConsultarCategoriaServlet" method="POST">
+          <input type="hidden" name="action" value="insert">
+
+          <div class="input-group full-width">
+            <label>Nome</label>
+            <input type="text" id="modal_add_nome" name="nome_categoria" required>
+          </div>
+
+          <div class="input-group full-width">
+            <label>Descrição</label>
+            <input type="text" id="modal_add_descricao" name="descricao_categoria">
+          </div>
+
+          <div class="button-group full-width">
+            <button type="submit" class="btn-guardar">Criar Categoria</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <!-- DataTables JS -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
         $(document).ready(function() {
             var table = $('#categoriasTable').DataTable({
-                "pageLength": 2,
+                "pageLength": 5,
                 "language": {
                     "search": "Pesquisar:",
                     "lengthMenu": "Mostrar _MENU_ categorias por página",
@@ -195,6 +221,13 @@
             document.getElementById("modal").style.display = "none";
         }
         
+        function abrirModalAddCategoria() {
+            document.getElementById("modalAddCategoria").style.display = "flex";
+        }
+
+        function fecharModalAddCategoria() {
+            document.getElementById("modalAddCategoria").style.display = "none";
+        }
         
     </script>
 

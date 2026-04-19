@@ -1,4 +1,4 @@
-	package model;
+	package DAO;
 	
 	import java.sql.Connection;
 	import java.sql.*;
@@ -7,23 +7,24 @@
 	import java.util.List;
 	
 	import DBconnection.DBconnection;
+import model.Categoria;
+import model.Produto;
 	
 	public class ProdutoDAO {
 		//CRUD - Create
 		public void insert(Produto produto) {
 			
-			String sql = "INSERT INTO produto (id_produto, id_categoria, unidade_medida, marca, nome, cod_barras, preco) VALUES (?, ?, ?, ?, ?, ?, ?)";
+String sql = "INSERT INTO produto (id_categoria, unidade_medida, marca, nome, cod_barras, preco) VALUES (?, ?, ?, ?, ?, ?)";
+
+		try (Connection conn = DBconnection.getConnection();
+		    PreparedStatement stmt = conn.prepareStatement(sql)){
 	
-			try (Connection conn = DBconnection.getConnection();
-		    	PreparedStatement stmt = conn.prepareStatement(sql)){
-	
-		    	stmt.setInt(1, produto.getIdProduto());
-	            stmt.setInt(2, produto.getCategoria().getIdCategoria()); // Pegamos o ID do objeto Categoria
-	            stmt.setString(3, produto.getUnidadeMedida());
-	            stmt.setString(4, produto.getMarca());
-	            stmt.setString(5, produto.getNome());
-	            stmt.setString(6, produto.getCodBarras());
-	            stmt.setFloat(7, produto.getPreco());
+stmt.setInt(1, produto.getCategoria().getIdCategoria()); // Pegamos o ID do objeto Categoria
+            stmt.setString(2, produto.getUnidadeMedida());
+            stmt.setString(3, produto.getMarca());
+            stmt.setString(4, produto.getNome());
+            stmt.setString(5, produto.getCodBarras());
+            stmt.setFloat(6, produto.getPreco());
 	            
 	            int rows = stmt.executeUpdate();        
 	            

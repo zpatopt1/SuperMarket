@@ -1,45 +1,42 @@
 package model;
 
 public class StockLocal {
-	private Produto idProduto;
-	private Local idLocal;
-	private int quantidade;
-	
-	public StockLocal() {
-		
-	}	
-	
-	public StockLocal(Produto idProduto, Local idLocal, int quantidade) {
-		this.idProduto = idProduto;
-		this.idLocal = idLocal;
-		this.quantidade = quantidade;
-	}
+    private Produto produto;
+    private Local local;
+    private int quantidade;
 
-	public Produto getIdProduto() {
-		return idProduto;
-	}
+    public StockLocal() {
+    }
 
-	public void setIdProduto(Produto idProduto) {
-		this.idProduto = idProduto;
-	}
+    public StockLocal(Produto produto, Local local, int quantidade) {
+        this.produto = produto;
+        this.local = local;
+        this.quantidade = quantidade;
+    }
 
-	public Local getIdLocal() {
-		return idLocal;
-	}
+    public Produto getProduto() {
+        return produto;
+    }
 
-	public void setIdLocal(Local idLocal) {
-		this.idLocal = idLocal;
-	}
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
 
-	public int getQuantidade() {
-		return quantidade;
-	}
+    public Local getLocal() {
+        return local;
+    }
 
-	public void setQuantidade(int quantidade) {
-		this.quantidade = quantidade;
-	}
+    public void setLocal(Local local) {
+        this.local = local;
+    }
 
-	
+    public int getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
 }
 	
 	

@@ -7,22 +7,24 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Categoria;
 import model.Produto;
-import model.ProdutoDAO;
 
 import java.io.IOException;
 import java.util.List;
 
+import DAO.ProdutoDAO;
+import DAO.CategoriaDAO;
+
 /**
  * Servlet implementation class ListarProdutoServlet
  */
-@WebServlet("/ConsultarStockServlet")
-public class ConsultarStockServlet extends HttpServlet {
+@WebServlet("/ConsultarProdutosServlet")
+public class ConsultarProdutosServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ConsultarStockServlet() {
+    public ConsultarProdutosServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -32,7 +34,7 @@ public class ConsultarStockServlet extends HttpServlet {
 	 */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	int currentPage = 1;
-    	int pageSize = 5; // 20 produtos por página
+    	int pageSize = 5; // produtos por página
 
     	try {
     		currentPage = Integer.parseInt(request.getParameter("page"));
@@ -56,7 +58,12 @@ public class ConsultarStockServlet extends HttpServlet {
 
         int totalPages = (int) Math.ceil((double) totalProdutos / pageSize);
         
+        // Carregar categorias para o modal
+        CategoriaDAO categoriaDao = new CategoriaDAO();
+        List<Categoria> categorias = categoriaDao.getAllCategorias();
+        
         request.setAttribute("produtos", produtos);
+        request.setAttribute("categorias", categorias);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalProdutos", totalProdutos);
         request.setAttribute("totalPages", totalPages);
@@ -66,7 +73,7 @@ public class ConsultarStockServlet extends HttpServlet {
         
  
         //  Encaminhar para o JSP
-        request.getRequestDispatcher("/Front-end/pages/consultarstock.jsp").forward(request, response);
+        request.getRequestDispatcher("/Front-end/pages/consultarProdutos.jsp").forward(request, response);
     }
     
 
@@ -94,11 +101,36 @@ public class ConsultarStockServlet extends HttpServlet {
                 int id = Integer.parseInt(request.getParameter("delete_id_produto"));
                 Produto p = dao.selectProduto(id);
                 dao.deleteProduto(id);
-                response.sendRedirect("ConsultarStockServlet?page=" + page +
-                			"&txtNome=" + txtNome +
-                            "&orderBy=" + orderBy +
-                            "&orderDir=" + orderDir);
-         
+                response.sendRedirect("ConsultarProdutosServlet?page=" + page +
+                        "&txtNome=" + txtNome +
+                        "&orderBy=" + orderBy +
+                        "&orderDir=" + orderDir);
+
+            } else if ("insert".equals(action)) {
+                int idCat = Integer.parseInt(request.getParameter("id_categoria"));
+                String nome = request.getParameter("nome");
+                String marca = request.getParameter("marca");
+                String unidade = request.getParameter("unidade");
+                String codBarras = request.getParameter("cod_barras");
+                float preco = Float.parseFloat(request.getParameter("preco"));
+
+                Categoria cat = new Categoria();
+                cat.setIdCategoria(idCat);
+
+                Produto p = new Produto();
+                p.setCategoria(cat);
+                p.setNome(nome);
+                p.setMarca(marca);
+                p.setUnidadeMedida(unidade);
+                p.setCodBarras(codBarras);
+                p.setPreco(preco);
+
+                dao.insert(p);
+                response.sendRedirect("ConsultarProdutosServlet?page=" + page +
+                        "&txtNome=" + txtNome +
+                        "&orderBy=" + orderBy +
+                        "&orderDir=" + orderDir);
+
             } else if ("update".equals(action)) {
 
                 // 1. Capturar os dados do formulário
@@ -131,7 +163,7 @@ public class ConsultarStockServlet extends HttpServlet {
                     request.setAttribute("msg", "Produto nao encontrado para atualizacao");
                 }
 
-                response.sendRedirect("ConsultarStockServlet?page=" + page +
+                response.sendRedirect("ConsultarProdutosServlet?page=" + page +
                         "&txtNome=" + txtNome +
                         "&orderBy=" + orderBy +
                         "&orderDir=" + orderDir);
@@ -140,7 +172,7 @@ public class ConsultarStockServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("msg", "Erro");
-            request.getRequestDispatcher("/Front-end/pages/consultarstock.jsp")
+            request.getRequestDispatcher("/Front-end/pages/consultarProdutos.jsp")
                    .forward(request, response);
         }
     }

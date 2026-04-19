@@ -6,17 +6,19 @@ public class Devolucao {
 	private String motivo;
 	private int quantidade;
 	private float valor;
+	private boolean reporStock;
 	
 	public Devolucao() {
 		
 	}
 	
-	public Devolucao(Movimentos idMovimentos, LinhaVenda idLinhaVenda, String motivo, int quantidade, float valor) {
+	public Devolucao(Movimentos idMovimentos, LinhaVenda idLinhaVenda, String motivo, int quantidade, float valor, boolean reporStock) {
 		this.idMovimentos = idMovimentos;
 		this.idLinhavenda = idLinhaVenda;
 		this.motivo = motivo;
 		this.quantidade = quantidade;
 		this.valor = valor;
+		this.reporStock = reporStock;
 	}
 
 	public Movimentos getIdMovimentos() {
@@ -57,6 +59,14 @@ public class Devolucao {
 
 	public void setValor(float valor) {
 		this.valor = valor;
+	}
+
+	public boolean isReporStock() {
+		return reporStock;
+	}
+
+	public void setReporStock(boolean reporStock) {
+		this.reporStock = reporStock;
 	}
 
 }

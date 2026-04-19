@@ -9,7 +9,7 @@
 <button id="toggleBtn-inside" class="toggle-btn left">
   <img src="${pageContext.request.contextPath}/Front-end/assets/sidebar-2.svg" alt="Toggle Sidebar" width="32px">
 </button>
-    
+    f
     </div>  
   <nav class="nav">
     <div class="nav-section">
@@ -18,10 +18,14 @@
     </div>
 
     <div class="nav-section">
-      <div class="nav-label">Gestão de Produtos</div>
-      <a class="nav-item" href="${pageContext.request.contextPath}/ProdutoServlet">Registar Produto</a>
-      <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarStockServlet">Consultar Stock</a>
+      <div class="nav-label">GestÃ£o de Produtos</div>
+      <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarProdutosServlet">Produtos</a>
+      <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarLocalServlet">Locais</a>
       <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarCategoriaServlet">Consultar Categorias</a>
+      <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarZonaServlet">Consultar Zonas</a>
+      <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarStockLocalServlet">Consultar stock</a>
+
+      
     </div>
 
     <div class="nav-section">
@@ -33,14 +37,14 @@
 
     <div class="nav-section">
       <div class="nav-label">Sistema</div>
-      <a class="nav-item" href="/SuperMARKT/Front-end/pages/admin/utilizadores.jsp">Gestão de Utilizadores</a>
-      <a class="nav-item" href="/SuperMARKT/Front-end/pages/admin/promocoes.jsp">Gerir Promoções</a>
+      <a class="nav-item" href="/SuperMARKT/Front-end/pages/admin/utilizadores.jsp">Gestï¿½o de Utilizadores</a>
+      <a class="nav-item" href="/SuperMARKT/Front-end/pages/admin/promocoes.jsp">Gerir Promoï¿½ï¿½es</a>
     </div>
 
   </nav>
 
   <button class="logout" onclick="location.href='/SuperMARKT/Front-end/pages/logout.jsp'">
-    Terminar Sessão
+    Terminar Sessï¿½o
   </button>
 </aside>
 <script type="module" src="/SuperMARKT/Front-end/js/pages/dashboard.js"></script>
