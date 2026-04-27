@@ -1,12 +1,10 @@
 package DAO;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDate;
 
 import DBconnection.DBconnection;
 import model.Local;
@@ -14,6 +12,16 @@ import model.Produto;
 import model.StockLocal;
 
 public class StockLocalDAO {
+
+    private static final String STOCK_SELECT_BASE =
+            "SELECT s.quantidade, " +
+            "p.id_produto, p.nome, p.marca, p.unidade_medida, p.cod_barras, p.preco, " +
+            "c.id_categoria, c.nome AS nome_categoria, c.descricao AS desc_categoria, " +
+            "l.id_local, l.nome AS local_nome, l.tipo_local " +
+            "FROM stock_local s " +
+            "INNER JOIN produto p ON s.id_produto = p.id_produto " +
+            "INNER JOIN categoria c ON p.id_categoria = c.id_categoria " +
+            "INNER JOIN `local` l ON s.id_local = l.id_local";
 
     public StockLocal selectStock(int idProduto, int idLocal) {
         String sql = "SELECT s.quantidade, " +
@@ -83,14 +91,7 @@ public class StockLocalDAO {
     }
 
     public List<StockLocal> getAllStock() {
-        String sql = "SELECT s.quantidade, " +
-                     "p.id_produto, p.nome, p.marca, p.unidade_medida, p.cod_barras, p.preco, " +
-                     "c.id_categoria, c.nome AS nome_categoria, c.descricao AS desc_categoria, " +
-                     "l.id_local, l.nome AS local_nome, l.tipo_local " +
-                     "FROM stock_local s " +
-                     "INNER JOIN produto p ON s.id_produto = p.id_produto " +
-                     "INNER JOIN categoria c ON p.id_categoria = c.id_categoria " +
-                     "INNER JOIN `local` l ON s.id_local = l.id_local";
+        String sql = STOCK_SELECT_BASE;
         List<StockLocal> lista = new ArrayList<>();
 
         try (Connection conn = DBconnection.getConnection();
@@ -102,6 +103,49 @@ public class StockLocalDAO {
                 Local local = buildLocal(rs);
                 int quantidade = rs.getInt("quantidade");
                 lista.add(new StockLocal(produto, local, quantidade));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        return lista;
+    }
+
+    public List<StockLocal> getStockFilteredOrdered(Integer idProduto, Integer idLocal, String orderBy, String orderDir) {
+        StringBuilder sql = new StringBuilder(STOCK_SELECT_BASE);
+        List<Object> params = new ArrayList<>();
+        boolean hasWhere = false;
+
+        if (idProduto != null) {
+            sql.append(" WHERE s.id_produto = ?");
+            params.add(idProduto);
+            hasWhere = true;
+        }
+
+        if (idLocal != null) {
+            sql.append(hasWhere ? " AND" : " WHERE");
+            sql.append(" s.id_local = ?");
+            params.add(idLocal);
+        }
+
+        sql.append(" ORDER BY ").append(resolveOrderBy(orderBy)).append(" ").append(resolveOrderDir(orderDir));
+
+        List<StockLocal> lista = new ArrayList<>();
+        try (Connection conn = DBconnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                stmt.setObject(i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Produto produto = buildProduto(rs);
+                    Local local = buildLocal(rs);
+                    int quantidade = rs.getInt("quantidade");
+                    lista.add(new StockLocal(produto, local, quantidade));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -210,5 +254,16 @@ public class StockLocalDAO {
         local.setNome(rs.getString("local_nome"));
         local.setTipoLocal(rs.getString("tipo_local"));
         return local;
+    }
+
+    private String resolveOrderBy(String orderBy) {
+        if ("nome".equalsIgnoreCase(orderBy)) return "p.nome";
+        if ("local_nome".equalsIgnoreCase(orderBy)) return "l.nome";
+        if ("quantidade".equalsIgnoreCase(orderBy)) return "s.quantidade";
+        return "p.id_produto";
+    }
+
+    private String resolveOrderDir(String orderDir) {
+        return "DESC".equalsIgnoreCase(orderDir) ? "DESC" : "ASC";
     }
 }

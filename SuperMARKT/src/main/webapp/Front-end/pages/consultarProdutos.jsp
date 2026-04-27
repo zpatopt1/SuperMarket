@@ -7,6 +7,9 @@
 <%@ page import="model.Categoria" %>
 <%
   List<Categoria> categorias = (List<Categoria>) request.getAttribute("categorias");
+  String txtNome = (String) request.getAttribute("txtNome");
+  String orderBy = (String) request.getAttribute("orderBy");
+  String orderDir = (String) request.getAttribute("orderDir");
 %>
 
 <!doctype html>
@@ -62,11 +65,6 @@
           </div>
         </div>
 
-        <%
-          String txtNome = (String) request.getAttribute("txtNome");
-          String orderBy = (String) request.getAttribute("orderBy");
-          String orderDir = (String) request.getAttribute("orderDir");
-        %>
 
         <section class="card">
           <!-- Search + filter -->   

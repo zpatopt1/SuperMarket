@@ -14,12 +14,12 @@ import model.Produto;
 		//CRUD - Create
 		public void insert(Produto produto) {
 			
-String sql = "INSERT INTO produto (id_categoria, unidade_medida, marca, nome, cod_barras, preco) VALUES (?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO produto (id_categoria, unidade_medida, marca, nome, cod_barras, preco) VALUES (?, ?, ?, ?, ?, ?)";
 
 		try (Connection conn = DBconnection.getConnection();
 		    PreparedStatement stmt = conn.prepareStatement(sql)){
 	
-stmt.setInt(1, produto.getCategoria().getIdCategoria()); // Pegamos o ID do objeto Categoria
+			stmt.setInt(1, produto.getCategoria().getIdCategoria()); // Pegamos o ID do objeto Categoria
             stmt.setString(2, produto.getUnidadeMedida());
             stmt.setString(3, produto.getMarca());
             stmt.setString(4, produto.getNome());
@@ -150,8 +150,7 @@ stmt.setInt(1, produto.getCategoria().getIdCategoria()); // Pegamos o ID do obje
 		        
 			        try (ResultSet rs = stmt.executeQuery()) {
 			            while (rs.next()) {
-			            	
-			            	
+			            
 			                Categoria cat = new Categoria();
 			                cat.setIdCategoria(rs.getInt("id_categoria"));
 			                cat.setNome(rs.getString("nome_categoria")); 

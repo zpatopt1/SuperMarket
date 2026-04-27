@@ -4,7 +4,9 @@ public class Funcao {
     private int idFuncao;
     private String descricao;
     
-    
+	public Funcao() {
+		// TODO Auto-generated constructor stub
+	}
     public Funcao(int idFuncao, String descricao) {
     	this.idFuncao = idFuncao;
     	this.descricao = descricao;

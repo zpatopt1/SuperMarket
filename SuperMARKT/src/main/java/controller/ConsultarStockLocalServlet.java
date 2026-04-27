@@ -26,19 +26,31 @@ public class ConsultarStockLocalServlet extends HttpServlet {
         StockLocalDAO dao = new StockLocalDAO();
         String produtoFiltro = request.getParameter("idProduto");
         String localFiltro = request.getParameter("idLocal");
-        List<StockLocal> stocks;
+        String orderBy = request.getParameter("orderBy");
+        String orderDir = request.getParameter("orderDir");
 
-        if (produtoFiltro != null && !produtoFiltro.isEmpty()) {
-            stocks = dao.getStockByProduto(Integer.parseInt(produtoFiltro));
-        } else if (localFiltro != null && !localFiltro.isEmpty()) {
-            stocks = dao.getStockByLocal(Integer.parseInt(localFiltro));
-        } else {
-            stocks = dao.getAllStock();
-        }
+        if (orderBy == null || orderBy.isBlank()) orderBy = "id_produto";
+        if (orderDir == null || orderDir.isBlank()) orderDir = "ASC";
+
+        Integer idProduto = parseInteger(produtoFiltro);
+        Integer idLocal = parseInteger(localFiltro);
+
+        List<StockLocal> stocks = dao.getStockFilteredOrdered(idProduto, idLocal, orderBy, orderDir);
 
         request.setAttribute("stocks", stocks);
         request.setAttribute("idProduto", produtoFiltro);
         request.setAttribute("idLocal", localFiltro);
+        request.setAttribute("orderBy", orderBy);
+        request.setAttribute("orderDir", orderDir);
         request.getRequestDispatcher("/Front-end/pages/consultarstocklocal.jsp").forward(request, response);
+    }
+
+    private Integer parseInteger(String value) {
+        if (value == null || value.isBlank()) return null;
+        try {
+            return Integer.valueOf(value.trim());
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 }

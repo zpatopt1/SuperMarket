@@ -24,7 +24,7 @@
         <h2 class="logout-title">Sessão Terminada</h2>
         <p class="logout-message">Obrigado por utilizar o sistema SuperMart. A sua sessão foi encerrada com segurança.</p>
 
-        <a href="${pageContext.request.contextPath}/Front-end/pages/login.jsp" class="btn-outline-white">VOLTAR AO LOGIN</a>
+        <a href="${pageContext.request.contextPath}/login" class="btn-outline-white">VOLTAR AO LOGIN</a>
     </div>
 
 </body>
