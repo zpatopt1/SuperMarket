@@ -85,6 +85,9 @@
             id_funcao INT,
             nome VARCHAR(50),
             contacto VARCHAR(50),
+            email VARCHAR(120) UNIQUE,
+            password VARCHAR(100) NOT NULL,
+            ativo BOOLEAN DEFAULT TRUE,
             PRIMARY KEY (nif),
             FOREIGN KEY (id_funcao) REFERENCES funcao(id_funcao)
         );
@@ -198,13 +201,13 @@
         );
 
         CREATE TABLE perda_stock (
-            id_perda INT AUTO_INCREMENT,
+            id_perda INT,
             id_produto INT,
             id_local INT,
             quantidade INT,
             motivo VARCHAR(100),
-            data_registo DATE,
             PRIMARY KEY (id_perda),
+            FOREIGN KEY (id_perda) REFERENCES movimentos(id_movimentos),
             FOREIGN KEY (id_produto) REFERENCES produto(id_produto),
             FOREIGN KEY (id_local) REFERENCES local(id_local)
         );
@@ -238,37 +241,20 @@
         -- Terá um alerta sempre que algum produto esta perto data de validade para serem removidos.
         -- Depois caso tenha algum produto fora da validade terei que manualmente registar as perdas 
         -- expira → alerta → funcionário confirma → registo de perda → baixa stock_local
-        -- -- ADICIONAR AO MODEL
+        -- expira→alerta → funcionário confirma→pag mostra a zona do produto→registo de perda→baixa stock_local
+
+
+        -- -- ADICIONAR AO MODEL É UM MOVIMENTO
         -- CREATE TABLE perda_stock (
-        --     id_perda INT AUTO_INCREMENT,
+        --     id_perda INT,
         --     id_produto INT,
         --     id_local INT,
         --     quantidade INT,
         --     motivo VARCHAR(100),
-        --     data_registo DATE,
         --     PRIMARY KEY (id_perda),
+        --     FOREIGN KEY (id_perda) REFERENCES movimentos(id_movimentos),
         --     FOREIGN KEY (id_produto) REFERENCES produto(id_produto),
         --     FOREIGN KEY (id_local) REFERENCES local(id_local)
         -- );
-        
-        -- Faz sentido rever SEGUIR ESTA LOGICA
-        -- STOCK LOCAL PAGE:
-        -- O sistema tem duas vistas principais. Na página inicial é mostrado o stock total de cada produto e a data de validade mais próxima, permitindo uma visão geral rápida do estado do inventário.
-        -- Ao clicar num produto, abre-se uma página de detalhe onde são listadas as encomendas desse produto,
-        -- cada uma com a sua quantidade e respetiva data de validade fornecedor . Isto permite ver a origem do stock e controlar melhor os prazos de expiração.
-        -- Terá um alerta sempre que algum produto esta perto data de validade para serem removidos.
-        -- Depois caso tenha algum produto fora da validade terei que manualmente registar as perdas 
-        -- expira → alerta → funcionário confirma → registo de perda → baixa stock_local
-        -- ADICIONAR AO MODEL
-        -- CREATE TABLE perda_stock (
-        --     id_perda INT AUTO_INCREMENT,
-        --     id_produto INT,
-        --     id_local INT,
-        --     quantidade INT,
-        --     motivo VARCHAR(100),
-        --     data_registo DATE,
-        --     PRIMARY KEY (id_perda),
-        --     FOREIGN KEY (id_produto) REFERENCES produto(id_produto),
-        --     FOREIGN KEY (id_local) REFERENCES local(id_local)
-        -- );
+
     

@@ -2,7 +2,7 @@ package model;
 
 public class Movimentos {
     private int idMovimentos;
-    private Funcionario nif;
+    private Funcionario funcionario;
     private String status;
     private String data;
     private String hora;
@@ -11,9 +11,9 @@ public class Movimentos {
     	// TODO Auto-generated constructor stub
     }
     
-    public Movimentos(int idMovimentos, Funcionario nif, String status, String data, String hora) {
+    public Movimentos(int idMovimentos, Funcionario funcionario, String status, String data, String hora) {
     	this.idMovimentos = idMovimentos;
-    	this.nif = nif;
+    	this.funcionario = funcionario;
     	this.status = status;
     	this.data = data;
     	this.hora = hora;
@@ -27,12 +27,12 @@ public class Movimentos {
 		this.idMovimentos = idMovimentos;
 	}
 
-	public String getNif() {
-		return nif;
+	public Funcionario getFuncionario() {
+		return funcionario;
 	}
 
-	public void setNif(String nif) {
-		this.nif = nif;
+	public void setFuncionario(Funcionario funcionario) {
+		this.funcionario = funcionario;
 	}
 
 	public String getStatus() {

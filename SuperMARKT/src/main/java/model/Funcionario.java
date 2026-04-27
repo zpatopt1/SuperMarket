@@ -1,27 +1,30 @@
 package model;
 
 public class Funcionario {
-    private int nif;
+    private String nif;
     private Funcao idFuncao;
     private String nome;
     private String contacto;
+    private String email;
+    private String password;
+    private boolean ativo;
     
     public Funcionario() {
-    	// TODO Auto-generated constructor stub
+
     }
     
-    public Funcionario(int nif, Funcao idFuncao, String nome, String contacto) {
+    public Funcionario(String nif, Funcao idFuncao, String nome, String contacto) {
     	this.nif = nif;
     	this.idFuncao = idFuncao;
     	this.nome = nome;
     	this.contacto = contacto;
     }
 
-	public int getNif() {
+	public String getNif() {
 		return nif;
 	}
 
-	public void setNif(int nif) {
+	public void setNif(String nif) {
 		this.nif = nif;
 	}
 
@@ -47,6 +50,30 @@ public class Funcionario {
 
 	public void setContacto(String contacto) {
 		this.contacto = contacto;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public boolean isAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(boolean ativo) {
+		this.ativo = ativo;
 	}
     
 }

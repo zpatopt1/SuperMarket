@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import DBconnection.DBconnection;
-import model.Categoria;
 import model.Local;
 import model.Zona;
 
@@ -34,7 +33,7 @@ public class ZonaDAO {
 
 	            Local local = new Local();
 	            local.setIdLocal(rs.getInt("id_local"));
-	            local.setNome(rs.getString("local_nome")); // ✔️ corrigido
+	            local.setNome(rs.getString("local_nome")); 
 	            local.setTipoLocal(rs.getString("tipo_local"));
 
 	            zona.setLocal(local);
@@ -50,7 +49,6 @@ public class ZonaDAO {
 	    return zonas;
 	}
 
-// ➕ Inserir zona
 public boolean insertZona(Zona zona) {
     String sql = "INSERT INTO zona (nome, id_local) VALUES (?, ?)";
 
@@ -68,7 +66,6 @@ public boolean insertZona(Zona zona) {
     }
 }
 
-// ✏️ Atualizar zona
 public boolean updateZona(Zona zona) {
     String sql = "UPDATE zona SET nome = ?, id_local = ? WHERE id_zona = ?";
 

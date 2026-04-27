@@ -94,7 +94,7 @@
                     <td><%= c.getDescricao() %></td>
 					<td>
 				    <button type="button" class="btn-guardar"
-                            onclick="abrirModal(<%=c.getIdCategoria()%>, '<%=c.getNome()%>', '<%=c.getDescricao()%>')"
+                            onclick="abrirModal('<%=c.getIdCategoria()%>', '<%=c.getNome()%>', '<%=c.getDescricao()%>')"
                             style="background-color:gray;">Editar</button>		
 					</td>
 					<td>

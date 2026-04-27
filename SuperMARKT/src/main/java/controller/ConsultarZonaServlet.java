@@ -40,14 +40,12 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
 
     try {
 
-        // ❌ DELETE
         if ("delete".equals(action)) {
             int id = Integer.parseInt(request.getParameter("delete_id_zona"));
             dao.deleteZona(id);
             response.sendRedirect("ConsultarZonaServlet");
         }
 
-        // ➕ INSERT
         else if ("insert".equals(action)) {
         	String nome = request.getParameter("modal_add_nome");
         	int idLocal = Integer.parseInt(request.getParameter("modal_add_id_local"));
@@ -65,7 +63,6 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             response.sendRedirect("ConsultarZonaServlet");
         }
 
-        // ✏️ UPDATE
         else if ("update".equals(action)) {
             int idZona = Integer.parseInt(request.getParameter("id_zona"));
             String nome = request.getParameter("nome");
