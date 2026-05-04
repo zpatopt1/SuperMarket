@@ -22,6 +22,70 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Front-end/styles/styles.css" />
+    <style>
+      /* Premium Table Styling */
+      .table-wrap {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px -3px rgba(0,0,0,0.05);
+        border: 1px solid #e2e8f0;
+        background: white;
+      }
+      .table th {
+        background-color: #f8fafc;
+        color: #334155;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.05em;
+        padding: 16px;
+        border-bottom: 2px solid #e2e8f0;
+      }
+      .table td {
+        padding: 14px 16px;
+        color: #1e293b;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      .table tbody tr:hover {
+        background-color: #f8fafc;
+        transition: background-color 0.2s ease;
+      }
+      
+      .badge-qty {
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        display: inline-block;
+        text-align: center;
+        min-width: 60px;
+      }
+      .badge-danger {
+        background-color: #fee2e2;
+        color: #b91c1c;
+      }
+      .badge-warning {
+        background-color: #fef3c7;
+        color: #b45309;
+      }
+      .badge-success {
+        background-color: #d1fae5;
+        color: #047857;
+      }
+      
+      .search input {
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        padding: 10px 10px 10px 36px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      .search input:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        outline: none;
+      }
+    </style>
 </head>
 <body>
   <div class="app">
@@ -84,7 +148,15 @@
                   <td><%= s.getProduto() != null ? s.getProduto().getIdProduto() : "" %></td>
                   <td><%= s.getProduto() != null ? s.getProduto().getNome() : "" %></td>
                   <td><%= s.getLocal() != null ? s.getLocal().getNome() : "" %></td>
-                  <td><%= s.getQuantidade() %></td>
+                  <td>
+                    <% 
+                       int q = s.getQuantidade();
+                       String badgeClass = "badge-success";
+                       if (q < 10) badgeClass = "badge-danger";
+                       else if (q < 50) badgeClass = "badge-warning";
+                    %>
+                    <span class="badge-qty <%= badgeClass %>"><%= q %></span>
+                  </td>
                 </tr>
                 <%   }
                    } else { %>

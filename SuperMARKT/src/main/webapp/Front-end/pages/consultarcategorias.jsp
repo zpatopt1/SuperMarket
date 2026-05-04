@@ -12,6 +12,72 @@
   	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Front-end/styles/styles.css" />
+    <style>
+      /* Premium Table Styling */
+      .table-wrap {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px -3px rgba(0,0,0,0.05);
+        border: 1px solid #e2e8f0;
+        background: white;
+      }
+      .table th {
+        background-color: #f8fafc;
+        color: #334155;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.05em;
+        padding: 16px;
+        border-bottom: 2px solid #e2e8f0;
+      }
+      .table td {
+        padding: 14px 16px;
+        color: #1e293b;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      .table tbody tr:hover {
+        background-color: #f8fafc;
+        transition: background-color 0.2s ease;
+      }
+      .btn-action {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-edit {
+        background-color: #f1f5f9;
+        color: #475569;
+      }
+      .btn-edit:hover {
+        background-color: #e2e8f0;
+        color: #1e293b;
+      }
+      .btn-delete {
+        background-color: #fee2e2;
+        color: #ef4444;
+      }
+      .btn-delete:hover {
+        background-color: #fca5a5;
+        color: #b91c1c;
+      }
+      .search input {
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        padding: 10px 10px 10px 36px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      .search input:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        outline: none;
+      }
+    </style>
 </head>
 <body>
   <div class="app">
@@ -93,15 +159,15 @@
                     <td><%= c.getNome() %></td>
                     <td><%= c.getDescricao() %></td>
 					<td>
-				    <button type="button" class="btn-guardar"
-                            onclick="abrirModal('<%=c.getIdCategoria()%>', '<%=c.getNome()%>', '<%=c.getDescricao()%>')"
-                            style="background-color:gray;">Editar</button>		
+				    <button type="button" class="btn-action btn-edit"
+                            onclick="abrirModal('<%=c.getIdCategoria()%>', '<%=c.getNome()%>', '<%=c.getDescricao()%>')">
+                            Editar</button>		
 					</td>
 					<td>
-					<form method="post" action="${pageContext.request.contextPath}/ConsultarCategoriaServlet" style="display:inline;">
+					<form method="post" action="${pageContext.request.contextPath}/ConsultarCategoriaServlet" style="margin:0;">
 					    <input type="hidden" name="delete_id_categoria" value="<%= c.getIdCategoria() %>">
 					    <input type="hidden" name="action" value="delete">
-					    <button type="submit" class="btn-guardar" style="background-color:red;">Apagar</button>
+					    <button type="submit" class="btn-action btn-delete">Apagar</button>
 					</form>
 					</td>
                 </tr>

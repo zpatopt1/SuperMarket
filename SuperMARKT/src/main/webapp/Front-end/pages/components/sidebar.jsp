@@ -27,11 +27,12 @@
           <div class="nav-section">
             <% if (isRepositor) { %>
               <div class="nav-label">Gestao de Produtos</div>
+              <a class="nav-item" href="${pageContext.request.contextPath}/ImportarProdutosServlet">Importar CSV</a>
               <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarProdutosServlet">Produtos</a>
               <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarCategoriaServlet">Categorias</a>
-              <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarLocalServlet">Locais</a>
-              <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarZonaServlet">Zonas</a>
+              <a class="nav-item" href="${pageContext.request.contextPath}/GestaoEspacosServlet">Gest&atilde;o de Espa&ccedil;os</a>
               <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarStockLocalServlet">Stock Local</a>
+              <a class="nav-item" href="${pageContext.request.contextPath}/TransferirStockServlet">Transferir Stock</a>
               <% } %>
           </div>
 

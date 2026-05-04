@@ -22,6 +22,70 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/Front-end/styles/styles.css" />
+  <style>
+    /* Premium Table Styling */
+    .table-wrap {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px -3px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+      background: white;
+    }
+    .table th {
+      background-color: #f8fafc;
+      color: #334155;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      padding: 16px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    .table td {
+      padding: 14px 16px;
+      color: #1e293b;
+      vertical-align: middle;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .table tbody tr:hover {
+      background-color: #f8fafc;
+      transition: background-color 0.2s ease;
+    }
+    .badge-cat {
+      background-color: #eff6ff;
+      color: #2563eb;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: inline-block;
+    }
+    .btn-action {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-edit {
+      background-color: #f1f5f9;
+      color: #475569;
+    }
+    .btn-edit:hover {
+      background-color: #e2e8f0;
+      color: #1e293b;
+    }
+    .btn-delete {
+      background-color: #fee2e2;
+      color: #ef4444;
+    }
+    .btn-delete:hover {
+      background-color: #fca5a5;
+      color: #b91c1c;
+    }
+  </style>
 </head>
 <body>
   <div class="app">
@@ -64,7 +128,6 @@
             <div class="kpi-value">1913.32 €</div>
           </div>
         </div>
-
 
         <section class="card">
           <!-- Search + filter -->   
@@ -115,7 +178,7 @@
                     </a>
                   </th>
                   <th>Editar</th>
-                  <th>Deletar</th>
+                  <th>Apagar</th>
                 </tr>
               </thead>
               <tbody>
@@ -127,15 +190,14 @@
                 <tr>
                   <td><%= p.getIdProduto() %></td>
                   <td><%= p.getNome() %></td>
-                  <td><span class="pill"><%= p.getCategoria().getNome() %></span></td>
+                  <td><span class="badge-cat"><%= p.getCategoria().getNome() %></span></td>
                   <td><%= p.getMarca() %></td>
                   <td><%= p.getUnidadeMedida() %></td>
                   <td><%= p.getCodBarras() %></td>
                   <td><%= String.format("%.2f", p.getPreco()) %>€</td>
 
-                  <!-- Botão Editar -->
                   <td>
-                    <button type="button" class="btn-guardar"  style="background-color:gray;"
+                    <button type="button" class="btn-action btn-edit"
                       onclick="abrirModal(
                         '<%= p.getIdProduto() %>',
                         '<%= p.getCategoria().getIdCategoria() %>',
@@ -149,16 +211,15 @@
                     </button>
                   </td>
 
-                  <!-- Botão Deletar -->
                   <td>
-                    <form action="${pageContext.request.contextPath}/ConsultarProdutosServlet" method="POST">
+                    <form action="${pageContext.request.contextPath}/ConsultarProdutosServlet" method="POST" style="margin: 0;">
                       <input type="hidden" name="action" value="delete" />
                       <input type="hidden" name="page" value="${currentPage}">
                       <input type="hidden" name="txtNome" value="${txtNome}">
                       <input type="hidden" name="orderBy" value="${orderBy}">
                       <input type="hidden" name="orderDir" value="${orderDir}">
                       <input type="hidden" name="delete_id_produto" value="<%= p.getIdProduto() %>" />
-                      <button type="submit" class="btn-guardar" style="background-color:red;">Apagar</button>
+                      <button type="submit" class="btn-action btn-delete">Apagar</button>
                     </form>
                   </td>
                 </tr>

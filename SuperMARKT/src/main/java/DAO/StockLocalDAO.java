@@ -266,4 +266,88 @@ public class StockLocalDAO {
     private String resolveOrderDir(String orderDir) {
         return "DESC".equalsIgnoreCase(orderDir) ? "DESC" : "ASC";
     }
+
+    // TRANSFERIR STOCK
+    public void transferirStock(int idProduto, int idOrigem, int idDestino, int quantidadeTransferir) throws Exception {
+        if (quantidadeTransferir <= 0) {
+            throw new Exception("A quantidade a transferir deve ser maior que zero.");
+        }
+        if (idOrigem == idDestino) {
+            throw new Exception("O local de origem e destino não podem ser iguais.");
+        }
+
+        String checkOrigemSql = "SELECT quantidade FROM stock_local WHERE id_produto = ? AND id_local = ? FOR UPDATE";
+        String updateOrigemSql = "UPDATE stock_local SET quantidade = quantidade - ? WHERE id_produto = ? AND id_local = ?";
+        String checkDestinoSql = "SELECT quantidade FROM stock_local WHERE id_produto = ? AND id_local = ? FOR UPDATE";
+        String updateDestinoSql = "UPDATE stock_local SET quantidade = quantidade + ? WHERE id_produto = ? AND id_local = ?";
+        String insertDestinoSql = "INSERT INTO stock_local (id_produto, id_local, quantidade) VALUES (?, ?, ?)";
+
+        try (Connection conn = DBconnection.getConnection()) {
+            conn.setAutoCommit(false); // Início da transação
+
+            try {
+                // 1. Verificar Origem
+                int qtdOrigem = 0;
+                try (PreparedStatement stmtCheckO = conn.prepareStatement(checkOrigemSql)) {
+                    stmtCheckO.setInt(1, idProduto);
+                    stmtCheckO.setInt(2, idOrigem);
+                    try (ResultSet rs = stmtCheckO.executeQuery()) {
+                        if (rs.next()) {
+                            qtdOrigem = rs.getInt("quantidade");
+                        } else {
+                            throw new Exception("Produto não encontrado no local de origem.");
+                        }
+                    }
+                }
+
+                if (qtdOrigem < quantidadeTransferir) {
+                    throw new Exception("Stock insuficiente na origem (Disponível: " + qtdOrigem + ").");
+                }
+
+                // 2. Descontar Origem
+                try (PreparedStatement stmtUpdO = conn.prepareStatement(updateOrigemSql)) {
+                    stmtUpdO.setInt(1, quantidadeTransferir);
+                    stmtUpdO.setInt(2, idProduto);
+                    stmtUpdO.setInt(3, idOrigem);
+                    stmtUpdO.executeUpdate();
+                }
+
+                // 3. Verificar Destino
+                boolean destinoExiste = false;
+                try (PreparedStatement stmtCheckD = conn.prepareStatement(checkDestinoSql)) {
+                    stmtCheckD.setInt(1, idProduto);
+                    stmtCheckD.setInt(2, idDestino);
+                    try (ResultSet rs = stmtCheckD.executeQuery()) {
+                        if (rs.next()) {
+                            destinoExiste = true;
+                        }
+                    }
+                }
+
+                // 4. Somar ou Inserir Destino
+                if (destinoExiste) {
+                    try (PreparedStatement stmtUpdD = conn.prepareStatement(updateDestinoSql)) {
+                        stmtUpdD.setInt(1, quantidadeTransferir);
+                        stmtUpdD.setInt(2, idProduto);
+                        stmtUpdD.setInt(3, idDestino);
+                        stmtUpdD.executeUpdate();
+                    }
+                } else {
+                    try (PreparedStatement stmtInsD = conn.prepareStatement(insertDestinoSql)) {
+                        stmtInsD.setInt(1, idProduto);
+                        stmtInsD.setInt(2, idDestino);
+                        stmtInsD.setInt(3, quantidadeTransferir);
+                        stmtInsD.executeUpdate();
+                    }
+                }
+
+                conn.commit(); // Confirma
+            } catch (Exception e) {
+                conn.rollback(); // Cancela tudo se der erro
+                throw e;
+            } finally {
+                conn.setAutoCommit(true);
+            }
+        }
+    }
 }

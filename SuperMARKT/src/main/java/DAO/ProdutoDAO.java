@@ -291,6 +291,96 @@ import model.Produto;
 		    }
 		}
 		
+		// RESOLVER CATEGORIA (Busca ID ou cria nova)
+		private int resolveCategoriaId(Connection conn, String nomeCategoria) throws SQLException {
+			String sqlSelect = "SELECT id_categoria FROM categoria WHERE nome = ?";
+			try (PreparedStatement stmt = conn.prepareStatement(sqlSelect)) {
+				stmt.setString(1, nomeCategoria.trim());
+				try (ResultSet rs = stmt.executeQuery()) {
+					if (rs.next()) {
+						return rs.getInt(1);
+					}
+				}
+			}
+			// Se não existe, cria
+			String sqlInsert = "INSERT INTO categoria (nome, descricao) VALUES (?, 'Criada via Importação CSV')";
+			try (PreparedStatement stmt = conn.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS)) {
+				stmt.setString(1, nomeCategoria.trim());
+				stmt.executeUpdate();
+				try (ResultSet rs = stmt.getGeneratedKeys()) {
+					if (rs.next()) {
+						return rs.getInt(1);
+					}
+				}
+			}
+			throw new SQLException("Falha ao criar categoria: " + nomeCategoria);
+		}
+
+		// IMPORTAR LOTE CSV
+		public int importarProdutosCSV(List<String[]> linhas) throws Exception {
+			int importados = 0;
+			String sqlInsertProduto = "INSERT INTO produto (id_categoria, unidade_medida, marca, nome, cod_barras, preco) VALUES (?, ?, ?, ?, ?, ?)";
+			String sqlInsertStock = "INSERT INTO stock_local (id_produto, id_local, quantidade) VALUES (?, 2, ?)"; // 2 = Armazém
+			
+			try (Connection conn = DBconnection.getConnection()) {
+				conn.setAutoCommit(false); // Inicia transação
+				
+				try (PreparedStatement stmtProd = conn.prepareStatement(sqlInsertProduto, Statement.RETURN_GENERATED_KEYS);
+				     PreparedStatement stmtStock = conn.prepareStatement(sqlInsertStock)) {
+					
+					for (String[] linha : linhas) {
+						if (linha.length < 7) continue;
+						
+						String catNome = linha[0];
+						String unidade = linha[1];
+						String marca = linha[2];
+						String nome = linha[3];
+						String codBarras = linha[4];
+						float preco = Float.parseFloat(linha[5].replace(",", "."));
+						
+						int idCat = resolveCategoriaId(conn, catNome);
+						
+						stmtProd.setInt(1, idCat);
+						stmtProd.setString(2, unidade.trim());
+						stmtProd.setString(3, marca.trim());
+						stmtProd.setString(4, nome.trim());
+						stmtProd.setString(5, codBarras.trim());
+						stmtProd.setFloat(6, preco);
+						
+						stmtProd.addBatch();
+					}
+					
+					stmtProd.executeBatch();
+					
+					// Recuperar IDs e inserir stock
+					try (ResultSet rsKeys = stmtProd.getGeneratedKeys()) {
+					    int idx = 0;
+						while (rsKeys.next()) {
+							int idProduto = rsKeys.getInt(1);
+							String[] linha = linhas.get(idx);
+							int quantidade = Integer.parseInt(linha[6].trim());
+							
+							stmtStock.setInt(1, idProduto);
+							stmtStock.setInt(2, quantidade);
+							stmtStock.addBatch();
+							
+							importados++;
+							idx++;
+						}
+					}
+					
+					stmtStock.executeBatch();
+					conn.commit();
+				} catch (Exception e) {
+					conn.rollback();
+					throw new Exception("Erro na importação. Nenhuma linha foi guardada. Erro: " + e.getMessage(), e);
+				} finally {
+					conn.setAutoCommit(true);
+				}
+			}
+			return importados;
+		}
+		
 	}
 	
 	

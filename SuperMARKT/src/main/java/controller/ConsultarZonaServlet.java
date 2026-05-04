@@ -43,7 +43,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         if ("delete".equals(action)) {
             int id = Integer.parseInt(request.getParameter("delete_id_zona"));
             dao.deleteZona(id);
-            response.sendRedirect("ConsultarZonaServlet");
+            response.sendRedirect("GestaoEspacosServlet");
         }
 
         else if ("insert".equals(action)) {
@@ -60,7 +60,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
                 dao.insertZona(zona);
             }
 
-            response.sendRedirect("ConsultarZonaServlet");
+            response.sendRedirect("GestaoEspacosServlet");
         }
 
         else if ("update".equals(action)) {
@@ -78,7 +78,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             zona.setLocal(local);
 
             dao.updateZona(zona);
-            response.sendRedirect("ConsultarZonaServlet");
+            response.sendRedirect("GestaoEspacosServlet");
         }
 
     } catch (Exception e) {
