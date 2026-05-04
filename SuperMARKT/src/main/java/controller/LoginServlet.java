@@ -45,7 +45,7 @@ public class LoginServlet extends HttpServlet {
         String funcao = funcionario.getIdFuncao().getDescricao();
 
         if (funcao.equalsIgnoreCase("administrador")) {
-        	response.sendRedirect(request.getContextPath() + "/Front-end/dashboard.jsp");
+        	response.sendRedirect(request.getContextPath() + "/DashboardServlet");
         }else if(funcao.equalsIgnoreCase("caixa")) {
             response.sendRedirect(request.getContextPath() + "/Front-end/pages/vendas.jsp");
         }else if(funcao.equalsIgnoreCase("repositor")) {
