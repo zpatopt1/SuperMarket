@@ -55,6 +55,9 @@ public class ConsultarProdutosServlet extends HttpServlet {
         List<Produto> produtos = dao.getProdutos(nomePesquisa, orderBy, orderDir, pageSize, offset);
         
         int totalProdutos = dao.getTotalProdutos(nomePesquisa); 
+        double valorTotalStock = dao.getValorTotalStock();
+        int produtosSemStock = dao.getProdutosSemStock();
+        int produtosBaixoStock = dao.getProdutosBaixoStock();
 
         int totalPages = (int) Math.ceil((double) totalProdutos / pageSize);
         
@@ -66,6 +69,9 @@ public class ConsultarProdutosServlet extends HttpServlet {
         request.setAttribute("categorias", categorias);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalProdutos", totalProdutos);
+        request.setAttribute("valorTotalStock", valorTotalStock);
+        request.setAttribute("produtosSemStock", produtosSemStock);
+        request.setAttribute("produtosBaixoStock", produtosBaixoStock);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("txtNome", nomePesquisa);
         request.setAttribute("orderBy", orderBy);

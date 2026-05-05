@@ -105,7 +105,6 @@
             <h2 class="page-title">Gestão de Espaços</h2>
             <p class="page-subtitle">Organização física de Locais e Zonas</p>
           </div>
-          <button class="btn-primary" type="button">Exportar Relatorio</button>
         </div>
 
         <%

@@ -104,28 +104,53 @@
             <h2 class="page-title">Produtos</h2>
             <p class="page-subtitle">Gestão do catálogo de produtos</p>
           </div>
-          <button class="btn-primary" type="button">Exportar Relatorio</button>
         </div>		
         <!-- KPIs -->
-        <div class="kpis kpis-stock">
-          <div class="kpi">
-            <div class="kpi-label">Total Produtos</div>
-            <div class="kpi-value"><%= request.getAttribute("totalProdutos")%></div>
+        <%
+          Object tp = request.getAttribute("totalProdutos");
+          Object vts = request.getAttribute("valorTotalStock");
+          Object pss = request.getAttribute("produtosSemStock");
+          Object pbs = request.getAttribute("produtosBaixoStock");
+        %>
+        <div class="kpis kpis-stock" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-bottom: 32px;">
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #3b82f6;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Total Produtos</div>
+                <div class="kpi-value" style="font-size: 1.75rem; color: #1e293b;"><%= tp != null ? tp : "0" %></div>
+              </div>
+              <div style="background: #eff6ff; padding: 10px; border-radius: 12px; color: #3b82f6; font-size: 1.5rem;">📦</div>
+            </div>
           </div>
 
-          <div class="kpi">
-            <div class="kpi-label">Stock Armazem</div>
-            <div class="kpi-value">3</div>
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #10b981;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Valor Total Stock</div>
+                <div class="kpi-value" style="font-size: 1.75rem; color: #1e293b;"><%= vts != null ? String.format("%.2f", (Double)vts) : "0.00" %>€</div>
+              </div>
+              <div style="background: #ecfdf5; padding: 10px; border-radius: 12px; color: #10b981; font-size: 1.5rem;">💰</div>
+            </div>
           </div>
 
-          <div class="kpi">
-            <div class="kpi-label">Stock Loja</div>
-            <div class="kpi-value">200</div>
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #ef4444;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Produtos Sem Stock</div>
+                <div class="kpi-value" style="font-size: 1.75rem; color: #1e293b;"><%= pss != null ? pss : "0" %></div>
+              </div>
+              <div style="background: #fef2f2; padding: 10px; border-radius: 12px; color: #ef4444; font-size: 1.5rem;">🚫</div>
+            </div>
           </div>
 
-          <div class="kpi">
-            <div class="kpi-label">Valor Total</div>
-            <div class="kpi-value">1913.32 €</div>
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #f59e0b;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Baixo Stock (&lt;10)</div>
+                <div class="kpi-value" style="font-size: 1.75rem; color: #1e293b;"><%= pbs != null ? pbs : "0" %></div>
+              </div>
+              <div style="background: #fffbeb; padding: 10px; border-radius: 12px; color: #f59e0b; font-size: 1.5rem;">⚠️</div>
+            </div>
           </div>
         </div>
 

@@ -109,4 +109,65 @@ public class CategoriaDAO {
     	    throw new RuntimeException(e);
     	}
 	}
+
+	public int getTotalCategorias() {
+		int count = 0;
+		String sql = "SELECT COUNT(*) FROM categoria";
+		try (Connection conn = DBconnection.getConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql);
+			 ResultSet rs = stmt.executeQuery()) {
+			if (rs.next()) {
+				count = rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return count;
 	}
+
+	public String getCategoriaMaisProdutos() {
+		String nome = "N/A";
+		String sql = "SELECT c.nome FROM categoria c JOIN produto p ON c.id_categoria = p.id_categoria GROUP BY c.id_categoria ORDER BY COUNT(p.id_produto) DESC LIMIT 1";
+		try (Connection conn = DBconnection.getConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql);
+			 ResultSet rs = stmt.executeQuery()) {
+			if (rs.next()) {
+				nome = rs.getString(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return nome;
+	}
+
+	public int getCategoriasVazias() {
+		int count = 0;
+		String sql = "SELECT COUNT(*) FROM categoria c WHERE NOT EXISTS (SELECT 1 FROM produto p WHERE p.id_categoria = c.id_categoria)";
+		try (Connection conn = DBconnection.getConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql);
+			 ResultSet rs = stmt.executeQuery()) {
+			if (rs.next()) {
+				count = rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+
+	public String getCategoriaMaiorValor() {
+		String nome = "N/A";
+		String sql = "SELECT c.nome FROM categoria c JOIN produto p ON c.id_categoria = p.id_categoria JOIN stock_local s ON p.id_produto = s.id_produto GROUP BY c.id_categoria ORDER BY SUM(p.preco * s.quantidade) DESC LIMIT 1";
+		try (Connection conn = DBconnection.getConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql);
+			 ResultSet rs = stmt.executeQuery()) {
+			if (rs.next()) {
+				nome = rs.getString(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return nome;
+	}
+}
+

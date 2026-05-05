@@ -138,6 +138,7 @@
                       Quantidade <%= "quantidade".equals(orderBy) ? ("ASC".equals(orderDir) ? "▲" : "▼") : "" %>
                     </a>
                   </th>
+                  <th>Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -157,11 +158,16 @@
                     %>
                     <span class="badge-qty <%= badgeClass %>"><%= q %></span>
                   </td>
+                  <td>
+                    <button type="button" class="btn-danger" style="font-size: 0.75rem; padding: 6px 10px;" onclick="openPerdaModal(<%= s.getProduto() != null ? s.getProduto().getIdProduto() : 0 %>, <%= s.getLocal() != null ? s.getLocal().getIdLocal() : 0 %>, <%= q %>)">
+                      Registar Quebra
+                    </button>
+                  </td>
                 </tr>
                 <%   }
                    } else { %>
                 <tr>
-                  <td colspan="4" style="text-align:center;">Nenhum registo de stock local encontrado.</td>
+                  <td colspan="5" style="text-align:center;">Nenhum registo de stock local encontrado.</td>
                 </tr>
                 <% } %>
               </tbody>
@@ -171,7 +177,121 @@
       </section>
     </main>
   </div>
-  <script type="module" src="/SuperMARKT/Front-end/js/pages/dashboard.js"></script>
+
+  <!-- Modal para Registar Quebra de Stock -->
+  <div id="modalPerda" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <h3 style="margin-top: 0; color: #b91c1c;">Registar Quebra de Stock</h3>
+      <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 20px;">Preencha os dados abaixo para justificar a perda do artigo.</p>
+      
+      <form action="${pageContext.request.contextPath}/RegistarPerdaServlet" method="post">
+        <input type="hidden" name="idProduto" id="perdaIdProduto">
+        <input type="hidden" name="idLocal" id="perdaIdLocal">
+        <input type="hidden" name="filterIdLocal" value="<%= idLocal %>">
+        
+        <div style="margin-bottom: 15px;">
+          <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem;">Quantidade Perdida</label>
+          <input type="number" name="quantidade" id="perdaQuantidade" min="1" required style="width: 100%; border-radius: 8px; border: 1px solid #cbd5e1; padding: 10px; box-sizing: border-box;" />
+          <small id="maxQtdText" style="color: #64748b; display: block; margin-top: 5px;"></small>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem;">Motivo da Perda</label>
+          <select name="motivo" required style="width: 100%; border-radius: 8px; border: 1px solid #cbd5e1; padding: 10px; box-sizing: border-box; background: white;">
+            <option value="">Selecione um motivo...</option>
+            <option value="Prazo de Validade Expirado">Prazo de Validade Expirado</option>
+            <option value="Produto Danificado">Produto Danificado</option>
+            <option value="Furto / Roubo">Furto / Roubo</option>
+            <option value="Qualidade Comprometida">Qualidade Comprometida</option>
+            <option value="Outro">Outro</option>
+          </select>
+        </div>
+        
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" class="btn-secondary" onclick="closePerdaModal()">Cancelar</button>
+          <button type="submit" class="btn-danger">Confirmar Registo</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <style>
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+    }
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 450px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .btn-danger {
+      background-color: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .btn-danger:hover {
+      background-color: #dc2626;
+    }
+    .btn-secondary {
+      background-color: #e2e8f0;
+      color: #475569;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .btn-secondary:hover {
+      background-color: #cbd5e1;
+    }
+  </style>
+
+  <script>
+    function openPerdaModal(idProduto, idLocal, maxQuantidade) {
+      document.getElementById('perdaIdProduto').value = idProduto;
+      document.getElementById('perdaIdLocal').value = idLocal;
+      document.getElementById('perdaQuantidade').max = maxQuantidade;
+      document.getElementById('maxQtdText').innerText = 'Máximo disponível: ' + maxQuantidade;
+      document.getElementById('modalPerda').style.display = 'flex';
+    }
+
+    function closePerdaModal() {
+      document.getElementById('modalPerda').style.display = 'none';
+    }
+  </script>
+
+  <script type="module" src="${pageContext.request.contextPath}/Front-end/js/pages/dashboard.js"></script>
+  
+  <%-- Notificações de Sucesso/Erro --%>
+  <% if(session.getAttribute("mensagemSucesso") != null) { %>
+    <script>
+      alert("<%= session.getAttribute("mensagemSucesso") %>");
+    </script>
+    <% session.removeAttribute("mensagemSucesso"); %>
+  <% } %>
+  
+  <% if(session.getAttribute("mensagemErro") != null) { %>
+    <script>
+      alert("<%= session.getAttribute("mensagemErro") %>");
+    </script>
+    <% session.removeAttribute("mensagemErro"); %>
+  <% } %>
+
 </body>
 </html>
-	

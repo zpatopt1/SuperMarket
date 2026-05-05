@@ -21,6 +21,69 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/Front-end/styles/styles.css" />
+  <style>
+    /* Premium Table Styling */
+    .table-wrap {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px -3px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+      background: white;
+    }
+    .table th {
+      background-color: #f8fafc;
+      color: #334155;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      padding: 16px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    .table td {
+      padding: 14px 16px;
+      color: #1e293b;
+      vertical-align: middle;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .table tbody tr:hover {
+      background-color: #f8fafc;
+      transition: background-color 0.2s ease;
+    }
+    .btn-action {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-edit {
+      background-color: #f1f5f9;
+      color: #475569;
+    }
+    .btn-edit:hover {
+      background-color: #e2e8f0;
+      color: #1e293b;
+    }
+    .btn-delete {
+      background-color: #fee2e2;
+      color: #ef4444;
+    }
+    .btn-delete:hover {
+      background-color: #fca5a5;
+      color: #b91c1c;
+    }
+    .badge-nif {
+      background-color: #f1f5f9;
+      color: #475569;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-weight: 600;
+    }
+  </style>
 </head>
 <body>
   <div class="app">
@@ -32,27 +95,45 @@
         <div class="pagehead">
           <div>
             <h2 class="page-title">Clientes</h2>
-            <p class="page-subtitle">Gestao e consulta de clientes</p>
+            <p class="page-subtitle">Gestão e consulta de clientes</p>
           </div>
-          <button class="btn-primary" type="button">Exportar Relatorio</button>
         </div>
 
-        <div class="kpis kpis-stock">
-          <div class="kpi">
-            <div class="kpi-label">Total Clientes</div>
-            <div class="kpi-value"><%= request.getAttribute("totalClientes") %></div>
+        <!-- KPIs -->
+        <%
+          Object tc = request.getAttribute("totalClientes");
+          Object mc = request.getAttribute("melhorCliente");
+          Object mg = request.getAttribute("mediaGastos");
+        %>
+        <div class="kpis kpis-stock" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-bottom: 32px;">
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #3b82f6;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Total Clientes</div>
+                <div class="kpi-value" style="font-size: 1.75rem; color: #1e293b;"><%= tc != null ? tc : "0" %></div>
+              </div>
+              <div style="background: #eff6ff; padding: 10px; border-radius: 12px; color: #3b82f6; font-size: 1.5rem;">👥</div>
+            </div>
           </div>
-          <div class="kpi">
-            <div class="kpi-label">Stock Armazem</div>
-            <div class="kpi-value">3</div>
+
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #8b5cf6;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Melhor Cliente</div>
+                <div class="kpi-value" style="font-size: 1.25rem; color: #1e293b; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 150px;"><%= mc != null ? mc : "N/A" %></div>
+              </div>
+              <div style="background: #f5f3ff; padding: 10px; border-radius: 12px; color: #8b5cf6; font-size: 1.5rem;">🏆</div>
+            </div>
           </div>
-          <div class="kpi">
-            <div class="kpi-label">Stock Loja</div>
-            <div class="kpi-value">200</div>
-          </div>
-          <div class="kpi">
-            <div class="kpi-label">Valor Total</div>
-            <div class="kpi-value">1913.32 EUR</div>
+
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #f59e0b;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Média de Gastos</div>
+                <div class="kpi-value" style="font-size: 1.75rem; color: #1e293b;"><%= mg != null ? String.format("%.2f", (Double)mg) : "0.00" %>€</div>
+              </div>
+              <div style="background: #fffbeb; padding: 10px; border-radius: 12px; color: #f59e0b; font-size: 1.5rem;">💳</div>
+            </div>
           </div>
         </div>
 
@@ -72,7 +153,7 @@
                 <tr>
                   <th class="<%= "id_cliente".equals(orderBy) ? "active" : "" %>">
                     <a href="?txtNome=<%= txtNome %>&orderBy=id_cliente&orderDir=<%= ("id_cliente".equals(orderBy) && "ASC".equals(orderDir)) ? "DESC" : "ASC" %>">
-                      Codigo <%= "id_cliente".equals(orderBy) ? ("ASC".equals(orderDir) ? "▲" : "▼") : "" %>
+                      Código <%= "id_cliente".equals(orderBy) ? ("ASC".equals(orderDir) ? "▲" : "▼") : "" %>
                     </a>
                   </th>
                   <th class="<%= "nome".equals(orderBy) ? "active" : "" %>">
@@ -91,7 +172,7 @@
                     </a>
                   </th>
                   <th>Editar</th>
-                  <th>Deletar</th>
+                  <th>Apagar</th>
                 </tr>
               </thead>
               <tbody>
@@ -104,22 +185,22 @@
                 %>
                 <tr>
                   <td><%= c.getIdCliente() %></td>
-                  <td><%= c.getNome() != null ? c.getNome() : "" %></td>
+                  <td><strong><%= c.getNome() != null ? c.getNome() : "" %></strong></td>
                   <td><%= c.getContacto() != null ? c.getContacto() : "" %></td>
-                  <td><%= c.getNif() != null ? c.getNif() : "" %></td>
+                  <td><span class="badge-nif"><%= c.getNif() != null ? c.getNif() : "---" %></span></td>
                   <td>
-                    <button type="button" class="btn-guardar" style="background-color:gray;"
+                    <button type="button" class="btn-action btn-edit"
                       onclick="abrirModal('<%= c.getIdCliente() %>', '<%= nomeJs %>', '<%= contactoJs %>', '<%= nifJs %>')">Editar</button>
                   </td>
                   <td>
-                    <form action="${pageContext.request.contextPath}/ConsultarClientesServlet" method="POST">
+                    <form action="${pageContext.request.contextPath}/ConsultarClientesServlet" method="POST" style="margin:0;">
                       <input type="hidden" name="action" value="delete" />
                       <input type="hidden" name="page" value="${currentPage}">
                       <input type="hidden" name="txtNome" value="${txtNome}">
                       <input type="hidden" name="orderBy" value="${orderBy}">
                       <input type="hidden" name="orderDir" value="${orderDir}">
                       <input type="hidden" name="delete_id_cliente" value="<%= c.getIdCliente() %>" />
-                      <button type="submit" class="btn-guardar" style="background-color:red;">Apagar</button>
+                      <button type="submit" class="btn-action btn-delete">Apagar</button>
                     </form>
                   </td>
                 </tr>
