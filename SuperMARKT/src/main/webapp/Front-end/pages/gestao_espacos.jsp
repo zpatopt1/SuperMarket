@@ -112,15 +112,41 @@
           List<Zona> zonas = (List<Zona>) request.getAttribute("zonas");
         %>
 
-        <!-- KPIs Globais -->
-        <div class="kpis kpis-stock">
-          <div class="kpi">
-            <div class="kpi-label">Total Locais</div>
-    		<div class="kpi-value"><%= locais != null ? locais.size() : 0 %></div>
+        <!-- KPIs -->
+        <%
+          Object tl = request.getAttribute("totalLocais");
+          Object tz = request.getAttribute("totalZonas");
+          Object zmo = request.getAttribute("zonaMaisOcupada");
+        %>
+        <div class="kpis kpis-stock" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-bottom: 32px;">
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #3b82f6;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Total Locais</div>
+                <div class="kpi-value" style="font-size: 1.75rem; color: #1e293b;"><%= tl != null ? tl : "0" %></div>
+              </div>
+              <div style="background: #eff6ff; padding: 10px; border-radius: 12px; color: #3b82f6; font-size: 1.5rem;">📍</div>
+            </div>
           </div>
-          <div class="kpi">
-            <div class="kpi-label">Total Zonas</div>
-            <div class="kpi-value"><%= zonas != null ? zonas.size() : 0 %></div>
+
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #10b981;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Total Zonas</div>
+                <div class="kpi-value" style="font-size: 1.75rem; color: #1e293b;"><%= tz != null ? tz : "0" %></div>
+              </div>
+              <div style="background: #ecfdf5; padding: 10px; border-radius: 12px; color: #10b981; font-size: 1.5rem;">🏗️</div>
+            </div>
+          </div>
+
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #8b5cf6;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Zona Mais Ocupada</div>
+                <div class="kpi-value" style="font-size: 1.25rem; color: #1e293b; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 150px;"><%= zmo != null ? zmo : "N/A" %></div>
+              </div>
+              <div style="background: #f5f3ff; padding: 10px; border-radius: 12px; color: #8b5cf6; font-size: 1.5rem;">📦</div>
+            </div>
           </div>
         </div>
 

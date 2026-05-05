@@ -100,5 +100,26 @@ public boolean deleteZona(int idZona) {
         throw new RuntimeException(e);
     }
 }
+    public int getTotalZonas() {
+        int count = 0;
+        String sql = "SELECT COUNT(*) FROM zona";
+        try (Connection conn = DBconnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) count = rs.getInt(1);
+        } catch (Exception e) { e.printStackTrace(); }
+        return count;
+    }
+
+    public String getZonaMaisOcupada() {
+        String nome = "N/A";
+        String sql = "SELECT z.nome FROM zona z JOIN stock_local sl ON z.id_zona = sl.id_zona GROUP BY z.id_zona ORDER BY SUM(sl.quantidade) DESC LIMIT 1";
+        try (Connection conn = DBconnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) nome = rs.getString(1);
+        } catch (Exception e) { e.printStackTrace(); }
+        return nome;
+    }
 }
 

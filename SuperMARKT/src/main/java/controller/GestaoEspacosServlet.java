@@ -36,9 +36,17 @@ public class GestaoEspacosServlet extends HttpServlet {
             List<Local> locais = localDAO.getAllLocais();
             List<Zona> zonas = zonaDAO.getAllZonas();
             
+            // KPIs
+            int totalLocais = localDAO.getTotalLocais();
+            int totalZonas = zonaDAO.getTotalZonas();
+            String zonaMaisOcupada = zonaDAO.getZonaMaisOcupada();
+            
             // Passar os dados para a view
             request.setAttribute("locais", locais);
             request.setAttribute("zonas", zonas);
+            request.setAttribute("totalLocais", totalLocais);
+            request.setAttribute("totalZonas", totalZonas);
+            request.setAttribute("zonaMaisOcupada", zonaMaisOcupada);
             
             // Encaminhar para o JSP unificado
             request.getRequestDispatcher("/Front-end/pages/gestao_espacos.jsp").forward(request, response);
