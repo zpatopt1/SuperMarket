@@ -372,29 +372,13 @@
         op.textContent = "Sem zonas associadas para remover";
         selectRemove.appendChild(op);
       }
-ectAdd.appendChild(op);
-          }
-          if (atuaisIds.has(String(z.id))) {
-            const op2 = document.createElement('option');
-            op2.value = z.id;
-            op2.textContent = z.nome + " (#" + z.id + ")";
-            selectRemove.appendChild(op2);
-          }
-        }
-      });
-   <% if(session.getAttribute("mensagemSucesso") != null) { %>
-    <script>
-      alert("<%= session.getAttribute("mensagemSucesso") %>");
-    </script>
-    <% session.removeAttribute("mensagemSucesso"); %>
-  <% } %>
-  
-  <% if(session.getAttribute("mensagemErro") != null) { %>
-    <script>
-      alert("<%= session.getAttribute("mensagemErro") %>");
-    </script>
-    <% session.removeAttribute("mensagemErro"); %>
-  <% } %>
 
+      document.getElementById('modalZonas').style.display = 'flex';
+    }
+
+    function closeZonasModal() {
+      document.getElementById('modalZonas').style.display = 'none';
+    }
+    </script>
 </body>
 </html>
