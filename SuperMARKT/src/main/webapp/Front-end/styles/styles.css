@@ -626,11 +626,14 @@ body {
   border-radius: 12px;
   background: rgba(15, 23, 42, .03);
   padding: 10px 12px;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .search-ico {
   color: rgba(15, 23, 42, .45);
   font-weight: 900;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  
 }
 
 .search input {
@@ -640,6 +643,14 @@ body {
   width: 100%;
   font-weight: 800;
   color: rgba(15, 23, 42, .75);
+}
+
+.search:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+.search:focus-within .search-ico {
+  color: #3b82f6;
 }
 
 .filterbtn {
@@ -712,7 +723,7 @@ body {
   font-weight: 900;
   font-size: 11px;
 }
-
+/*BADGES*/
 .badge {
   display: inline-block;
   padding: 5px 10px;
@@ -729,6 +740,45 @@ body {
 .badge.low {
   background: rgba(239, 68, 68, .92);
 }
+	.badge-danger {
+        background-color: #fee2e2;
+        color: #b91c1c;
+      }
+      .badge-warning {
+        background-color: #fef3c7;
+        color: #b45309;
+      }
+      .badge-success {
+        background-color: #d1fae5;
+        color: #047857;
+      }
+      .badge-qty {
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        display: inline-block;
+        text-align: center;
+        min-width: 60px;
+      } 
+     .badge-role {
+      background-color: #eff6ff;
+      color: #3b82f6;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }      
+    .badge-nif {
+      background-color: #f1f5f9;
+      color: #475569;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-weight: 600;
+    }
+  
+
 
 @media (max-width:1120px) {
   .kpis-stock {
@@ -1098,6 +1148,34 @@ body {
 .full-width {
     grid-column: span 2;
 }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 8px;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 1rem;
+      color: #1e293b;
+      transition: all 0.2s;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
 
 .input-group {
     display: flex;
@@ -1212,6 +1290,87 @@ body {
     border: 1px solid #ccc !important; /* garante borda mesmo desabilitado */
     
 }
+
+  /* Premium Table Styling */
+      .table-wrap {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px -3px rgba(0,0,0,0.05);
+        border: 1px solid #e2e8f0;
+        background: white;
+      }
+      .table th {
+        background-color: #f8fafc;
+        color: #334155;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.05em;
+        padding: 16px;
+        border-bottom: 2px solid #e2e8f0;
+      }
+      .table td {
+        padding: 14px 16px;
+        color: #1e293b;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      .table tbody tr:hover {
+        background-color: #f8fafc;
+        transition: background-color 0.2s ease;
+      }
+      .btn-action {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-edit {
+        background-color: #f1f5f9;
+        color: #475569;
+      }
+      .btn-edit:hover {
+        background-color: #e2e8f0;
+        color: #1e293b;
+      }
+      .btn-delete {
+        background-color: #fee2e2;
+        color: #ef4444;
+      }
+      .btn-delete:hover {
+        background-color: #fca5a5;
+        color: #b91c1c;
+      }
+          .btn-danger {
+      background-color: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .btn-danger:hover {
+      background-color: #dc2626;
+    }
+    .btn-secondary {
+      background-color: #e2e8f0;
+      color: #475569;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .btn-secondary:hover {
+      background-color: #cbd5e1;
+    }
+      
 
 .table-wrap {
     overflow: auto;
@@ -1332,9 +1491,177 @@ table.dataTable tbody tr:hover {
     z-index: 4;
 }
 
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+    }
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 450px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+
 .close {
 	float: right;
 	font-size: 24px;
 	cursor: pointer;
 }
 
+/* Pagina IMPORTAR PRODUTOS*/
+    .upload-box {
+      border: 2px dashed #cbd5e1;
+      border-radius: 20px;
+      padding: 60px 40px;
+      text-align: center;
+      background-color: #f8fafc;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+    
+    .upload-box:hover, .upload-box.dragover {
+      border-color: #3b82f6;
+      background-color: #eff6ff;
+    }
+    
+    .upload-icon {
+      font-size: 48px;
+      color: #94a3b8;
+      margin-bottom: 16px;
+    }
+    
+    .upload-text {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 8px;
+    }
+    
+    .upload-subtext {
+      font-size: 0.9rem;
+      color: #64748b;
+      font-weight: 500;
+    }
+    
+    #file-input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+    
+    .btn-submit {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      width: 100%;
+      margin-top: 24px;
+    }
+    
+    .btn-submit:hover {
+      background-color: #1d4ed8;
+    }
+    
+    .btn-submit:disabled {
+      background-color: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    .alert {
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      font-weight: 600;
+      display: none;
+    }
+
+    .alert.success {
+      display: block;
+      background-color: #d1fae5;
+      color: #065f46;
+      border: 1px solid #10b981;
+    }
+
+    .alert.error {
+      display: block;
+      background-color: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #ef4444;
+    }
+
+    .selected-file {
+      margin-top: 16px;
+      padding: 12px;
+      background-color: #e2e8f0;
+      border-radius: 8px;
+      font-weight: 700;
+      color: #1e293b;
+      display: none;
+    }
+
+    
+    /* CLIENTE*/
+    .status-badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .status-active {
+      background-color: #ecfdf5;
+      color: #10b981;
+    }
+    .status-inactive {
+      background-color: #fef2f2;
+      color: #ef4444;
+    }
+
+  /* Transferir_sTOCK */
+      .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 8px;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 1rem;
+      color: #1e293b;
+      transition: all 0.2s;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+  

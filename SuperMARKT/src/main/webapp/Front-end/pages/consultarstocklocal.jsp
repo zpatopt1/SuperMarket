@@ -1,9 +1,11 @@
-	<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿	<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <% request.setAttribute("seccao", "Gestão de Stock Local"); %>
 <%@ page import="java.util.List" %>
 <%@ page import="model.StockLocal" %>
+<%@ page import="model.Zona" %>
 <%
   List<StockLocal> stocks = (List<StockLocal>) request.getAttribute("stocks");
+  List<Zona> todasZonas = (List<Zona>) request.getAttribute("todasZonas");
   String idProduto = (String) request.getAttribute("idProduto");
   String idLocal = (String) request.getAttribute("idLocal");
   String orderBy = (String) request.getAttribute("orderBy");
@@ -22,70 +24,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Front-end/styles/styles.css" />
-    <style>
-      /* Premium Table Styling */
-      .table-wrap {
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 15px -3px rgba(0,0,0,0.05);
-        border: 1px solid #e2e8f0;
-        background: white;
-      }
-      .table th {
-        background-color: #f8fafc;
-        color: #334155;
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 0.8rem;
-        letter-spacing: 0.05em;
-        padding: 16px;
-        border-bottom: 2px solid #e2e8f0;
-      }
-      .table td {
-        padding: 14px 16px;
-        color: #1e293b;
-        vertical-align: middle;
-        border-bottom: 1px solid #f1f5f9;
-      }
-      .table tbody tr:hover {
-        background-color: #f8fafc;
-        transition: background-color 0.2s ease;
-      }
-      
-      .badge-qty {
-        padding: 6px 12px;
-        border-radius: 999px;
-        font-size: 0.85rem;
-        font-weight: 700;
-        display: inline-block;
-        text-align: center;
-        min-width: 60px;
-      }
-      .badge-danger {
-        background-color: #fee2e2;
-        color: #b91c1c;
-      }
-      .badge-warning {
-        background-color: #fef3c7;
-        color: #b45309;
-      }
-      .badge-success {
-        background-color: #d1fae5;
-        color: #047857;
-      }
-      
-      .search input {
-        border-radius: 8px;
-        border: 1px solid #cbd5e1;
-        padding: 10px 10px 10px 36px;
-        transition: border-color 0.2s, box-shadow 0.2s;
-      }
-      .search input:focus {
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        outline: none;
-      }
-    </style>
 </head>
 <body>
   <div class="app">
@@ -138,6 +76,7 @@
                       Quantidade <%= "quantidade".equals(orderBy) ? ("ASC".equals(orderDir) ? "▲" : "▼") : "" %>
                     </a>
                   </th>
+                  <th>Gerir Zonas</th>
                   <th>Ações</th>
                 </tr>
               </thead>
@@ -158,24 +97,136 @@
                     %>
                     <span class="badge-qty <%= badgeClass %>"><%= q %></span>
                   </td>
+                 <td>
+                <%
+                    List<Zona> zonasLinha = s.getZonas();
+                
+                    if (zonasLinha != null && !zonasLinha.isEmpty()) {
+                        for (Zona z : zonasLinha) {
+                %>
+                    <span class="badge-qty badge-warning" style="margin-right:6px; margin-bottom:4px; display:inline-block;">
+                        <%= z.getNome() %>
+                    </span>
+                <%
+                        }
+                    } else {
+                %>
+                    <span style="color:#64748b;">Sem zonas</span>
+                <%
+                    }
+                %>
+                </td>
                   <td>
                     <button type="button" class="btn-danger" style="font-size: 0.75rem; padding: 6px 10px;" onclick="openPerdaModal(<%= s.getProduto() != null ? s.getProduto().getIdProduto() : 0 %>, <%= s.getLocal() != null ? s.getLocal().getIdLocal() : 0 %>, <%= q %>)">
                       Registar Quebra
+                    </button>
+                    <a class="btn-primary" style="font-size: 0.75rem; padding: 6px 10px; text-decoration: none;"
+                       href="${pageContext.request.contextPath}/TransferirStockServlet?idProduto=<%= s.getProduto() != null ? s.getProduto().getIdProduto() : 0 %>&idOrigem=<%= s.getLocal() != null ? s.getLocal().getIdLocal() : 0 %>">
+                      Transferir Stock
+                    </a>
+                    <button type="button" class="btn-secondary" style="font-size: 0.75rem; padding: 6px 10px;"
+                      onclick="openZonasModal(<%= s.getProduto() != null ? s.getProduto().getIdProduto() : 0 %>, <%= s.getLocal() != null ? s.getLocal().getIdLocal() : 0 %>)">
+                      Gerir Zonas
                     </button>
                   </td>
                 </tr>
                 <%   }
                    } else { %>
                 <tr>
-                  <td colspan="5" style="text-align:center;">Nenhum registo de stock local encontrado.</td>
+                  <td colspan="6" style="text-align:center;">Nenhum registo de stock local encontrado.</td>
                 </tr>
                 <% } %>
               </tbody>
             </table>
           </div>
+
+          <div class="pagination">
+            <%
+              Integer currentPage = (Integer) request.getAttribute("currentPage");
+              Integer totalPages = (Integer) request.getAttribute("totalPages");
+              if (currentPage == null) currentPage = 1;
+              if (totalPages == null || totalPages < 1) totalPages = 1;
+            %>
+              <% if (currentPage > 1) { %>
+                <a class="page-btn" href="?idProduto=<%= idProduto %>&idLocal=<%= idLocal %>&orderBy=<%= orderBy %>&orderDir=<%= orderDir %>&page=<%= currentPage - 1 %>">« Anterior</a>
+              <% } else { %>
+                <span class="page-btn disabled">« Anterior</span>
+              <% } %>
+
+              <%
+                int startPage = Math.max(1, currentPage - 2);
+                int endPage = Math.min(totalPages, currentPage + 2);
+                for (int i = startPage; i <= endPage; i++) {
+                  if (i == currentPage) {
+              %>
+                <span class="page-btn current"><%= i %></span>
+              <% } else { %>
+                <a class="page-btn" href="?idProduto=<%= idProduto %>&idLocal=<%= idLocal %>&orderBy=<%= orderBy %>&orderDir=<%= orderDir %>&page=<%= i %>"><%= i %></a>
+              <% }
+                }
+              %>
+
+              <% if (currentPage < totalPages) { %>
+                <a class="page-btn" href="?idProduto=<%= idProduto %>&idLocal=<%= idLocal %>&orderBy=<%= orderBy %>&orderDir=<%= orderDir %>&page=<%= currentPage + 1 %>">Próximo »</a>
+              <% } else { %>
+                <span class="page-btn disabled">Próximo »</span>
+              <% } %>
+            <% %>
+          </div>
         </section>
       </section>
     </main>
+  </div>
+
+  <div id="modalZonas" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <h3 style="margin-top: 0;">Gerir Zonas do Produto</h3>
+      <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 15px;">Associe ou remova zonas para este produto no local selecionado.</p>
+
+      <div style="margin-bottom: 10px;">
+        <strong>Zonas atuais:</strong>
+        <ul id="listaZonasAtuais" style="margin-top: 8px; padding-left: 18px;"></ul>
+      </div>
+
+      <form action="${pageContext.request.contextPath}/ConsultarStockLocalServlet" method="post" style="margin-bottom: 12px;">
+        <input type="hidden" name="action" value="addZona" />
+        <input type="hidden" name="idProduto" id="zonaIdProdutoAdd" />
+        <input type="hidden" name="idLocal" id="zonaIdLocalAdd" />
+        <input type="hidden" name="filterIdProduto" value="<%= idProduto %>" />
+        <input type="hidden" name="filterIdLocal" value="<%= idLocal %>" />
+        <input type="hidden" name="filterOrderBy" value="<%= orderBy %>" />
+        <input type="hidden" name="filterOrderDir" value="<%= orderDir %>" />
+        <input type="hidden" name="filterPage" value="<%= request.getAttribute("currentPage") %>" />
+
+        <label style="display:block; margin-bottom:6px;">Adicionar zona</label>
+        <select id="zonaSelectAdd" name="idZona" required style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px;">
+          <option value="">Selecione uma zona...</option>
+        </select>
+        <div style="margin-top:10px;">
+          <button type="submit" class="btn-primary">Adicionar</button>
+        </div>
+      </form>
+
+      <form action="${pageContext.request.contextPath}/ConsultarStockLocalServlet" method="post">
+        <input type="hidden" name="action" value="removeZona" />
+        <input type="hidden" name="idProduto" id="zonaIdProdutoRemove" />
+        <input type="hidden" name="idLocal" id="zonaIdLocalRemove" />
+        <input type="hidden" name="filterIdProduto" value="<%= idProduto %>" />
+        <input type="hidden" name="filterIdLocal" value="<%= idLocal %>" />
+        <input type="hidden" name="filterOrderBy" value="<%= orderBy %>" />
+        <input type="hidden" name="filterOrderDir" value="<%= orderDir %>" />
+        <input type="hidden" name="filterPage" value="<%= request.getAttribute("currentPage") %>" />
+
+        <label style="display:block; margin-bottom:6px;">Remover zona</label>
+        <select id="zonaSelectRemove" name="idZona" required style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px;">
+          <option value="">Selecione uma zona...</option>
+        </select>
+        <div style="margin-top:10px;">
+          <button type="submit" class="btn-danger">Remover</button>
+          <button type="button" class="btn-secondary" onclick="closeZonasModal()">Fechar</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <!-- Modal para Registar Quebra de Stock -->
@@ -214,55 +265,38 @@
       </form>
     </div>
   </div>
-
-  <style>
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(15, 23, 42, 0.6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      backdrop-filter: blur(4px);
-    }
-    .modal-content {
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      width: 100%;
-      max-width: 450px;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    }
-    .btn-danger {
-      background-color: #ef4444;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      padding: 10px 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-    .btn-danger:hover {
-      background-color: #dc2626;
-    }
-    .btn-secondary {
-      background-color: #e2e8f0;
-      color: #475569;
-      border: none;
-      border-radius: 6px;
-      padding: 10px 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-    .btn-secondary:hover {
-      background-color: #cbd5e1;
-    }
-  </style>
-
   <script>
+    const todasZonas = {
+      <% if (todasZonas != null) { 
+           for (Zona z : todasZonas) { 
+             int zid = z.getIdZona();
+             String zn = z.getNome() != null ? z.getNome().replace("\\", "\\\\").replace("'", "\\'") : "";
+             int lid = (z.getLocal() != null) ? z.getLocal().getIdLocal() : 0;
+      %>
+      "<%= zid %>": { id: <%= zid %>, nome: "<%= zn %>", idLocal: <%= lid %> },
+      <% } } %>
+    };
+
+    const zonasAtuaisMap = {
+      <% if (stocks != null) {
+           for (StockLocal s : stocks) {
+             if (s.getProduto() != null && s.getLocal() != null) {
+               String key = s.getProduto().getIdProduto() + "-" + s.getLocal().getIdLocal();
+               List<Zona> zonasLinha = s.getZonas();
+      %>
+      "<%= key %>": [
+        <% if (zonasLinha != null) {
+             for (Zona z : zonasLinha) {
+               String zn = z.getNome() != null ? z.getNome().replace("\\", "\\\\").replace("'", "\\'") : ""; %>
+        { id: <%= z.getIdZona() %>, nome: "<%= zn %>" },
+        <%   }
+           } %>
+      ],
+      <%     }
+           }
+         } %>
+    };
+
     function openPerdaModal(idProduto, idLocal, maxQuantidade) {
       document.getElementById('perdaIdProduto').value = idProduto;
       document.getElementById('perdaIdLocal').value = idLocal;
@@ -274,12 +308,81 @@
     function closePerdaModal() {
       document.getElementById('modalPerda').style.display = 'none';
     }
-  </script>
 
-  <script type="module" src="${pageContext.request.contextPath}/Front-end/js/pages/dashboard.js"></script>
-  
-  <%-- Notificações de Sucesso/Erro --%>
-  <% if(session.getAttribute("mensagemSucesso") != null) { %>
+    function openZonasModal(idProduto, idLocal) {
+      const localIdNum = Number(idLocal);
+      const key = idProduto + "-" + idLocal;
+      const atuais = zonasAtuaisMap[key] || [];
+      const ul = document.getElementById('listaZonasAtuais');
+      const selectAdd = document.getElementById('zonaSelectAdd');
+      const selectRemove = document.getElementById('zonaSelectRemove');
+
+      document.getElementById('zonaIdProdutoAdd').value = idProduto;
+      document.getElementById('zonaIdLocalAdd').value = idLocal;
+      document.getElementById('zonaIdProdutoRemove').value = idProduto;
+      document.getElementById('zonaIdLocalRemove').value = idLocal;
+
+      ul.innerHTML = "";
+      if (atuais.length === 0) {
+        ul.innerHTML = "<li>Nenhuma zona associada.</li>";
+      } else {
+        atuais.forEach(z => {
+          const li = document.createElement('li');
+          li.textContent = z.nome + " (#" + z.id + ")";
+          ul.appendChild(li);
+        });
+      }
+
+      selectAdd.innerHTML = '<option value="">Selecione uma zona...</option>';
+      selectRemove.innerHTML = '<option value="">Selecione uma zona...</option>';
+
+      const atuaisIds = new Set(atuais.map(z => String(z.id)));
+      let addCount = 0;
+      let removeCount = 0;
+      Object.values(todasZonas).forEach(z => {
+        if (Number(z.idLocal) === localIdNum) {
+          if (!atuaisIds.has(String(z.id))) {
+            const op = document.createElement('option');
+            op.value = z.id;
+            op.textContent = z.nome + " (#" + z.id + ")";
+            selectAdd.appendChild(op);
+            addCount++;
+          }
+          if (atuaisIds.has(String(z.id))) {
+            const op2 = document.createElement('option');
+            op2.value = z.id;
+            op2.textContent = z.nome + " (#" + z.id + ")";
+            selectRemove.appendChild(op2);
+            removeCount++;
+          }
+        }
+      });
+
+      if (addCount === 0) {
+        const op = document.createElement('option');
+        op.value = "";
+        op.disabled = true;
+        op.textContent = "Sem zonas disponíveis neste local";
+        selectAdd.appendChild(op);
+      }
+      if (removeCount === 0) {
+        const op = document.createElement('option');
+        op.value = "";
+        op.disabled = true;
+        op.textContent = "Sem zonas associadas para remover";
+        selectRemove.appendChild(op);
+      }
+ectAdd.appendChild(op);
+          }
+          if (atuaisIds.has(String(z.id))) {
+            const op2 = document.createElement('option');
+            op2.value = z.id;
+            op2.textContent = z.nome + " (#" + z.id + ")";
+            selectRemove.appendChild(op2);
+          }
+        }
+      });
+   <% if(session.getAttribute("mensagemSucesso") != null) { %>
     <script>
       alert("<%= session.getAttribute("mensagemSucesso") %>");
     </script>

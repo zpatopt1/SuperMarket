@@ -22,70 +22,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/Front-end/styles/styles.css" />
-  <style>
-    /* Premium Table Styling */
-    .table-wrap {
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 15px -3px rgba(0,0,0,0.05);
-      border: 1px solid #e2e8f0;
-      background: white;
-    }
-    .table th {
-      background-color: #f8fafc;
-      color: #334155;
-      font-weight: 700;
-      text-transform: uppercase;
-      font-size: 0.8rem;
-      letter-spacing: 0.05em;
-      padding: 16px;
-      border-bottom: 2px solid #e2e8f0;
-    }
-    .table td {
-      padding: 14px 16px;
-      color: #1e293b;
-      vertical-align: middle;
-      border-bottom: 1px solid #f1f5f9;
-    }
-    .table tbody tr:hover {
-      background-color: #f8fafc;
-      transition: background-color 0.2s ease;
-    }
-    .badge-cat {
-      background-color: #eff6ff;
-      color: #2563eb;
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      display: inline-block;
-    }
-    .btn-action {
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-edit {
-      background-color: #f1f5f9;
-      color: #475569;
-    }
-    .btn-edit:hover {
-      background-color: #e2e8f0;
-      color: #1e293b;
-    }
-    .btn-delete {
-      background-color: #fee2e2;
-      color: #ef4444;
-    }
-    .btn-delete:hover {
-      background-color: #fca5a5;
-      color: #b91c1c;
-    }
-  </style>
 </head>
 <body>
   <div class="app">
@@ -265,7 +201,8 @@
             <% 
               Integer currentPage = (Integer) request.getAttribute("currentPage");
               Integer totalPages = (Integer) request.getAttribute("totalPages");
-              if (totalPages != null && totalPages > 1) {
+              if (currentPage == null) currentPage = 1;
+              if (totalPages == null || totalPages < 1) totalPages = 1;            
             %>
               <% if (currentPage > 1) { %>
                 <a class="page-btn" href="?txtNome=<%= txtNome %>&orderBy=<%= orderBy %>&orderDir=<%= orderDir %>&page=<%= currentPage - 1 %>">« Anterior</a>
@@ -276,7 +213,7 @@
                 int startPage = Math.max(1, currentPage - 2);
                 int endPage = Math.min(totalPages, currentPage + 2);
                 for (int i = startPage; i <= endPage; i++) {
-                  if (i == currentPage) {
+                if (i == currentPage) {
               %>
                 <span class="page-btn current"><%= i %></span>
               <% } else { %>
@@ -289,7 +226,7 @@
               <% } else { %>
                 <span class="page-btn disabled">Próximo »</span>
               <% } %>
-            <% } %>
+            
           </div>
 
         </section>

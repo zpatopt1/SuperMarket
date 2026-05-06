@@ -1,4 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+  String preIdProduto = request.getParameter("idProduto");
+  String preIdOrigem = request.getParameter("idOrigem");
+  String preIdDestino = "2".equals(preIdOrigem) ? "1" : ("1".equals(preIdOrigem) ? "2" : "");
+  if (preIdProduto == null) preIdProduto = "";
+  if (preIdOrigem == null) preIdOrigem = "";
+%>
 <!doctype html>
 <html lang="pt-PT">
 <head>
@@ -9,77 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/Front-end/styles/styles.css" />
-  <style>
-    .form-group {
-      margin-bottom: 20px;
-    }
-    
-    .form-label {
-      display: block;
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #334155;
-      margin-bottom: 8px;
-    }
-    
-    .form-control {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      font-size: 1rem;
-      color: #1e293b;
-      transition: all 0.2s;
-    }
-    
-    .form-control:focus {
-      outline: none;
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-    
-    .btn-submit {
-      background-color: #3b82f6;
-      color: white;
-      border: none;
-      padding: 14px 24px;
-      border-radius: 12px;
-      font-weight: 800;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background-color 0.2s;
-      width: 100%;
-      margin-top: 10px;
-    }
-    
-    .btn-submit:hover {
-      background-color: #2563eb;
-    }
-    
-    .alert {
-      padding: 16px;
-      border-radius: 12px;
-      margin-bottom: 24px;
-      font-weight: 600;
-      display: none;
-    }
-
-    .alert.success {
-      display: block;
-      background-color: #d1fae5;
-      color: #065f46;
-      border: 1px solid #10b981;
-    }
-
-    .alert.error {
-      display: block;
-      background-color: #fee2e2;
-      color: #991b1b;
-      border: 1px solid #ef4444;
-    }
-  </style>
 </head>
-
 <body>
   <div class="app">
     <!-- Sidebar -->
@@ -113,30 +50,30 @@
           <!-- Formulário -->
           <section class="card">
             <div class="card-head simple">
-              <h2>Detalhes da Movimentação</h2>
+              <h2>Detalhes da Movimentacão</h2>
             </div>
             <div class="card-body">
               <form action="${pageContext.request.contextPath}/TransferirStockServlet" method="post">
                 
                 <div class="form-group">
                   <label class="form-label" for="idProduto">ID do Produto</label>
-                  <input type="number" name="idProduto" id="idProduto" class="form-control" placeholder="Ex: 5" required min="1">
+                  <input type="number" name="idProduto" id="idProduto" class="form-control" placeholder="Ex: 5" required min="1" value="<%= preIdProduto %>">
                 </div>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <div class="form-group">
                       <label class="form-label" for="idOrigem">De (Origem)</label>
                       <select name="idOrigem" id="idOrigem" class="form-control" required>
-                          <option value="2">Armazém</option>
-                          <option value="1">Loja</option>
+                          <option value="2" <%= "2".equals(preIdOrigem) ? "selected" : "" %>>Armazém</option>
+                          <option value="1" <%= "1".equals(preIdOrigem) ? "selected" : "" %>>Loja</option>
                       </select>
                     </div>
                     
                     <div class="form-group">
                       <label class="form-label" for="idDestino">Para (Destino)</label>
                       <select name="idDestino" id="idDestino" class="form-control" required>
-                          <option value="1">Loja</option>
-                          <option value="2">Armazém</option>
+                          <option value="1" <%= "1".equals(preIdDestino) ? "selected" : "" %>>Loja</option>
+                          <option value="2" <%= "2".equals(preIdDestino) ? "selected" : "" %>>Armazém</option>
                       </select>
                     </div>
                 </div>
@@ -180,3 +117,5 @@
   <script type="module" src="${pageContext.request.contextPath}/Front-end/js/pages/dashboard.js"></script>
 </body>
 </html>
+
+

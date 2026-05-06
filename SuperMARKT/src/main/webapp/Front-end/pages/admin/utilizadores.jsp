@@ -15,84 +15,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Front-end/styles/styles.css" />
-  <style>
-    /* Premium Table Styling */
-    .table-wrap {
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 15px -3px rgba(0,0,0,0.05);
-      border: 1px solid #e2e8f0;
-      background: white;
-    }
-    .table th {
-      background-color: #f8fafc;
-      color: #334155;
-      font-weight: 700;
-      text-transform: uppercase;
-      font-size: 0.8rem;
-      letter-spacing: 0.05em;
-      padding: 16px;
-      border-bottom: 2px solid #e2e8f0;
-    }
-    .table td {
-      padding: 14px 16px;
-      color: #1e293b;
-      vertical-align: middle;
-      border-bottom: 1px solid #f1f5f9;
-    }
-    .table tbody tr:hover {
-      background-color: #f8fafc;
-      transition: background-color 0.2s ease;
-    }
-    .btn-action {
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-edit {
-      background-color: #f1f5f9;
-      color: #475569;
-    }
-    .btn-edit:hover {
-      background-color: #e2e8f0;
-      color: #1e293b;
-    }
-    .btn-delete {
-      background-color: #fee2e2;
-      color: #ef4444;
-    }
-    .btn-delete:hover {
-      background-color: #fca5a5;
-      color: #b91c1c;
-    }
-    .status-badge {
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-    .status-active {
-      background-color: #ecfdf5;
-      color: #10b981;
-    }
-    .status-inactive {
-      background-color: #fef2f2;
-      color: #ef4444;
-    }
-    .role-badge {
-      background-color: #eff6ff;
-      color: #3b82f6;
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
-  </style>
 </head>
 <body>
   <div class="app">
@@ -188,7 +110,7 @@
                     <td><%= nif %></td>
                     <td><strong><%= nome %></strong></td>
                     <td><%= email %></td>
-                    <td><span class="role-badge"><%= (f.getIdFuncao() != null && f.getIdFuncao().getDescricao() != null) ? f.getIdFuncao().getDescricao() : "N/A" %></span></td>
+                    <td><span class="badge-role"><%= (f.getIdFuncao() != null && f.getIdFuncao().getDescricao() != null) ? f.getIdFuncao().getDescricao() : "N/A" %></span></td>
                     <td>
                         <span class="status-badge <%= f.isAtivo() ? "status-active" : "status-inactive" %>">
                             <%= f.isAtivo() ? "Ativo" : "Inativo" %>

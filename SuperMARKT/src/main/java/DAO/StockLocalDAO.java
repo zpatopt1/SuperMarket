@@ -10,6 +10,7 @@ import DBconnection.DBconnection;
 import model.Local;
 import model.Produto;
 import model.StockLocal;
+import model.Zona;
 
 public class StockLocalDAO {
 
@@ -155,6 +156,89 @@ public class StockLocalDAO {
         return lista;
     }
 
+    public List<StockLocal> getStockFilteredOrdered(Integer idProduto, Integer idLocal, String orderBy, String orderDir, int pageSize, int offset) {
+        StringBuilder sql = new StringBuilder(STOCK_SELECT_BASE);
+        List<Object> params = new ArrayList<>();
+        boolean hasWhere = false;
+
+        if (idProduto != null) {
+            sql.append(" WHERE s.id_produto = ?");
+            params.add(idProduto);
+            hasWhere = true;
+        }
+
+        if (idLocal != null) {
+            sql.append(hasWhere ? " AND" : " WHERE");
+            sql.append(" s.id_local = ?");
+            params.add(idLocal);
+        }
+
+        sql.append(" ORDER BY ").append(resolveOrderBy(orderBy)).append(" ").append(resolveOrderDir(orderDir));
+        sql.append(" LIMIT ? OFFSET ?");
+        params.add(pageSize);
+        params.add(offset);
+
+        List<StockLocal> lista = new ArrayList<>();
+        try (Connection conn = DBconnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                stmt.setObject(i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Produto produto = buildProduto(rs);
+                    Local local = buildLocal(rs);
+                    int quantidade = rs.getInt("quantidade");
+                    lista.add(new StockLocal(produto, local, quantidade));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        return lista;
+    }
+
+    public int getTotalStockFiltered(Integer idProduto, Integer idLocal) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM stock_local s");
+        List<Object> params = new ArrayList<>();
+        boolean hasWhere = false;
+
+        if (idProduto != null) {
+            sql.append(" WHERE s.id_produto = ?");
+            params.add(idProduto);
+            hasWhere = true;
+        }
+
+        if (idLocal != null) {
+            sql.append(hasWhere ? " AND" : " WHERE");
+            sql.append(" s.id_local = ?");
+            params.add(idLocal);
+        }
+
+        try (Connection conn = DBconnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                stmt.setObject(i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        return 0;
+    }
+
     public List<StockLocal> getStockByLocal(int idLocal) {
         String sql = "SELECT s.quantidade, " +
                      "p.id_produto, p.nome, p.marca, p.unidade_medida, p.cod_barras, p.preco, " +
@@ -265,6 +349,66 @@ public class StockLocalDAO {
 
     private String resolveOrderDir(String orderDir) {
         return "DESC".equalsIgnoreCase(orderDir) ? "DESC" : "ASC";
+    }
+
+    public List<Zona> getZonasByProdutoLocal(int idProduto, int idLocal) {
+        String sql = "SELECT z.id_zona, z.nome, z.id_local " +
+                "FROM produto_localizacao_zona plz " +
+                "INNER JOIN zona z ON z.id_zona = plz.id_zona " +
+                "WHERE plz.id_produto = ? AND plz.id_local = ? " +
+                "ORDER BY z.nome ASC";
+        List<Zona> zonas = new ArrayList<>();
+
+        try (Connection conn = DBconnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idProduto);
+            stmt.setInt(2, idLocal);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Zona z = new Zona();
+                    z.setIdZona(rs.getInt("id_zona"));
+                    z.setNome(rs.getString("nome"));
+                    Local l = new Local();
+                    l.setIdLocal(rs.getInt("id_local"));
+                    z.setLocal(l);
+                    zonas.add(z);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        return zonas;
+    }
+
+    public boolean addZonaProdutoLocal(int idProduto, int idLocal, int idZona) {
+        String sql = "INSERT INTO produto_localizacao_zona (id_produto, id_local, id_zona) VALUES (?, ?, ?)";
+        try (Connection conn = DBconnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idProduto);
+            stmt.setInt(2, idLocal);
+            stmt.setInt(3, idZona);
+            return stmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean removeZonaProdutoLocal(int idProduto, int idLocal, int idZona) {
+        String sql = "DELETE FROM produto_localizacao_zona WHERE id_produto = ? AND id_local = ? AND id_zona = ?";
+        try (Connection conn = DBconnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idProduto);
+            stmt.setInt(2, idLocal);
+            stmt.setInt(3, idZona);
+            return stmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     // TRANSFERIR STOCK
