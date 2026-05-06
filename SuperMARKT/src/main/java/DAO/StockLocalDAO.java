@@ -350,4 +350,37 @@ public class StockLocalDAO {
             }
         }
     }
+
+    public void reduzirStock(int idProduto, int idLocal, int quantidade, Connection conn) throws Exception {
+        if (quantidade <= 0) {
+            throw new Exception("A quantidade a reduzir deve ser maior que zero.");
+        }
+
+        String checkSql = "SELECT quantidade FROM stock_local WHERE id_produto = ? AND id_local = ? FOR UPDATE";
+        String updateSql = "UPDATE stock_local SET quantidade = quantidade - ? WHERE id_produto = ? AND id_local = ?";
+        
+        int qtdAtual = 0;
+        try (PreparedStatement stmtCheck = conn.prepareStatement(checkSql)) {
+            stmtCheck.setInt(1, idProduto);
+            stmtCheck.setInt(2, idLocal);
+            try (ResultSet rs = stmtCheck.executeQuery()) {
+                if (rs.next()) {
+                    qtdAtual = rs.getInt("quantidade");
+                } else {
+                    throw new Exception("Produto não encontrado no local para redução de stock.");
+                }
+            }
+        }
+
+        if (qtdAtual < quantidade) {
+            throw new Exception("Stock insuficiente para a perda registada (Disponível: " + qtdAtual + ").");
+        }
+
+        try (PreparedStatement stmtUpd = conn.prepareStatement(updateSql)) {
+            stmtUpd.setInt(1, quantidade);
+            stmtUpd.setInt(2, idProduto);
+            stmtUpd.setInt(3, idLocal);
+            stmtUpd.executeUpdate();
+        }
+    }
 }

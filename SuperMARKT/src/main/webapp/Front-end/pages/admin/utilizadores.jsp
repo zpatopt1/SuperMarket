@@ -15,6 +15,84 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Front-end/styles/styles.css" />
+  <style>
+    /* Premium Table Styling */
+    .table-wrap {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px -3px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+      background: white;
+    }
+    .table th {
+      background-color: #f8fafc;
+      color: #334155;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      padding: 16px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    .table td {
+      padding: 14px 16px;
+      color: #1e293b;
+      vertical-align: middle;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .table tbody tr:hover {
+      background-color: #f8fafc;
+      transition: background-color 0.2s ease;
+    }
+    .btn-action {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-edit {
+      background-color: #f1f5f9;
+      color: #475569;
+    }
+    .btn-edit:hover {
+      background-color: #e2e8f0;
+      color: #1e293b;
+    }
+    .btn-delete {
+      background-color: #fee2e2;
+      color: #ef4444;
+    }
+    .btn-delete:hover {
+      background-color: #fca5a5;
+      color: #b91c1c;
+    }
+    .status-badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .status-active {
+      background-color: #ecfdf5;
+      color: #10b981;
+    }
+    .status-inactive {
+      background-color: #fef2f2;
+      color: #ef4444;
+    }
+    .role-badge {
+      background-color: #eff6ff;
+      color: #3b82f6;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+  </style>
 </head>
 <body>
   <div class="app">
@@ -26,28 +104,46 @@
       <section class="content">
         <div class="pagehead">
           <div>
-            <h2 class="page-title">Gestao de Utilizadores</h2>
-            <p class="page-subtitle">Gestao e consulta de funcionarios</p>
+            <h2 class="page-title">Gestão de Utilizadores</h2>
+            <p class="page-subtitle">Gestão e consulta de funcionários e acessos</p>
           </div>
-          <button class="btn-primary" type="button">Exportar Relatorio</button>
         </div>
 
-        <div class="kpis kpis-stock">
-          <div class="kpi">
-            <div class="kpi-label">Utilizadores (filtrados)</div>
-            <div class="kpi-value" id="totalFiltrado">0</div>
+        <!-- KPIs -->
+        <%
+          Object tu = request.getAttribute("totalUtilizadores");
+          Object ta = request.getAttribute("totalAtivos");
+          Object tadm = request.getAttribute("totalAdmins");
+        %>
+        <div class="kpis kpis-stock" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-bottom: 32px;">
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #3b82f6;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Total Utilizadores</div>
+                <div class="kpi-value" style="font-size: 1.75rem; color: #1e293b;"><%= tu != null ? tu : "0" %></div>
+              </div>
+              <div style="background: #eff6ff; padding: 10px; border-radius: 12px; color: #3b82f6; font-size: 1.5rem;">👤</div>
+            </div>
           </div>
-          <div class="kpi">
-            <div class="kpi-label">Stock Armazem</div>
-            <div class="kpi-value">3</div>
+
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #10b981;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Contas Ativas</div>
+                <div class="kpi-value" style="font-size: 1.75rem; color: #1e293b;"><%= ta != null ? ta : "0" %></div>
+              </div>
+              <div style="background: #ecfdf5; padding: 10px; border-radius: 12px; color: #10b981; font-size: 1.5rem;">✅</div>
+            </div>
           </div>
-          <div class="kpi">
-            <div class="kpi-label">Stock Loja</div>
-            <div class="kpi-value">200</div>
-          </div>
-          <div class="kpi">
-            <div class="kpi-label">Valor Total</div>
-            <div class="kpi-value">1913.32 EUR</div>
+
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #8b5cf6;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Administradores</div>
+                <div class="kpi-value" style="font-size: 1.75rem; color: #1e293b;"><%= tadm != null ? tadm : "0" %></div>
+              </div>
+              <div style="background: #f5f3ff; padding: 10px; border-radius: 12px; color: #8b5cf6; font-size: 1.5rem;">🛡️</div>
+            </div>
           </div>
         </div>
 
@@ -58,7 +154,7 @@
               <input type="text" placeholder="Pesquisar utilizadores..." id="searchInput">
             </div>
             <button class="btn-primary" type="button" id="btnFiltrar">Filtrar</button>
-            <button type="button" class="btn-primary" onclick="abrirModalAddFuncionario()">Adicionar Funcionario</button>
+            <button type="button" class="btn-primary" onclick="abrirModalAddFuncionario()">Adicionar Funcionário</button>
           </div>
 
           <div class="table-wrap">
@@ -67,9 +163,8 @@
                 <tr>
                   <th>NIF</th>
                   <th>Nome</th>
-                  <th>Contacto</th>
                   <th>Email</th>
-                  <th>Funcao</th>
+                  <th>Função</th>
                   <th>Estado</th>
                   <th>Editar</th>
                   <th>Apagar</th>
@@ -91,20 +186,23 @@
                 %>
                   <tr>
                     <td><%= nif %></td>
-                    <td><%= nome %></td>
-                    <td><%= contacto %></td>
+                    <td><strong><%= nome %></strong></td>
                     <td><%= email %></td>
-                    <td><%= (f.getIdFuncao() != null && f.getIdFuncao().getDescricao() != null) ? f.getIdFuncao().getDescricao() : "" %></td>
-                    <td><%= f.isAtivo() ? "Ativo" : "Inativo" %></td>
+                    <td><span class="role-badge"><%= (f.getIdFuncao() != null && f.getIdFuncao().getDescricao() != null) ? f.getIdFuncao().getDescricao() : "N/A" %></span></td>
                     <td>
-                      <button type="button" class="btn-guardar" style="background-color:gray;"
+                        <span class="status-badge <%= f.isAtivo() ? "status-active" : "status-inactive" %>">
+                            <%= f.isAtivo() ? "Ativo" : "Inativo" %>
+                        </span>
+                    </td>
+                    <td>
+                      <button type="button" class="btn-action btn-edit"
                         onclick="abrirModal('<%= nif %>', '<%= nomeJs %>', '<%= contactoJs %>', '<%= emailJs %>', '<%= idFuncao %>', <%= f.isAtivo() ? "true" : "false" %>)">Editar</button>
                     </td>
                     <td>
-                      <form method="post" action="${pageContext.request.contextPath}/ConsultarUtilizadoresServlet" style="display:inline;">
+                      <form method="post" action="${pageContext.request.contextPath}/ConsultarUtilizadoresServlet" style="margin:0;">
                         <input type="hidden" name="delete_nif" value="<%= nif %>">
                         <input type="hidden" name="action" value="delete">
-                        <button type="submit" class="btn-guardar" style="background-color:red;">Apagar</button>
+                        <button type="submit" class="btn-action btn-delete">Apagar</button>
                       </form>
                     </td>
                   </tr>

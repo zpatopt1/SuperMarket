@@ -381,6 +381,50 @@ import model.Produto;
 			return importados;
 		}
 		
+		public double getValorTotalStock() {
+			double total = 0;
+			String sql = "SELECT SUM(p.preco * s.quantidade) FROM produto p JOIN stock_local s ON p.id_produto = s.id_produto";
+			try (Connection conn = DBconnection.getConnection();
+				 PreparedStatement stmt = conn.prepareStatement(sql);
+				 ResultSet rs = stmt.executeQuery()) {
+				if (rs.next()) {
+					total = rs.getDouble(1);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return total;
+		}
+
+		public int getProdutosSemStock() {
+			int count = 0;
+			String sql = "SELECT COUNT(*) FROM produto p WHERE NOT EXISTS (SELECT 1 FROM stock_local s WHERE s.id_produto = p.id_produto AND s.quantidade > 0)";
+			try (Connection conn = DBconnection.getConnection();
+				 PreparedStatement stmt = conn.prepareStatement(sql);
+				 ResultSet rs = stmt.executeQuery()) {
+				if (rs.next()) {
+					count = rs.getInt(1);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return count;
+		}
+
+		public int getProdutosBaixoStock() {
+			int count = 0;
+			String sql = "SELECT COUNT(*) FROM (SELECT id_produto, SUM(quantidade) as total_qty FROM stock_local GROUP BY id_produto HAVING total_qty < 10) as baixo_stock";
+			try (Connection conn = DBconnection.getConnection();
+				 PreparedStatement stmt = conn.prepareStatement(sql);
+				 ResultSet rs = stmt.executeQuery()) {
+				if (rs.next()) {
+					count = rs.getInt(1);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return count;
+		}
 	}
 	
 	

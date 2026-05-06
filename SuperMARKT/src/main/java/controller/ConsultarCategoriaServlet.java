@@ -32,7 +32,17 @@ public class ConsultarCategoriaServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         CategoriaDAO dao = new CategoriaDAO();
         List<Categoria> categorias = dao.getAllCategorias();
+        
+        int totalCategorias = dao.getTotalCategorias();
+        String categoriaMaisProdutos = dao.getCategoriaMaisProdutos();
+        int categoriasVazias = dao.getCategoriasVazias();
+        String categoriaMaiorValor = dao.getCategoriaMaiorValor();
+        
         request.setAttribute("categorias", categorias);
+        request.setAttribute("totalCategorias", totalCategorias);
+        request.setAttribute("categoriaMaisProdutos", categoriaMaisProdutos);
+        request.setAttribute("categoriasVazias", categoriasVazias);
+        request.setAttribute("categoriaMaiorValor", categoriaMaiorValor);
         request.getRequestDispatcher("/Front-end/pages/consultarcategorias.jsp").forward(request, response);
     }
 
