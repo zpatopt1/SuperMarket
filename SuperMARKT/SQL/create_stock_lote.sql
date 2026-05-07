@@ -8,7 +8,7 @@ CREATE TABLE fornecedor_produto (
     id_fornecedor INT,
     id_produto INT,
 
-    preco FLOAT,
+    preco FL
 
     PRIMARY KEY (id_fornecedor, id_produto),
 

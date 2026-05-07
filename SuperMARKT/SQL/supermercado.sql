@@ -2,6 +2,7 @@
         USE supermercado;
 
         DROP TABLE IF EXISTS perda_stock;
+        DROP TABLE IF EXISTS stock_lote;
         DROP TABLE IF EXISTS fornecedor_produto;
         DROP TABLE IF EXISTS linha_enc;
         DROP TABLE IF EXISTS encomenda;
@@ -185,6 +186,22 @@
             PRIMARY KEY (id_linhaenc),
             FOREIGN KEY (id_encomenda) REFERENCES encomenda(id_encomenda),
             FOREIGN KEY (id_produto) REFERENCES produto(id_produto)
+        );
+
+        CREATE TABLE stock_lote (
+            id_lote INT AUTO_INCREMENT,
+            id_produto INT NOT NULL,
+            id_local INT NOT NULL,
+            id_linhaenc INT,
+            numero_lote VARCHAR(50),
+            quantidade INT NOT NULL,
+            data_validade DATE,
+            data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
+            ativo BOOLEAN DEFAULT TRUE,
+            PRIMARY KEY (id_lote),
+            FOREIGN KEY (id_produto) REFERENCES produto(id_produto),
+            FOREIGN KEY (id_local) REFERENCES local(id_local),
+            FOREIGN KEY (id_linhaenc) REFERENCES linha_enc(id_linhaenc)
         );
 
         -- adicionar no model
