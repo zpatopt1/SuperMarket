@@ -155,4 +155,48 @@ public class ClienteDAO {
 
         return cliente;
     }
+    public String getMelhorCliente() {
+        String nome = "N/A";
+        String sql = "SELECT c.nome FROM cliente c JOIN venda v ON c.id_cliente = v.id_cliente GROUP BY c.id_cliente ORDER BY SUM(v.valor_total) DESC LIMIT 1";
+        try (Connection conn = DBconnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                nome = rs.getString(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return nome;
+    }
+
+    public double getMediaGastos() {
+        double media = 0;
+        String sql = "SELECT AVG(valor_total) FROM venda";
+        try (Connection conn = DBconnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                media = rs.getDouble(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return media;
+    }
+
+    public int getClientesComCompras() {
+        int count = 0;
+        String sql = "SELECT COUNT(DISTINCT id_cliente) FROM venda";
+        try (Connection conn = DBconnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
 }

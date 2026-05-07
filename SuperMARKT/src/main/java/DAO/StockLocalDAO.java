@@ -10,6 +10,7 @@ import DBconnection.DBconnection;
 import model.Local;
 import model.Produto;
 import model.StockLocal;
+import model.Zona;
 
 public class StockLocalDAO {
 
@@ -155,6 +156,89 @@ public class StockLocalDAO {
         return lista;
     }
 
+    public List<StockLocal> getStockFilteredOrdered(Integer idProduto, Integer idLocal, String orderBy, String orderDir, int pageSize, int offset) {
+        StringBuilder sql = new StringBuilder(STOCK_SELECT_BASE);
+        List<Object> params = new ArrayList<>();
+        boolean hasWhere = false;
+
+        if (idProduto != null) {
+            sql.append(" WHERE s.id_produto = ?");
+            params.add(idProduto);
+            hasWhere = true;
+        }
+
+        if (idLocal != null) {
+            sql.append(hasWhere ? " AND" : " WHERE");
+            sql.append(" s.id_local = ?");
+            params.add(idLocal);
+        }
+
+        sql.append(" ORDER BY ").append(resolveOrderBy(orderBy)).append(" ").append(resolveOrderDir(orderDir));
+        sql.append(" LIMIT ? OFFSET ?");
+        params.add(pageSize);
+        params.add(offset);
+
+        List<StockLocal> lista = new ArrayList<>();
+        try (Connection conn = DBconnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                stmt.setObject(i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Produto produto = buildProduto(rs);
+                    Local local = buildLocal(rs);
+                    int quantidade = rs.getInt("quantidade");
+                    lista.add(new StockLocal(produto, local, quantidade));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        return lista;
+    }
+
+    public int getTotalStockFiltered(Integer idProduto, Integer idLocal) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM stock_local s");
+        List<Object> params = new ArrayList<>();
+        boolean hasWhere = false;
+
+        if (idProduto != null) {
+            sql.append(" WHERE s.id_produto = ?");
+            params.add(idProduto);
+            hasWhere = true;
+        }
+
+        if (idLocal != null) {
+            sql.append(hasWhere ? " AND" : " WHERE");
+            sql.append(" s.id_local = ?");
+            params.add(idLocal);
+        }
+
+        try (Connection conn = DBconnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                stmt.setObject(i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        return 0;
+    }
+
     public List<StockLocal> getStockByLocal(int idLocal) {
         String sql = "SELECT s.quantidade, " +
                      "p.id_produto, p.nome, p.marca, p.unidade_medida, p.cod_barras, p.preco, " +
@@ -265,5 +349,182 @@ public class StockLocalDAO {
 
     private String resolveOrderDir(String orderDir) {
         return "DESC".equalsIgnoreCase(orderDir) ? "DESC" : "ASC";
+    }
+
+    public List<Zona> getZonasByProdutoLocal(int idProduto, int idLocal) {
+        String sql = "SELECT z.id_zona, z.nome, z.id_local " +
+                "FROM produto_localizacao_zona plz " +
+                "INNER JOIN zona z ON z.id_zona = plz.id_zona " +
+                "WHERE plz.id_produto = ? AND plz.id_local = ? " +
+                "ORDER BY z.nome ASC";
+        List<Zona> zonas = new ArrayList<>();
+
+        try (Connection conn = DBconnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idProduto);
+            stmt.setInt(2, idLocal);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Zona z = new Zona();
+                    z.setIdZona(rs.getInt("id_zona"));
+                    z.setNome(rs.getString("nome"));
+                    Local l = new Local();
+                    l.setIdLocal(rs.getInt("id_local"));
+                    z.setLocal(l);
+                    zonas.add(z);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        return zonas;
+    }
+
+    public boolean addZonaProdutoLocal(int idProduto, int idLocal, int idZona) {
+        String sql = "INSERT INTO produto_localizacao_zona (id_produto, id_local, id_zona) VALUES (?, ?, ?)";
+        try (Connection conn = DBconnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idProduto);
+            stmt.setInt(2, idLocal);
+            stmt.setInt(3, idZona);
+            return stmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean removeZonaProdutoLocal(int idProduto, int idLocal, int idZona) {
+        String sql = "DELETE FROM produto_localizacao_zona WHERE id_produto = ? AND id_local = ? AND id_zona = ?";
+        try (Connection conn = DBconnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idProduto);
+            stmt.setInt(2, idLocal);
+            stmt.setInt(3, idZona);
+            return stmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    // TRANSFERIR STOCK
+    public void transferirStock(int idProduto, int idOrigem, int idDestino, int quantidadeTransferir) throws Exception {
+        if (quantidadeTransferir <= 0) {
+            throw new Exception("A quantidade a transferir deve ser maior que zero.");
+        }
+        if (idOrigem == idDestino) {
+            throw new Exception("O local de origem e destino não podem ser iguais.");
+        }
+
+        String checkOrigemSql = "SELECT quantidade FROM stock_local WHERE id_produto = ? AND id_local = ? FOR UPDATE";
+        String updateOrigemSql = "UPDATE stock_local SET quantidade = quantidade - ? WHERE id_produto = ? AND id_local = ?";
+        String checkDestinoSql = "SELECT quantidade FROM stock_local WHERE id_produto = ? AND id_local = ? FOR UPDATE";
+        String updateDestinoSql = "UPDATE stock_local SET quantidade = quantidade + ? WHERE id_produto = ? AND id_local = ?";
+        String insertDestinoSql = "INSERT INTO stock_local (id_produto, id_local, quantidade) VALUES (?, ?, ?)";
+
+        try (Connection conn = DBconnection.getConnection()) {
+            conn.setAutoCommit(false); // Início da transação
+
+            try {
+                // 1. Verificar Origem
+                int qtdOrigem = 0;
+                try (PreparedStatement stmtCheckO = conn.prepareStatement(checkOrigemSql)) {
+                    stmtCheckO.setInt(1, idProduto);
+                    stmtCheckO.setInt(2, idOrigem);
+                    try (ResultSet rs = stmtCheckO.executeQuery()) {
+                        if (rs.next()) {
+                            qtdOrigem = rs.getInt("quantidade");
+                        } else {
+                            throw new Exception("Produto não encontrado no local de origem.");
+                        }
+                    }
+                }
+
+                if (qtdOrigem < quantidadeTransferir) {
+                    throw new Exception("Stock insuficiente na origem (Disponível: " + qtdOrigem + ").");
+                }
+
+                // 2. Descontar Origem
+                try (PreparedStatement stmtUpdO = conn.prepareStatement(updateOrigemSql)) {
+                    stmtUpdO.setInt(1, quantidadeTransferir);
+                    stmtUpdO.setInt(2, idProduto);
+                    stmtUpdO.setInt(3, idOrigem);
+                    stmtUpdO.executeUpdate();
+                }
+
+                // 3. Verificar Destino
+                boolean destinoExiste = false;
+                try (PreparedStatement stmtCheckD = conn.prepareStatement(checkDestinoSql)) {
+                    stmtCheckD.setInt(1, idProduto);
+                    stmtCheckD.setInt(2, idDestino);
+                    try (ResultSet rs = stmtCheckD.executeQuery()) {
+                        if (rs.next()) {
+                            destinoExiste = true;
+                        }
+                    }
+                }
+
+                // 4. Somar ou Inserir Destino
+                if (destinoExiste) {
+                    try (PreparedStatement stmtUpdD = conn.prepareStatement(updateDestinoSql)) {
+                        stmtUpdD.setInt(1, quantidadeTransferir);
+                        stmtUpdD.setInt(2, idProduto);
+                        stmtUpdD.setInt(3, idDestino);
+                        stmtUpdD.executeUpdate();
+                    }
+                } else {
+                    try (PreparedStatement stmtInsD = conn.prepareStatement(insertDestinoSql)) {
+                        stmtInsD.setInt(1, idProduto);
+                        stmtInsD.setInt(2, idDestino);
+                        stmtInsD.setInt(3, quantidadeTransferir);
+                        stmtInsD.executeUpdate();
+                    }
+                }
+
+                conn.commit(); // Confirma
+            } catch (Exception e) {
+                conn.rollback(); // Cancela tudo se der erro
+                throw e;
+            } finally {
+                conn.setAutoCommit(true);
+            }
+        }
+    }
+
+    public void reduzirStock(int idProduto, int idLocal, int quantidade, Connection conn) throws Exception {
+        if (quantidade <= 0) {
+            throw new Exception("A quantidade a reduzir deve ser maior que zero.");
+        }
+
+        String checkSql = "SELECT quantidade FROM stock_local WHERE id_produto = ? AND id_local = ? FOR UPDATE";
+        String updateSql = "UPDATE stock_local SET quantidade = quantidade - ? WHERE id_produto = ? AND id_local = ?";
+        
+        int qtdAtual = 0;
+        try (PreparedStatement stmtCheck = conn.prepareStatement(checkSql)) {
+            stmtCheck.setInt(1, idProduto);
+            stmtCheck.setInt(2, idLocal);
+            try (ResultSet rs = stmtCheck.executeQuery()) {
+                if (rs.next()) {
+                    qtdAtual = rs.getInt("quantidade");
+                } else {
+                    throw new Exception("Produto não encontrado no local para redução de stock.");
+                }
+            }
+        }
+
+        if (qtdAtual < quantidade) {
+            throw new Exception("Stock insuficiente para a perda registada (Disponível: " + qtdAtual + ").");
+        }
+
+        try (PreparedStatement stmtUpd = conn.prepareStatement(updateSql)) {
+            stmtUpd.setInt(1, quantidade);
+            stmtUpd.setInt(2, idProduto);
+            stmtUpd.setInt(3, idLocal);
+            stmtUpd.executeUpdate();
+        }
     }
 }

@@ -1,9 +1,13 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StockLocal {
     private Produto produto;
     private Local local;
     private int quantidade;
+    private List<Zona> zonas = new ArrayList<>();
 
     public StockLocal() {
     }
@@ -12,7 +16,7 @@ public class StockLocal {
         this.produto = produto;
         this.local = local;
         this.quantidade = quantidade;
-    }
+   }
 
     public Produto getProduto() {
         return produto;
@@ -36,6 +40,14 @@ public class StockLocal {
 
     public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
+    }
+
+    public List<Zona> getZonas() {
+        return zonas;
+    }
+
+    public void setZonas(List<Zona> zonas) {
+        this.zonas = zonas;
     }
 }
 	

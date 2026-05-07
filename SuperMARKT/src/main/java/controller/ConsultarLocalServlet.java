@@ -38,7 +38,7 @@ public class ConsultarLocalServlet extends HttpServlet {
             if ("delete".equals(action)) {
                 int id = Integer.parseInt(request.getParameter("delete_id_local"));
                 dao.deleteLocal(id);
-                response.sendRedirect("ConsultarLocalServlet");
+                response.sendRedirect("GestaoEspacosServlet");
 
             } else if ("insert".equals(action)) {
                 String nome = request.getParameter("nome_local");
@@ -49,7 +49,7 @@ public class ConsultarLocalServlet extends HttpServlet {
                     local.setTipoLocal(tipo != null ? tipo.trim() : "");
                     dao.insertLocal(local);
                 }
-                response.sendRedirect("ConsultarLocalServlet");
+                response.sendRedirect("GestaoEspacosServlet");
 
             } else if ("update".equals(action)) {
                 int id = Integer.parseInt(request.getParameter("id_local"));
@@ -62,7 +62,7 @@ public class ConsultarLocalServlet extends HttpServlet {
                 local.setTipoLocal(tipo);
 
                 dao.updateLocal(local);
-                response.sendRedirect("ConsultarLocalServlet");
+                response.sendRedirect("GestaoEspacosServlet");
             }
         } catch (Exception e) {
             e.printStackTrace();

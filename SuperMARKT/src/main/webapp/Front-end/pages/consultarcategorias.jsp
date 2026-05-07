@@ -12,6 +12,7 @@
   	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/Front-end/styles/styles.css" />
+
 </head>
 <body>
   <div class="app">
@@ -30,31 +31,54 @@
             <h2 class="page-title">Consultar Categorias</h2>
             <p class="page-subtitle">Gestão e consulta de Categorias</p>
           </div>
-
-          <button class="btn-primary" type="button">Exportar Relatorio</button>
         </div>
 		
-
         <!-- KPIs -->
-        <div class="kpis kpis-stock">
-          <div class="kpi">
-			<div class="kpi-label">Categorias (filtradas)</div>
-    		<div class="kpi-value" id="totalFiltrado">0</div>
+        <%
+          Object tc = request.getAttribute("totalCategorias");
+          Object cmp = request.getAttribute("categoriaMaisProdutos");
+          Object cv = request.getAttribute("categoriasVazias");
+          Object cmv = request.getAttribute("categoriaMaiorValor");
+        %>
+        <div class="kpis kpis-stock" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-bottom: 32px;">
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #3b82f6;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Total Categorias</div>
+                <div class="kpi-value" style="font-size: 1.75rem; color: #1e293b;"><%= tc != null ? tc : "0" %></div>
+              </div>
+              <div style="background: #eff6ff; padding: 10px; border-radius: 12px; color: #3b82f6; font-size: 1.5rem;">🏷️</div>
+            </div>
           </div>
 
-          <div class="kpi">
-            <div class="kpi-label">Stock Armazem</div>
-            <div class="kpi-value">3</div>
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #10b981;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Maior Cat. (Qtd)</div>
+                <div class="kpi-value" style="font-size: 1.25rem; color: #1e293b; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 150px;"><%= cmp != null ? cmp : "N/A" %></div>
+              </div>
+              <div style="background: #ecfdf5; padding: 10px; border-radius: 12px; color: #10b981; font-size: 1.5rem;">📊</div>
+            </div>
           </div>
 
-          <div class="kpi">
-            <div class="kpi-label">Stock Loja</div>
-            <div class="kpi-value">200</div>
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #ef4444;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Categorias Vazias</div>
+                <div class="kpi-value" style="font-size: 1.75rem; color: #1e293b;"><%= cv != null ? cv : "0" %></div>
+              </div>
+              <div style="background: #fef2f2; padding: 10px; border-radius: 12px; color: #ef4444; font-size: 1.5rem;">🗃️</div>
+            </div>
           </div>
 
-          <div class="kpi">
-            <div class="kpi-label">Valor Total</div>
-            <div class="kpi-value">1913.32 €</div>
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #f59e0b;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Cat. Maior Valor</div>
+                <div class="kpi-value" style="font-size: 1.25rem; color: #1e293b; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 150px;"><%= cmv != null ? cmv : "N/A" %></div>
+              </div>
+              <div style="background: #fffbeb; padding: 10px; border-radius: 12px; color: #f59e0b; font-size: 1.5rem;">💎</div>
+            </div>
           </div>
         </div>
 
@@ -93,15 +117,15 @@
                     <td><%= c.getNome() %></td>
                     <td><%= c.getDescricao() %></td>
 					<td>
-				    <button type="button" class="btn-guardar"
-                            onclick="abrirModal('<%=c.getIdCategoria()%>', '<%=c.getNome()%>', '<%=c.getDescricao()%>')"
-                            style="background-color:gray;">Editar</button>		
+				    <button type="button" class="btn-action btn-edit"
+                            onclick="abrirModal('<%=c.getIdCategoria()%>', '<%=c.getNome()%>', '<%=c.getDescricao()%>')">
+                            Editar</button>		
 					</td>
 					<td>
-					<form method="post" action="${pageContext.request.contextPath}/ConsultarCategoriaServlet" style="display:inline;">
+					<form method="post" action="${pageContext.request.contextPath}/ConsultarCategoriaServlet" style="margin:0;">
 					    <input type="hidden" name="delete_id_categoria" value="<%= c.getIdCategoria() %>">
 					    <input type="hidden" name="action" value="delete">
-					    <button type="submit" class="btn-guardar" style="background-color:red;">Apagar</button>
+					    <button type="submit" class="btn-action btn-delete">Apagar</button>
 					</form>
 					</td>
                 </tr>

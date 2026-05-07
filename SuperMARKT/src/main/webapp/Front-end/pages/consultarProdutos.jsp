@@ -40,31 +40,55 @@
             <h2 class="page-title">Produtos</h2>
             <p class="page-subtitle">Gestão do catálogo de produtos</p>
           </div>
-          <button class="btn-primary" type="button">Exportar Relatorio</button>
         </div>		
         <!-- KPIs -->
-        <div class="kpis kpis-stock">
-          <div class="kpi">
-            <div class="kpi-label">Total Produtos</div>
-            <div class="kpi-value"><%= request.getAttribute("totalProdutos")%></div>
+        <%
+          Object tp = request.getAttribute("totalProdutos");
+          Object vts = request.getAttribute("valorTotalStock");
+          Object pss = request.getAttribute("produtosSemStock");
+          Object pbs = request.getAttribute("produtosBaixoStock");
+        %>
+        <div class="kpis kpis-stock" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-bottom: 32px;">
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #3b82f6;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Total Produtos</div>
+                <div class="kpi-value" style="font-size: 1.75rem; color: #1e293b;"><%= tp != null ? tp : "0" %></div>
+              </div>
+              <div style="background: #eff6ff; padding: 10px; border-radius: 12px; color: #3b82f6; font-size: 1.5rem;">📦</div>
+            </div>
           </div>
 
-          <div class="kpi">
-            <div class="kpi-label">Stock Armazem</div>
-            <div class="kpi-value">3</div>
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #10b981;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Valor Total Stock</div>
+                <div class="kpi-value" style="font-size: 1.75rem; color: #1e293b;"><%= vts != null ? String.format("%.2f", (Double)vts) : "0.00" %>€</div>
+              </div>
+              <div style="background: #ecfdf5; padding: 10px; border-radius: 12px; color: #10b981; font-size: 1.5rem;">💰</div>
+            </div>
           </div>
 
-          <div class="kpi">
-            <div class="kpi-label">Stock Loja</div>
-            <div class="kpi-value">200</div>
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #ef4444;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Produtos Sem Stock</div>
+                <div class="kpi-value" style="font-size: 1.75rem; color: #1e293b;"><%= pss != null ? pss : "0" %></div>
+              </div>
+              <div style="background: #fef2f2; padding: 10px; border-radius: 12px; color: #ef4444; font-size: 1.5rem;">🚫</div>
+            </div>
           </div>
 
-          <div class="kpi">
-            <div class="kpi-label">Valor Total</div>
-            <div class="kpi-value">1913.32 €</div>
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #f59e0b;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Baixo Stock (&lt;10)</div>
+                <div class="kpi-value" style="font-size: 1.75rem; color: #1e293b;"><%= pbs != null ? pbs : "0" %></div>
+              </div>
+              <div style="background: #fffbeb; padding: 10px; border-radius: 12px; color: #f59e0b; font-size: 1.5rem;">⚠️</div>
+            </div>
           </div>
         </div>
-
 
         <section class="card">
           <!-- Search + filter -->   
@@ -115,7 +139,7 @@
                     </a>
                   </th>
                   <th>Editar</th>
-                  <th>Deletar</th>
+                  <th>Apagar</th>
                 </tr>
               </thead>
               <tbody>
@@ -127,15 +151,14 @@
                 <tr>
                   <td><%= p.getIdProduto() %></td>
                   <td><%= p.getNome() %></td>
-                  <td><span class="pill"><%= p.getCategoria().getNome() %></span></td>
+                  <td><span class="badge-cat"><%= p.getCategoria().getNome() %></span></td>
                   <td><%= p.getMarca() %></td>
                   <td><%= p.getUnidadeMedida() %></td>
                   <td><%= p.getCodBarras() %></td>
                   <td><%= String.format("%.2f", p.getPreco()) %>€</td>
 
-                  <!-- Botão Editar -->
                   <td>
-                    <button type="button" class="btn-guardar"  style="background-color:gray;"
+                    <button type="button" class="btn-action btn-edit"
                       onclick="abrirModal(
                         '<%= p.getIdProduto() %>',
                         '<%= p.getCategoria().getIdCategoria() %>',
@@ -149,16 +172,15 @@
                     </button>
                   </td>
 
-                  <!-- Botão Deletar -->
                   <td>
-                    <form action="${pageContext.request.contextPath}/ConsultarProdutosServlet" method="POST">
+                    <form action="${pageContext.request.contextPath}/ConsultarProdutosServlet" method="POST" style="margin: 0;">
                       <input type="hidden" name="action" value="delete" />
                       <input type="hidden" name="page" value="${currentPage}">
                       <input type="hidden" name="txtNome" value="${txtNome}">
                       <input type="hidden" name="orderBy" value="${orderBy}">
                       <input type="hidden" name="orderDir" value="${orderDir}">
                       <input type="hidden" name="delete_id_produto" value="<%= p.getIdProduto() %>" />
-                      <button type="submit" class="btn-guardar" style="background-color:red;">Apagar</button>
+                      <button type="submit" class="btn-action btn-delete">Apagar</button>
                     </form>
                   </td>
                 </tr>
@@ -179,7 +201,8 @@
             <% 
               Integer currentPage = (Integer) request.getAttribute("currentPage");
               Integer totalPages = (Integer) request.getAttribute("totalPages");
-              if (totalPages != null && totalPages > 1) {
+              if (currentPage == null) currentPage = 1;
+              if (totalPages == null || totalPages < 1) totalPages = 1;            
             %>
               <% if (currentPage > 1) { %>
                 <a class="page-btn" href="?txtNome=<%= txtNome %>&orderBy=<%= orderBy %>&orderDir=<%= orderDir %>&page=<%= currentPage - 1 %>">« Anterior</a>
@@ -190,7 +213,7 @@
                 int startPage = Math.max(1, currentPage - 2);
                 int endPage = Math.min(totalPages, currentPage + 2);
                 for (int i = startPage; i <= endPage; i++) {
-                  if (i == currentPage) {
+                if (i == currentPage) {
               %>
                 <span class="page-btn current"><%= i %></span>
               <% } else { %>
@@ -203,7 +226,7 @@
               <% } else { %>
                 <span class="page-btn disabled">Próximo »</span>
               <% } %>
-            <% } %>
+            
           </div>
 
         </section>

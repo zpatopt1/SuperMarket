@@ -220,4 +220,3 @@
   <script type="module" src="/SuperMARKT/Front-end/js/pages/dashboard.js"></script>
 </body>
 </html>
-

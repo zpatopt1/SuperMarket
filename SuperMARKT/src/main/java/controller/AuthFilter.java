@@ -44,7 +44,6 @@ public class AuthFilter implements Filter {
         "/ConsultarClientesServlet",
         "/Front-end/pages/consultarclientes.jsp",
         "/Front-end/pages/vendas.jsp",
-        "/Front-end/pages/cancelar.jsp",
         "/Front-end/pages/reembolso.jsp"
     ));
 

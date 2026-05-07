@@ -24,8 +24,16 @@ public class ConsultarUtilizadoresServlet extends HttpServlet {
         List<Funcionario> funcionarios = funcionarioDAO.getAllFuncionarios();
         List<Funcao> funcoes = funcaoDAO.getAllFuncoes();
 
+        // KPIs
+        int totalUtilizadores = funcionarioDAO.getTotalUtilizadores();
+        int totalAdmins = funcionarioDAO.getTotalAdmins();
+        int totalAtivos = funcionarioDAO.getTotalAtivos();
+
         request.setAttribute("funcionarios", funcionarios);
         request.setAttribute("funcoes", funcoes);
+        request.setAttribute("totalUtilizadores", totalUtilizadores);
+        request.setAttribute("totalAdmins", totalAdmins);
+        request.setAttribute("totalAtivos", totalAtivos);
         request.getRequestDispatcher("/Front-end/pages/admin/utilizadores.jsp").forward(request, response);
     }
 

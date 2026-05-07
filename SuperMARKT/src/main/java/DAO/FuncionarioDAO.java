@@ -140,4 +140,36 @@ public class FuncionarioDAO {
             throw new RuntimeException(e);
         }
     }
+    public int getTotalUtilizadores() {
+        int count = 0;
+        String sql = "SELECT COUNT(*) FROM funcionario";
+        try (Connection conn = DBconnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) count = rs.getInt(1);
+        } catch (Exception e) { e.printStackTrace(); }
+        return count;
+    }
+
+    public int getTotalAdmins() {
+        int count = 0;
+        String sql = "SELECT COUNT(*) FROM funcionario f JOIN funcao fn ON f.id_funcao = fn.id_funcao WHERE fn.descricao LIKE '%Admin%'";
+        try (Connection conn = DBconnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) count = rs.getInt(1);
+        } catch (Exception e) { e.printStackTrace(); }
+        return count;
+    }
+
+    public int getTotalAtivos() {
+        int count = 0;
+        String sql = "SELECT COUNT(*) FROM funcionario WHERE ativo = TRUE";
+        try (Connection conn = DBconnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) count = rs.getInt(1);
+        } catch (Exception e) { e.printStackTrace(); }
+        return count;
+    }
 }

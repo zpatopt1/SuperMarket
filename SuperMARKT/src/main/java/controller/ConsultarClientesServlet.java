@@ -39,11 +39,19 @@ public class ConsultarClientesServlet extends HttpServlet {
         List<Cliente> clientes = dao.getClientes(nomePesquisa, orderBy, orderDir, pageSize, offset);
         int totalClientes = dao.getTotalClientes(nomePesquisa);
         int totalPages = (int) Math.ceil((double) totalClientes / pageSize);
+        
+        // KPIs
+        int clientesAtivos = dao.getClientesComCompras();
+        String melhorCliente = dao.getMelhorCliente();
+        double mediaGastos = dao.getMediaGastos();
 
         request.setAttribute("clientes", clientes);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalClientes", totalClientes);
         request.setAttribute("totalPages", totalPages);
+        request.setAttribute("clientesAtivos", clientesAtivos);
+        request.setAttribute("melhorCliente", melhorCliente);
+        request.setAttribute("mediaGastos", mediaGastos);
         request.setAttribute("txtNome", nomePesquisa);
         request.setAttribute("orderBy", orderBy);
         request.setAttribute("orderDir", orderDir);

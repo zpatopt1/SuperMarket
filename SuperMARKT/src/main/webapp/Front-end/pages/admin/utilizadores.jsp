@@ -26,28 +26,46 @@
       <section class="content">
         <div class="pagehead">
           <div>
-            <h2 class="page-title">Gestao de Utilizadores</h2>
-            <p class="page-subtitle">Gestao e consulta de funcionarios</p>
+            <h2 class="page-title">Gestão de Utilizadores</h2>
+            <p class="page-subtitle">Gestão e consulta de funcionários e acessos</p>
           </div>
-          <button class="btn-primary" type="button">Exportar Relatorio</button>
         </div>
 
-        <div class="kpis kpis-stock">
-          <div class="kpi">
-            <div class="kpi-label">Utilizadores (filtrados)</div>
-            <div class="kpi-value" id="totalFiltrado">0</div>
+        <!-- KPIs -->
+        <%
+          Object tu = request.getAttribute("totalUtilizadores");
+          Object ta = request.getAttribute("totalAtivos");
+          Object tadm = request.getAttribute("totalAdmins");
+        %>
+        <div class="kpis kpis-stock" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-bottom: 32px;">
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #3b82f6;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Total Utilizadores</div>
+                <div class="kpi-value" style="font-size: 1.75rem; color: #1e293b;"><%= tu != null ? tu : "0" %></div>
+              </div>
+              <div style="background: #eff6ff; padding: 10px; border-radius: 12px; color: #3b82f6; font-size: 1.5rem;">👤</div>
+            </div>
           </div>
-          <div class="kpi">
-            <div class="kpi-label">Stock Armazem</div>
-            <div class="kpi-value">3</div>
+
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #10b981;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Contas Ativas</div>
+                <div class="kpi-value" style="font-size: 1.75rem; color: #1e293b;"><%= ta != null ? ta : "0" %></div>
+              </div>
+              <div style="background: #ecfdf5; padding: 10px; border-radius: 12px; color: #10b981; font-size: 1.5rem;">✅</div>
+            </div>
           </div>
-          <div class="kpi">
-            <div class="kpi-label">Stock Loja</div>
-            <div class="kpi-value">200</div>
-          </div>
-          <div class="kpi">
-            <div class="kpi-label">Valor Total</div>
-            <div class="kpi-value">1913.32 EUR</div>
+
+          <div class="kpi" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-left: 5px solid #8b5cf6;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="kpi-label" style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #64748b;">Administradores</div>
+                <div class="kpi-value" style="font-size: 1.75rem; color: #1e293b;"><%= tadm != null ? tadm : "0" %></div>
+              </div>
+              <div style="background: #f5f3ff; padding: 10px; border-radius: 12px; color: #8b5cf6; font-size: 1.5rem;">🛡️</div>
+            </div>
           </div>
         </div>
 
@@ -58,7 +76,7 @@
               <input type="text" placeholder="Pesquisar utilizadores..." id="searchInput">
             </div>
             <button class="btn-primary" type="button" id="btnFiltrar">Filtrar</button>
-            <button type="button" class="btn-primary" onclick="abrirModalAddFuncionario()">Adicionar Funcionario</button>
+            <button type="button" class="btn-primary" onclick="abrirModalAddFuncionario()">Adicionar Funcionário</button>
           </div>
 
           <div class="table-wrap">
@@ -67,9 +85,8 @@
                 <tr>
                   <th>NIF</th>
                   <th>Nome</th>
-                  <th>Contacto</th>
                   <th>Email</th>
-                  <th>Funcao</th>
+                  <th>Função</th>
                   <th>Estado</th>
                   <th>Editar</th>
                   <th>Apagar</th>
@@ -91,20 +108,23 @@
                 %>
                   <tr>
                     <td><%= nif %></td>
-                    <td><%= nome %></td>
-                    <td><%= contacto %></td>
+                    <td><strong><%= nome %></strong></td>
                     <td><%= email %></td>
-                    <td><%= (f.getIdFuncao() != null && f.getIdFuncao().getDescricao() != null) ? f.getIdFuncao().getDescricao() : "" %></td>
-                    <td><%= f.isAtivo() ? "Ativo" : "Inativo" %></td>
+                    <td><span class="badge-role"><%= (f.getIdFuncao() != null && f.getIdFuncao().getDescricao() != null) ? f.getIdFuncao().getDescricao() : "N/A" %></span></td>
                     <td>
-                      <button type="button" class="btn-guardar" style="background-color:gray;"
+                        <span class="status-badge <%= f.isAtivo() ? "status-active" : "status-inactive" %>">
+                            <%= f.isAtivo() ? "Ativo" : "Inativo" %>
+                        </span>
+                    </td>
+                    <td>
+                      <button type="button" class="btn-action btn-edit"
                         onclick="abrirModal('<%= nif %>', '<%= nomeJs %>', '<%= contactoJs %>', '<%= emailJs %>', '<%= idFuncao %>', <%= f.isAtivo() ? "true" : "false" %>)">Editar</button>
                     </td>
                     <td>
-                      <form method="post" action="${pageContext.request.contextPath}/ConsultarUtilizadoresServlet" style="display:inline;">
+                      <form method="post" action="${pageContext.request.contextPath}/ConsultarUtilizadoresServlet" style="margin:0;">
                         <input type="hidden" name="delete_nif" value="<%= nif %>">
                         <input type="hidden" name="action" value="delete">
-                        <button type="submit" class="btn-guardar" style="background-color:red;">Apagar</button>
+                        <button type="submit" class="btn-action btn-delete">Apagar</button>
                       </form>
                     </td>
                   </tr>
