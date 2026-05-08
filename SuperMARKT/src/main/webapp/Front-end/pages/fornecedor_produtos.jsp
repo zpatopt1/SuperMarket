@@ -233,42 +233,164 @@
 
   document.getElementById('btnCriarEncomenda').addEventListener('click', function () {
 
-	  const checksMarcados = Array.from(
-	    document.querySelectorAll('.check-encomenda:checked')
-	  );
+	    const checksMarcados = Array.from(
+	        document.querySelectorAll('.check-encomenda:checked')
+	    );
 
-	  if (checksMarcados.length === 0) {
-	    alert('Seleciona pelo menos 1 produto.');
-	    return;
-	  }
+	    // =========================================
+	    // VALIDAR
+	    // =========================================
 
-	  const fornecedorId = checksMarcados[0].dataset.fornecedorId;
+	    if (checksMarcados.length === 0) {
 
-	  let mensagem = 'Fornecedor: ' + fornecedorId + '\n\n';
+	        alert('Seleciona pelo menos 1 produto.');
 
-	  checksMarcados.forEach(function (chk) {
-
-	    const linha = chk.closest('tr');
-
-	    const produtoId = chk.dataset.produtoId;
-
-	    const quantidade = linha.querySelector('.input-quantidade').value;
-	    
-	    if (isNaN(quantidade) || quantidade < 1) {
-	        alert('A quantidade do produto ' + produtoId + ' tem de ser maior que 0.');
-	        quantidadeInput.focus();
 	        return;
-	      }																																																																																												
-	    
-	    mensagem +=
-	      'Produto ID: ' + produtoId +
-	      ' | Quantidade: ' + quantidade + '\n';
-	  });
+	    }
 
-	  alert(mensagem);
-	});
-  
-  
+	    // =========================================
+	    // FORNECEDOR
+	    // =========================================
+
+	    const fornecedorId =
+	        checksMarcados[0].dataset.fornecedorId;
+
+	    // =========================================
+	    // FORM DINÂMICO
+	    // =========================================
+
+	    const form = document.createElement('form');
+
+	    form.method = 'POST';
+
+	    form.action =
+	        '${pageContext.request.contextPath}/ConsultarFornecedorProdutosServlet';
+
+	    // =========================================
+	    // ACTION
+	    // =========================================
+
+	    const actionInput =
+	        document.createElement('input');
+
+	    actionInput.type = 'hidden';
+
+	    actionInput.name = 'action';
+
+	    actionInput.value = 'createEncomenda';
+
+	    form.appendChild(actionInput);
+
+	    // =========================================
+	    // FORNECEDOR
+	    // =========================================
+
+	    const fornecedorInput =
+	        document.createElement('input');
+
+	    fornecedorInput.type = 'hidden';
+
+	    fornecedorInput.name = 'id_fornecedor';
+
+	    fornecedorInput.value = fornecedorId;
+
+	    form.appendChild(fornecedorInput);
+
+	    // =========================================
+	    // LOCAL
+	    // =========================================
+	    // TEMPORÁRIO FIXO
+	    // depois podes trocar por select
+
+	    const localInput =
+	        document.createElement('input');
+
+	    localInput.type = 'hidden';
+
+	    localInput.name = 'id_local';
+
+	    localInput.value = '1';
+
+	    form.appendChild(localInput);
+
+	    // =========================================
+	    // PRODUTOS
+	    // =========================================
+
+	    for (const chk of checksMarcados) {
+
+	        const linha =
+	            chk.closest('tr');
+
+	        const produtoId =
+	            chk.dataset.produtoId;
+
+	        const quantidadeInput =
+	            linha.querySelector(
+	                '.input-quantidade'
+	            );
+
+	        const quantidade =
+	            quantidadeInput.value;
+
+	        // =====================================
+	        // VALIDAR QUANTIDADE
+	        // =====================================
+
+	        if (
+	            isNaN(quantidade) ||
+	            quantidade < 1
+	        ) {
+
+	            alert(
+	                'Quantidade inválida no produto ' +
+	                produtoId
+	            );
+
+	            quantidadeInput.focus();
+
+	            return;
+	        }
+
+	        // =====================================
+	        // ID PRODUTO
+	        // =====================================
+
+	        const produtoInput =
+	            document.createElement('input');
+
+	        produtoInput.type = 'hidden';
+
+	        produtoInput.name = 'id_produto';
+
+	        produtoInput.value = produtoId;
+
+	        form.appendChild(produtoInput);
+
+	        // =====================================
+	        // QUANTIDADE
+	        // =====================================
+
+	        const qtyInput =
+	            document.createElement('input');
+
+	        qtyInput.type = 'hidden';
+
+	        qtyInput.name = 'qty_produtos';
+
+	        qtyInput.value = quantidade;
+
+	        form.appendChild(qtyInput);
+	    }
+
+	    // =========================================
+	    // ENVIAR
+	    // =========================================
+
+	    document.body.appendChild(form);
+
+	    form.submit();
+	});  
   
   function abrirModalAdd() { document.getElementById("modalAdd").style.display = "flex"; }
   function fecharModalAdd() { document.getElementById("modalAdd").style.display = "none"; }

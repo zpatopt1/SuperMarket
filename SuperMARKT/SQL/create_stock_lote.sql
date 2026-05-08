@@ -8,7 +8,7 @@ CREATE TABLE fornecedor_produto (
     id_fornecedor INT,
     id_produto INT,
 
-    preco FL
+    preco FLoat,
 
     PRIMARY KEY (id_fornecedor, id_produto),
 
@@ -31,7 +31,7 @@ CREATE TABLE encomenda (
     id_fornecedor INT NOT NULL,
     id_local INT NOT NULL,
 
-    valor_total FLOAT
+    valor_total FLOAT,
     custo_envio FLOAT,
 
     data_prevista DATE,

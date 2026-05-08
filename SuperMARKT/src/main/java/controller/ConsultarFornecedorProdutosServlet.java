@@ -50,6 +50,15 @@ public class ConsultarFornecedorProdutosServlet extends HttpServlet {
                 int idProduto = Integer.parseInt(request.getParameter("id_produto"));
                 dao.delete(idFornecedor, idProduto);
             }
+            else if ("createEncomenda".equals(action)) {
+                String nif = (String) request.getSession().getAttribute("nif");
+                int idFornecedor = Integer.parseInt(request.getParameter("id_fornecedor"));
+                int idLocal = Integer.parseInt(request.getParameter("id_local"));
+                String[] produtos = request.getParameterValues("id_produto");
+                String[] quantidades = request.getParameterValues("qty_produtos");
+
+                dao.createEncomendaCompleta(nif, idFornecedor, idLocal, produtos, quantidades);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

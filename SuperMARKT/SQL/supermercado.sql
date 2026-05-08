@@ -229,6 +229,36 @@
             FOREIGN KEY (id_local) REFERENCES local(id_local)
         );
 
+        CREATE TABLE stock_lote (
+            id_lote INT AUTO_INCREMENT,
+
+            id_produto INT NOT NULL,
+            id_local INT NOT NULL,
+
+            -- ligação ao registo original da encomenda
+            id_linhaenc INT,
+
+            numero_lote VARCHAR(50),
+
+            quantidade INT NOT NULL CHECK (quantidade >= 0),
+
+            data_validade DATE,
+
+            data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+            ativo BOOLEAN DEFAULT TRUE,
+
+            PRIMARY KEY (id_lote),
+
+            FOREIGN KEY (id_produto)
+                REFERENCES produto(id_produto),
+
+            FOREIGN KEY (id_local)
+                REFERENCES local(id_local),
+
+            FOREIGN KEY (id_linhaenc)
+                REFERENCES linha_enc(id_linhaenc),
+        );
         -- CERTO E FEITO
         -- AGORA FALTA A LOGICA DE CUSTO  DE ENVIO
         -- SIMPLES colocar custo_envio onde quando o fornecedor receber o pedido coloca o 

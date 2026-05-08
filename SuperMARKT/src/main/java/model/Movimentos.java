@@ -1,23 +1,26 @@
 package model;
 
+import java.sql.Date;
+import java.sql.Time;
+
 public class Movimentos {
     private int idMovimentos;
     private Funcionario funcionario;
     private String status;
-    private String data;
-    private String hora;
+    private Date data;
+    private Time hora;
     
     public Movimentos() {
     	// TODO Auto-generated constructor stub
     }
     
-    public Movimentos(int idMovimentos, Funcionario funcionario, String status, String data, String hora) {
+    public Movimentos(int idMovimentos, Funcionario funcionario, String status, Date data, Time hora) {
     	this.idMovimentos = idMovimentos;
     	this.funcionario = funcionario;
     	this.status = status;
     	this.data = data;
     	this.hora = hora;
-    }
+    }	
 
 	public int getIdMovimentos() {
 		return idMovimentos;
@@ -43,21 +46,22 @@ public class Movimentos {
 		this.status = status;
 	}
 
-	public String getData() {
+	public Date getData() {
 		return data;
 	}
 
-	public void setData(String data) {
-		this.data = data;
+	public void setData(Date date) {
+		this.data = date;
 	}
 
-	public String getHora() {
+	public void setHora(Time hora) {
+		this.hora = hora;
+	}
+
+	public Time getHora() {
 		return hora;
 	}
 
-	public void setHora(String hora) {
-		this.hora = hora;
-	}
+
 }
-    
     

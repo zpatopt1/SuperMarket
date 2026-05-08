@@ -29,12 +29,16 @@ public class AuthFilter implements Filter {
             "/ConsultarLocalServlet",
             "/ConsultarZonaServlet",
             "/ConsultarStockLocalServlet",
+            "/EncomendasServlet",
+            "/DetalhesEncomendaServlet",
             "/Front-end/pages/consultarProdutos.jsp",
             "/Front-end/pages/consultarcategorias.jsp",
             "/Front-end/pages/consultarfornecedores.jsp",
             "/Front-end/pages/fornecedor_produtos.jsp",
             "/Front-end/pages/consultarlocal.jsp",
             "/Front-end/pages/consultarzona.jsp",
+            "/Front-end/pages/encomendas.jsp",
+            "/Front-end/pages/linhas_encomenda.jsp",            
             "/Front-end/pages/consultarstocklocal.jsp"
     ));
 
