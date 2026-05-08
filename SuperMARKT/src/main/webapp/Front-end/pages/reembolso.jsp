@@ -16,14 +16,12 @@
 </head>
 <body>
   <div class="app">
- 	<!-- Sidebar -->
-	<jsp:include page="/Front-end/pages/components/sidebar.jsp" />
+ 	<jsp:include page="/Front-end/pages/components/sidebar.jsp" />
 
-    <!-- Main -->
     <main class="main">
 
-	<!-- Topbar -->
-	<jsp:include page="/Front-end/pages/components/topbar.jsp" />     <!-- CONTENT -->
+	<jsp:include page="/Front-end/pages/components/topbar.jsp" />     
+      
       <section class="content">
         <div class="refund-head">
           <a class="back" href="../index.html">← <span>Voltar</span></a>
@@ -35,7 +33,6 @@
         </div>
 
         <div class="grid grid-refund">
-          <!-- ESQUERDA -->
           <section class="card">
             <div class="toolbar">
               <div class="search">
@@ -58,7 +55,7 @@
                   </div>
                   <div class="refund-right">
                     <span class="muted2">2x 1.99€</span>
-                    <button class="btn-soft" type="button">Reembolsar</button>
+                    <button class="btn-soft" type="button" onclick="selecionarParaReembolso(4, 1.99)">Reembolsar</button>
                   </div>
                 </div>
 
@@ -69,7 +66,7 @@
                   </div>
                   <div class="refund-right">
                     <span class="muted2">1x 5.49€</span>
-                    <button class="btn-soft" type="button">Reembolsar</button>
+                    <button class="btn-soft" type="button" onclick="selecionarParaReembolso(5, 5.49)">Reembolsar</button>
                   </div>
                 </div>
 
@@ -80,26 +77,25 @@
                   </div>
                   <div class="refund-right">
                     <span class="muted2">3x 0.89€</span>
-                    <button class="btn-soft" type="button">Reembolsar</button>
+                    <button class="btn-soft" type="button" onclick="selecionarParaReembolso(6, 0.89)">Reembolsar</button>
                   </div>
                 </div>
               </div>
             </div>
           </section>
 
-          <!-- DIREITA -->
           <aside class="card">
             <div class="card-body">
               <h3 class="side-title">Resumo do Reembolso</h3>
 
               <div class="info-box info-blue">
                 <div class="info-label">Produtos Selecionados</div>
-                <div class="info-value">0</div>
+                <div class="info-value" id="ui-qtd">0</div>
               </div>
 
               <div class="info-box info-green">
                 <div class="info-label">Total a Reembolsar</div>
-                <div class="info-value">0.00€</div>
+                <div class="info-value" id="ui-total">0.00€</div>
               </div>
 
               <div class="info-box info-gray">
@@ -108,17 +104,39 @@
               </div>
 
               <div class="refund-actions">
-                <button class="btn-warn" type="button">Processar Reembolso</button>
-                <button class="btn-outline" type="button">Cancelar</button>
+                <form action="${pageContext.request.contextPath}/DevolucaoServlet" method="POST" style="width: 100%; margin: 0; padding: 0;">
+                    <input type="hidden" name="idLinhaVenda" id="form-idLinha" value="">
+                    <input type="hidden" name="motivo" value="Devolução a pedido do cliente">
+                    <input type="hidden" name="quantidade" id="form-qtd" value="0">
+                    <input type="hidden" name="valor" id="form-valor" value="0.00">
+                    <input type="hidden" name="reporStock" value="sim">
+                    
+                    <button class="btn-warn" type="submit" style="width: 100%; margin-bottom: 8px;">Processar Reembolso</button>
+                </form>
+
+                <button class="btn-outline" type="button" style="width: 100%;" onclick="location.reload();">Cancelar</button>
               </div>
             </div>
           </aside>
         </div>
 
-        <button class="help" type="button" aria-label="Ajuda" onclick="location.href='Ajuda.html'">?</button>
       </section>
     </main>
   </div>
+
+  <script>
+    function selecionarParaReembolso(idLinha, precoUnitario) {
+        
+        document.getElementById('ui-qtd').innerText = "1";
+        document.getElementById('ui-total').innerText = precoUnitario + "€";
+
+       
+        document.getElementById('form-idLinha').value = idLinha;
+        document.getElementById('form-valor').value = precoUnitario;
+        document.getElementById('form-qtd').value = "1";
+    }
+  </script>
+
 </body>
 <script type="module" src="/SuperMARKT/Front-end/js/pages/dashboard.js"></script>
 </html>
