@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import DAO.EncomendaDAO;
-import DAO.FornecedorProdutoDAO;
 
 /**
  * Servlet implementation class EncomendasServlet

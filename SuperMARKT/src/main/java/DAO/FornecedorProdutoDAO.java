@@ -94,13 +94,13 @@ public class FornecedorProdutoDAO {
         return lista;
     }
 
-    public boolean insert(int idFornecedor, int idProduto, float preco) {
+    public boolean insert(FornecedorProduto fornecedorProduto) {
         String sql = "INSERT INTO fornecedor_produto (id_fornecedor, id_produto, preco) VALUES (?, ?, ?)";
         try (Connection conn = DBconnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, idFornecedor);
-            stmt.setInt(2, idProduto);
-            stmt.setFloat(3, preco);
+            stmt.setInt(1, fornecedorProduto.getFornecedor().getIdFornecedor());
+            stmt.setInt(2, fornecedorProduto.getProduto().getIdProduto());
+            stmt.setFloat(3, fornecedorProduto.getPreco());
             return stmt.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -108,13 +108,13 @@ public class FornecedorProdutoDAO {
         }
     }
 
-    public boolean update(int idFornecedor, int idProduto, float preco) {
+    public boolean update(FornecedorProduto fornecedorProduto) {
         String sql = "UPDATE fornecedor_produto SET preco = ? WHERE id_fornecedor = ? AND id_produto = ?";
         try (Connection conn = DBconnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setFloat(1, preco);
-            stmt.setInt(2, idFornecedor);
-            stmt.setInt(3, idProduto);
+            stmt.setFloat(1, fornecedorProduto.getPreco());
+            stmt.setInt(2, fornecedorProduto.getFornecedor().getIdFornecedor());
+            stmt.setInt(3, fornecedorProduto.getProduto().getIdProduto());
             return stmt.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -135,273 +135,4 @@ public class FornecedorProdutoDAO {
         }
     }
 
-    public int createMovimento(String nif, String status) {
-
-        String sql =
-            "INSERT INTO movimentos " +
-            "(nif, status, data, hora) " +
-            "VALUES (?, ?, CURRENT_DATE, CURRENT_TIME)";
-
-        try (Connection conn = DBconnection.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-
-            stmt.setString(1, nif);
-            stmt.setString(2, status);
-
-            stmt.executeUpdate();
-
-            ResultSet rs = stmt.getGeneratedKeys();
-
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return -1;
-    }
-
-    
-    public boolean createEncomenda(int idEncomenda, int idFornecedor,int idLocal) {
-        String sql = "insert into encomenda (id_encomenda, id_fornecedor, id_local, valor_total, custo_envio) VALUES (?,?,?,?,?)";
-
-        try (Connection conn = DBconnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            // 1. Criar encomenda
-
-            stmt.setInt(1, idEncomenda);
-            stmt.setInt(2, idFornecedor);
-            stmt.setInt(3, idLocal);
-
-            stmt.setFloat(4, 0);
-            stmt.setFloat(5, 0);
-            return stmt.executeUpdate() > 0;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-
-    }
-
-
-    public void createLinhaEnc(
-            int idEncomenda,
-            int idFornecedor,
-            String[] produtos,
-            String[] quantidades,
-            Connection conn) {
-
-        String sqlLinha =
-            "INSERT INTO linha_enc " +
-            "(id_encomenda, id_produto, quantidade, preco_encomenda) " +
-            "VALUES (?, ?, ?, ?)";
-
-        String sqlPreco =
-            "SELECT preco " +
-            "FROM fornecedor_produto " +
-            "WHERE id_fornecedor = ? " +
-            "AND id_produto = ?";
-
-        try (
-            PreparedStatement stmtLinha =
-                conn.prepareStatement(sqlLinha);
-
-            PreparedStatement stmtPreco =
-                conn.prepareStatement(sqlPreco)
-        ) {
-
-            for (int i = 0; i < produtos.length; i++) {
-
-                int idProduto =
-                    Integer.parseInt(produtos[i]);
-
-                int quantidade =
-                    Integer.parseInt(quantidades[i]);
-
-                // =========================================
-                // BUSCAR PREÇO
-                // =========================================
-
-                stmtPreco.setInt(1, idFornecedor);
-                stmtPreco.setInt(2, idProduto);
-
-                ResultSet rs =
-                    stmtPreco.executeQuery();
-
-                float preco = 0;
-
-                if (rs.next()) {
-                    preco = rs.getFloat("preco");
-                }
-
-                // =========================================
-                // INSERIR LINHA
-                // =========================================
-
-                stmtLinha.setInt(1, idEncomenda);
-                stmtLinha.setInt(2, idProduto);
-                stmtLinha.setInt(3, quantidade);
-                stmtLinha.setFloat(4, preco);
-                stmtLinha.addBatch();
-            }
-            stmtLinha.executeBatch();
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public void updateValorTotal(
-            int idEncomenda,
-            Connection conn) {
-
-        String sql =
-            "UPDATE encomenda " +
-            "SET valor_total = (" +
-            "   SELECT SUM(quantidade * preco_encomenda) " +
-            "   FROM linha_enc " +
-            "   WHERE id_encomenda = ?" +
-            ") " +
-            "WHERE id_encomenda = ?";
-
-        try (
-            PreparedStatement stmt =
-                conn.prepareStatement(sql)
-        ) {
-
-            stmt.setInt(1, idEncomenda);
-            stmt.setInt(2, idEncomenda);
-
-            stmt.executeUpdate();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    // =====================================================
-    // CREATE ENCOMENDA COMPLETA
-    // =====================================================
-
-    public boolean createEncomendaCompleta(
-            String nif,
-            int idFornecedor,
-            int idLocal,
-            String[] produtos,
-            String[] quantidades) {
-
-        Connection conn = null;
-
-        try {
-
-            conn = DBconnection.getConnection();
-
-            conn.setAutoCommit(false);
-
-            // =========================================
-            // 1. MOVIMENTO
-            // =========================================
-
-            int idMovimento =
-                createMovimento(
-                    nif,
-                    "ENCOMENDA"
-                );
-
-            if (idMovimento == -1) {
-
-                conn.rollback();
-
-                return false;
-            }
-
-            // =========================================
-            // 2. ENCOMENDA
-            // =========================================
-
-            boolean encomendaCriada =
-                createEncomenda(
-                    idMovimento,
-                    idFornecedor,
-                    idLocal
-                );
-
-            if (!encomendaCriada) {
-
-                conn.rollback();
-
-                return false;
-            }
-
-            // =========================================
-            // 3. LINHAS
-            // =========================================
-
-            createLinhaEnc(
-                idMovimento,
-                idFornecedor,
-                produtos,
-                quantidades,
-                conn
-            );
-
-            // =========================================
-            // 4. TOTAL
-            // =========================================
-
-            updateValorTotal(
-                idMovimento,
-                conn
-            );
-
-            // =========================================
-            // COMMIT
-            // =========================================
-
-            conn.commit();
-
-            return true;
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-            try {
-
-                if (conn != null) {
-                    conn.rollback();
-                }
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-
-        } finally {
-
-            try {
-
-                if (conn != null) {
-
-                    conn.setAutoCommit(true);
-
-                    conn.close();
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        return false;
-    }
 }
-
-
-

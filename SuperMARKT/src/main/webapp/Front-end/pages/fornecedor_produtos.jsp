@@ -4,6 +4,8 @@
 <%@ page import="model.FornecedorProduto" %>
 <%@ page import="model.Fornecedor" %>
 <%@ page import="model.Produto" %>
+<%@ page import="model.Local" %>
+
 <!DOCTYPE html>
 <html lang="pt-PT">
 <head>
@@ -20,72 +22,74 @@
   <main class="main">
     <jsp:include page="/Front-end/pages/components/topbar.jsp" />
     <section class="content">
-      <div class="pagehead">
+    <div class="pagehead">
+      <div>
+        <h2 class="page-title">Fornecedor Produtos</h2>
+        <p class="page-subtitle">Gestão de preços por fornecedor</p>
+      </div>
+    </div>
+    <section class="card">
+      <div class="toolbar">
+        <div class="search">
+          <span class="search-ico" aria-hidden="true">⌕</span>
+          <input type="text" id="searchInput" placeholder="Pesquisar...">
+        </div>
         <div>
-          <h2 class="page-title">Fornecedor Produtos</h2>
-          <p class="page-subtitle">Gestão de preços por fornecedor</p>
+            <button class="btn-secondary" type="button" id="btnLimparSelecao">Limpar seleção</button>
+			<button class="btn-primary" type="button" onclick="abrirModalConfirmar()">Efetuar Encomenda</button>            
+            <button class="btn-primary" type="button" onclick="abrirModalAdd()">Adicionar Novo Preço</button>
         </div>
       </div>
-
-      <section class="card">
-        <div class="toolbar">
-          <div class="search">
-            <span class="search-ico" aria-hidden="true">⌕</span>
-            <input type="text" id="searchInput" placeholder="Pesquisar...">
-          </div>
-          <button class="btn-secondary" type="button" id="btnLimparSelecao">Limpar seleção</button>
-          <button class="btn-primary" type="button" id="btnCriarEncomenda">Criar encomenda</button>
-          <button class="btn-primary" type="button" onclick="abrirModalAdd()">Adicionar</button>
-        </div>
-
-        <div class="table-wrap">
+      <% if(request.getAttribute("mensagem") != null) { %>
+          <div style="color: green; margin-bottom: 15px;"><%= request.getAttribute("mensagem") %></div>
+      <% } %>
+      <% if(request.getAttribute("erro") != null) { %>
+          <div style="color: red; margin-bottom: 15px;"><%= request.getAttribute("erro") %></div>
+      <% } %>
+      <div class="table-wrap">
+        <form id="formEncomenda" action="${pageContext.request.contextPath}/ConsultarFornecedorProdutosServlet" method="post">
+          <input type="hidden" name="action" value="encomendar">
+          <input type="hidden" name="id_fornecedor_comum" id="id_fornecedor_comum">
+          <input type="hidden" id="id_local" name="id_local">
           <table id="fornecedorProdutosTable" class="table">
             <thead>
-            <tr>
-              <th>Sel.</th>
-              <th>Qty</th>
-              <th>ID Fornecedor</th>
-              <th>Fornecedor</th>
-              <th>ID Produto</th>
-              <th>Produto</th>
-              <th>Preço</th>
-              <th>Editar</th>
-              <th>Apagar</th>
-            </tr>
+              <tr>
+                <th>Sel.</th>
+                <th>Qty</th>
+                <th>ID Fornecedor</th>
+                <th>Fornecedor</th>
+                <th>ID Produto</th>
+                <th>Produto</th>
+                <th>Preço (€)</th>
+                <th>Editar</th>
+                <th>Apagar</th>
+              </tr>
             </thead>
             <tbody>
             <%
               List<FornecedorProduto> lista = (List<FornecedorProduto>) request.getAttribute("fornecedorProdutos");
               if (lista != null) {
                 for (FornecedorProduto fp : lista) {
-                  String fornecedorNome = fp.getFornecedor().getTipoFornecedor() != null
-                      ? fp.getFornecedor().getTipoFornecedor().replace("\\", "\\\\").replace("'", "\\'")
-                      : "";
-                  String produtoNome = fp.getProduto().getNome() != null
-                      ? fp.getProduto().getNome().replace("\\", "\\\\").replace("'", "\\'")
-                      : "";
+                  String fornecedorNome = fp.getFornecedor().getTipoFornecedor();
+                  String produtoNome = fp.getProduto().getNome();
             %>
-				<tr>
-				  <td>
-				    <input type="checkbox"
-				           class="check-encomenda"
-				           data-fornecedor-id="<%= fp.getFornecedor().getIdFornecedor() %>"
-				           data-produto-id="<%= fp.getProduto().getIdProduto() %>">
-				  </td>
-				  
-				  <td>
-				    <input type="number"
-				           class="input-quantidade"
-				           min="1"
-				           value="1"
-				           style="width:70px;">
-				  </td>
-				  <td><%= fp.getFornecedor().getIdFornecedor() %></td>
-				  <td><%= fp.getFornecedor().getTipoFornecedor() %></td>
-				  <td><%= fp.getProduto().getIdProduto() %></td>
-				  <td><%= fp.getProduto().getNome() %></td>
-				  <td><%= fp.getPreco() %></td>
-				  <td>
+            <tr>
+              <td>
+                <input type="checkbox" name="selected_produtos" 
+                      value="<%= fp.getProduto().getIdProduto() %>"
+                      onclick="atualizarFornecedorComum('<%= fp.getFornecedor().getIdFornecedor() %>')">
+              </td>
+              <td>
+                <input type="number" name="qtd_<%= fp.getProduto().getIdProduto() %>" 
+                      class="input-quantidade" min="1" value="1" style="width:60px;">
+                <input type="hidden" name="preco_<%= fp.getProduto().getIdProduto() %>" value="<%= fp.getPreco()%>">
+              </td>
+              <td><%= fp.getFornecedor().getIdFornecedor() %></td>
+              <td><%= fornecedorNome %></td>
+              <td><%= fp.getProduto().getIdProduto() %></td>
+              <td><%= produtoNome %></td>
+              <td><%= String.format("%.2f", fp.getPreco()) %></td>
+              <td>
                 <button class="btn-action btn-edit" type="button"
                         onclick="abrirModalEdit('<%= fp.getFornecedor().getIdFornecedor() %>','<%= fornecedorNome %>','<%= fp.getProduto().getIdProduto() %>','<%= produtoNome %>','<%= fp.getPreco() %>')">
                   Editar
@@ -101,13 +105,13 @@
               </td>
             </tr>
             <% } } %>
-
             </tbody>
           </table>
-        </div>
-      </section>
+        </form>
+      </div>
     </section>
-  </main>
+  </section>
+</main>
 </div>
 
 <div id="modalAdd" class="modal">
@@ -116,6 +120,8 @@
     <h3>Adicionar Fornecedor Produto</h3>
     <form action="${pageContext.request.contextPath}/ConsultarFornecedorProdutosServlet" method="post">
       <input type="hidden" name="action" value="insert">
+    
+      
       <div class="input-group full-width">
         <label>Fornecedor</label>
         <select name="id_fornecedor" required>
@@ -178,222 +184,117 @@
   </div>
 </div>
 
+<!-- Modal de Confirmação para selecionar o Local -->
+<div id="modalConfirmar" class="modal">
+  <div class="registo-card">
+    <span class="close" onclick="fecharModalConfirmar()">x</span>
+    <h3>Finalizar Encomenda</h3>
+    <p>Selecione o local de destino:</p>
+    
+    <div class="input-group full-width">
+      <label>Local de Destino</label>
+      <select id="select_local_modal" class="input-field" required>
+        <option value="">Selecione um local...</option>
+        <%
+          List<Local> listaLocais = (List<Local>) request.getAttribute("locais");
+          if (listaLocais != null) {
+            for (model.Local l : listaLocais) {
+        %>
+          <option value="<%= l.getIdLocal() %>"><%= l.getNome() %></option>
+        <% 
+            } 
+          } 
+        %>
+      </select>
+    </div>
+    <div class="button-group full-width">
+      <button class="btn-guardar" type="button" onclick="confirmarEnvioFinal()">Confirmar e Enviar</button>
+    </div>
+  </div>
+</div>
+
+
 <script>
-  let fornecedorSelecionado = null;
+  function atualizarFornecedorComum(idFornecedorClicado) {
+    const checkboxes = document.querySelectorAll('input[name="selected_produtos"]');
+    const inputFornecedorComum = document.getElementById("id_fornecedor_comum");
+    const rows = document.querySelectorAll('#fornecedorProdutosTable tbody tr');
+    
+    // Contar quantas checkboxes estão marcadas
+    const selecionados = Array.from(checkboxes).filter(cb => cb.checked);
 
-  function atualizarFornecedorSelecionado() {
-    const checksMarcados = Array.from(document.querySelectorAll('.check-encomenda:checked'));
-    if (checksMarcados.length === 0) {
-      fornecedorSelecionado = null;
-      return;
-    }
-    fornecedorSelecionado = checksMarcados[0].dataset.fornecedorId;
-  }
-
-  function aplicarFiltrosTabela() {
-    const filtro = document.getElementById('searchInput').value.toLowerCase();
-    const linhas = document.querySelectorAll('#fornecedorProdutosTable tbody tr');
-    linhas.forEach(function (linha) {
-      const txt = linha.innerText.toLowerCase();
-      const passaTexto = txt.includes(filtro);
-      const chk = linha.querySelector('.check-encomenda');
-      const fornecedorLinha = chk ? chk.dataset.fornecedorId : null;
-      const passaFornecedor = !fornecedorSelecionado || fornecedorLinha === fornecedorSelecionado;
-      linha.style.display = (passaTexto && passaFornecedor) ? '' : 'none';
-    });
-  }
-
-  document.getElementById('searchInput').addEventListener('keyup', function () {
-    aplicarFiltrosTabela();
-  });
-
-  document.querySelectorAll('.check-encomenda').forEach(function (chk) {
-    chk.addEventListener('change', function () {
-      const fornecedorId = this.dataset.fornecedorId;
-
-      if (this.checked) {
-        if (fornecedorSelecionado && fornecedorSelecionado !== fornecedorId) {
-          alert('Só é permitido 1 fornecedor por encomenda. Limpa a seleção atual para trocar de fornecedor.');
-          this.checked = false;
-          return;
+    if (selecionados.length === 1) {
+      // Se for o primeiro a ser selecionado, filtramos a tabela por este fornecedor
+      inputFornecedorComum.value = idFornecedorClicado;
+      
+      rows.forEach(row => {
+        const idRow = row.cells[2].innerText.trim();
+        if (idRow !== idFornecedorClicado) {
+          row.style.display = 'none';
         }
-        fornecedorSelecionado = fornecedorId;
-      } else {
-        atualizarFornecedorSelecionado();
-      }
-      aplicarFiltrosTabela();
+      });
+      console.log("Filtro aplicado ao fornecedor: " + idFornecedorClicado);
+
+    } else if (selecionados.length === 0) {
+      // Se desmarcou tudo, volta a mostrar todos os produtos
+      inputFornecedorComum.value = "";
+      rows.forEach(row => row.style.display = '');
+      console.log("Filtro removido.");
+    }
+  }
+
+  // --- Ajuste no Limpar Seleção para restaurar a tabela ---
+  document.getElementById('btnLimparSelecao').addEventListener('click', function() {
+    const checkboxes = document.querySelectorAll('input[name="selected_produtos"]');
+    checkboxes.forEach(cb => cb.checked = false);
+    
+    document.getElementById("id_fornecedor_comum").value = "";
+    
+    // Mostrar todas as linhas novamente
+    const rows = document.querySelectorAll('#fornecedorProdutosTable tbody tr');
+    rows.forEach(row => row.style.display = '');
+    
+    // Resetar quantidades
+    document.querySelectorAll('.input-quantidade').forEach(input => input.value = 1);
+  });
+
+  // --- Lógica de Pesquisa (Mantida mas integrada) ---
+  document.getElementById('searchInput').addEventListener('keyup', function() {
+    const filter = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#fornecedorProdutosTable tbody tr');
+    const idFornecedorAtivo = document.getElementById("id_fornecedor_comum").value;
+
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      const idRow = row.cells[2].innerText.trim();
+      
+      // Só mostra se: coincidir com a pesquisa E (não houver filtro de fornecedor OU for o fornecedor correto)
+      const matchesSearch = text.includes(filter);
+      const matchesSupplier = (idFornecedorAtivo === "" || idRow === idFornecedorAtivo);
+
+      row.style.display = (matchesSearch && matchesSupplier) ? '' : 'none';
     });
   });
+  
+  function confirmarEnvioFinal() {
+	    const selectLocal = document.getElementById("select_local_modal");
+	    const localId = selectLocal.value;
 
-  document.getElementById('btnLimparSelecao').addEventListener('click', function () {
-    document.querySelectorAll('.check-encomenda').forEach(function (chk) { chk.checked = false; });
-    fornecedorSelecionado = null;
-    aplicarFiltrosTabela();
-  });
-
-  document.getElementById('btnCriarEncomenda').addEventListener('click', function () {
-
-	    const checksMarcados = Array.from(
-	        document.querySelectorAll('.check-encomenda:checked')
-	    );
-
-	    // =========================================
-	    // VALIDAR
-	    // =========================================
-
-	    if (checksMarcados.length === 0) {
-
-	        alert('Seleciona pelo menos 1 produto.');
-
+	    if (!localId) {
+	        alert("Por favor, selecione um local de destino.");
 	        return;
 	    }
 
-	    // =========================================
-	    // FORNECEDOR
-	    // =========================================
+	    // 1. Coloca o ID do local no campo hidden do formulário principal
+	    document.getElementById("id_local").value = localId;
 
-	    const fornecedorId =
-	        checksMarcados[0].dataset.fornecedorId;
+	    // 2. Submete o formulário manualmente
+	    document.getElementById("formEncomenda").submit();
+	}
 
-	    // =========================================
-	    // FORM DINÂMICO
-	    // =========================================
-
-	    const form = document.createElement('form');
-
-	    form.method = 'POST';
-
-	    form.action =
-	        '${pageContext.request.contextPath}/ConsultarFornecedorProdutosServlet';
-
-	    // =========================================
-	    // ACTION
-	    // =========================================
-
-	    const actionInput =
-	        document.createElement('input');
-
-	    actionInput.type = 'hidden';
-
-	    actionInput.name = 'action';
-
-	    actionInput.value = 'createEncomenda';
-
-	    form.appendChild(actionInput);
-
-	    // =========================================
-	    // FORNECEDOR
-	    // =========================================
-
-	    const fornecedorInput =
-	        document.createElement('input');
-
-	    fornecedorInput.type = 'hidden';
-
-	    fornecedorInput.name = 'id_fornecedor';
-
-	    fornecedorInput.value = fornecedorId;
-
-	    form.appendChild(fornecedorInput);
-
-	    // =========================================
-	    // LOCAL
-	    // =========================================
-	    // TEMPORÁRIO FIXO
-	    // depois podes trocar por select
-
-	    const localInput =
-	        document.createElement('input');
-
-	    localInput.type = 'hidden';
-
-	    localInput.name = 'id_local';
-
-	    localInput.value = '1';
-
-	    form.appendChild(localInput);
-
-	    // =========================================
-	    // PRODUTOS
-	    // =========================================
-
-	    for (const chk of checksMarcados) {
-
-	        const linha =
-	            chk.closest('tr');
-
-	        const produtoId =
-	            chk.dataset.produtoId;
-
-	        const quantidadeInput =
-	            linha.querySelector(
-	                '.input-quantidade'
-	            );
-
-	        const quantidade =
-	            quantidadeInput.value;
-
-	        // =====================================
-	        // VALIDAR QUANTIDADE
-	        // =====================================
-
-	        if (
-	            isNaN(quantidade) ||
-	            quantidade < 1
-	        ) {
-
-	            alert(
-	                'Quantidade inválida no produto ' +
-	                produtoId
-	            );
-
-	            quantidadeInput.focus();
-
-	            return;
-	        }
-
-	        // =====================================
-	        // ID PRODUTO
-	        // =====================================
-
-	        const produtoInput =
-	            document.createElement('input');
-
-	        produtoInput.type = 'hidden';
-
-	        produtoInput.name = 'id_produto';
-
-	        produtoInput.value = produtoId;
-
-	        form.appendChild(produtoInput);
-
-	        // =====================================
-	        // QUANTIDADE
-	        // =====================================
-
-	        const qtyInput =
-	            document.createElement('input');
-
-	        qtyInput.type = 'hidden';
-
-	        qtyInput.name = 'qty_produtos';
-
-	        qtyInput.value = quantidade;
-
-	        form.appendChild(qtyInput);
-	    }
-
-	    // =========================================
-	    // ENVIAR
-	    // =========================================
-
-	    document.body.appendChild(form);
-
-	    form.submit();
-	});  
-  
   function abrirModalAdd() { document.getElementById("modalAdd").style.display = "flex"; }
   function fecharModalAdd() { document.getElementById("modalAdd").style.display = "none"; }
+  
   function abrirModalEdit(idFornecedor, fornecedorNome, idProduto, produtoNome, preco) {
     document.getElementById("edit_id_fornecedor").value = idFornecedor;
     document.getElementById("edit_id_produto").value = idProduto;
@@ -403,6 +304,17 @@
     document.getElementById("modalEdit").style.display = "flex";
   }
   function fecharModalEdit() { document.getElementById("modalEdit").style.display = "none"; }
+ 
+  function abrirModalConfirmar() {
+	    // Validar se há produtos selecionados antes de abrir
+	    const selecionados = document.querySelectorAll('input[name="selected_produtos"]:checked');
+	    if (selecionados.length === 0) {
+	        alert("Selecione pelo menos um produto.");
+	        return;
+	    }
+	    document.getElementById("modalConfirmar").style.display = "flex";
+  }
+  function fecharModalConfirmar() { document.getElementById("modalConfirmar").style.display = "none" }
 </script>
 </body>
 </html>
