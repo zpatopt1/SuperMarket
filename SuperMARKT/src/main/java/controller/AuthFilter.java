@@ -24,14 +24,29 @@ public class AuthFilter implements Filter {
     private static final Set<String> REPOSITOR_ONLY = new HashSet<>(Arrays.asList(
             "/ConsultarProdutosServlet",
             "/ConsultarCategoriaServlet",
+            "/ConsultarFornecedoresServlet",
+            "/ConsultarFornecedorProdutosServlet",
             "/ConsultarLocalServlet",
             "/ConsultarZonaServlet",
             "/ConsultarStockLocalServlet",
+            "/EncomendasServlet",
+            "/DetalhesEncomendaServlet",
+            "/RegistarPerdaServlet",
+            "/TransferirStockServlet",
+            "/GestaoEspacosServlet",
             "/Front-end/pages/consultarProdutos.jsp",
             "/Front-end/pages/consultarcategorias.jsp",
+            "/Front-end/pages/consultarfornecedores.jsp",
+            "/Front-end/pages/fornecedor_produtos.jsp",
             "/Front-end/pages/consultarlocal.jsp",
             "/Front-end/pages/consultarzona.jsp",
-            "/Front-end/pages/consultarstocklocal.jsp"
+            "/Front-end/pages/encomendas.jsp",
+            "/Front-end/pages/linhas_encomenda.jsp",            
+            "/Front-end/pages/consultarstocklocal.jsp",
+            "/Front-end/pages/transferir_stock.jsp",
+            "/Front-end/pages/consultar_espacos.jsp"
+
+
     ));
 
     private static final Set<String> ADMIN_ONLY = new HashSet<>(Arrays.asList(

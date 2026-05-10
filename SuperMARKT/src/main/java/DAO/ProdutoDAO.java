@@ -229,8 +229,6 @@ import model.Produto;
 		        throw new RuntimeException(e);
 
 			}
-		
-			
 		}
 		
 		public Produto selectProduto(int id_Produto) {
