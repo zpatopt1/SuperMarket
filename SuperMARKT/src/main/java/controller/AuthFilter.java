@@ -34,6 +34,9 @@ public class AuthFilter implements Filter {
             "/RegistarPerdaServlet",
             "/TransferirStockServlet",
             "/GestaoEspacosServlet",
+            "/RegistarVendaServlet",
+            "/RegistarVenda",
+            "/DevolucaoServlet",
             "/Front-end/pages/consultarProdutos.jsp",
             "/Front-end/pages/consultarcategorias.jsp",
             "/Front-end/pages/consultarfornecedores.jsp",
@@ -44,9 +47,9 @@ public class AuthFilter implements Filter {
             "/Front-end/pages/linhas_encomenda.jsp",            
             "/Front-end/pages/consultarstocklocal.jsp",
             "/Front-end/pages/transferir_stock.jsp",
-            "/Front-end/pages/consultar_espacos.jsp"
-
-
+            "/Front-end/pages/gestao_espacos.jsp",
+            "/Front-end/pages/reembolso.jsp",
+            "/Front-end/pages/vendas.jsp"
     ));
 
     private static final Set<String> ADMIN_ONLY = new HashSet<>(Arrays.asList(
