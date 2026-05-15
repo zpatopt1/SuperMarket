@@ -29,12 +29,12 @@ public class DetalhesEncomendaServlet extends HttpServlet {
 	 */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+    
         int id = Integer.parseInt(request.getParameter("id"));
 
         EncomendaDAO dao = new EncomendaDAO();
 
-        request.setAttribute("linhas", dao.getLinhasEncomenda(id));
+        request.setAttribute("linhas", dao.getLinhasEncomenda(id));    
 
         request.getRequestDispatcher(
             "/Front-end/pages/linhas_encomenda.jsp"

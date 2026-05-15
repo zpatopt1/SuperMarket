@@ -31,11 +31,11 @@
               <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarProdutosServlet">Produtos</a>
               <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarCategoriaServlet">Categorias</a>
               <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarFornecedoresServlet">Fornecedores</a>
-              <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarFornecedorProdutosServlet">Fornecedor Produtos</a>
+              <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarFornecedorProdutosServlet">Produtos Fornecedores</a>
               <a class="nav-item" href="${pageContext.request.contextPath}/GestaoEspacosServlet">Gestao de Espaços</a>
-              <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarStockLocalServlet">Stock Local</a>
+              <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarStockLocalServlet">Stock</a>
               <a class="nav-item" href="${pageContext.request.contextPath}/TransferirStockServlet">Transferir Stock</a>
-                            <a class="nav-item" href="${pageContext.request.contextPath}/EncomendasServlet">Encomendas</a>
+              <a class="nav-item" href="${pageContext.request.contextPath}/EncomendasServlet">Encomendas</a>
               
               <% } %>
           </div>
@@ -55,7 +55,7 @@
                   <div class="nav-label">Sistema</div>
                   <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarUtilizadoresServlet">Gestao de
                     Utilizadores</a>
-                  <a class="nav-item" href="/SuperMARKT/Front-end/pages/admin/promocoes.jsp">Gerir Promocoes</a>
+                   <%-- <a class="nav-item" href="/SuperMARKT/Front-end/pages/admin/promocoes.jsp">Gerir Promocoes</a> --%>
                   <% } %>
                 </div>
 

@@ -36,8 +36,8 @@
         </div>
         <div>
             <button class="btn-secondary" type="button" id="btnLimparSelecao">Limpar seleção</button>
-			<button class="btn-primary" type="button" onclick="abrirModalConfirmar()">Efetuar Encomenda</button>            
-            <button class="btn-primary" type="button" onclick="abrirModalAdd()">Adicionar Novo Preço</button>
+            <button class="btn-primary" type="button" onclick="abrirModalConfirmar()">Criar Encomenda</button>
+            <button class="btn-primary" type="button" onclick="abrirModalAdd()">Adicionar Novo Produto</button>
         </div>
       </div>
       <% if(request.getAttribute("mensagem") != null) { %>
