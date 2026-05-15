@@ -1,5 +1,6 @@
 package model;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ public class StockLocal {
     private Produto produto;
     private Local local;
     private int quantidade;
+    private Date proximaValidade;
     private List<Zona> zonas = new ArrayList<>();
 
     public StockLocal() {
@@ -48,6 +50,14 @@ public class StockLocal {
 
     public void setZonas(List<Zona> zonas) {
         this.zonas = zonas;
+    }
+
+    public Date getProximaValidade() {
+        return proximaValidade;
+    }
+
+    public void setProximaValidade(Date proximaValidade) {
+        this.proximaValidade = proximaValidade;
     }
 }
 	

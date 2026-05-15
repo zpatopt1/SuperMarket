@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <% request.setAttribute("seccao", "Encomendas"); %>
 <%@ page import="java.util.List" %>
 <%@ page import="model.Encomenda" %>
@@ -32,6 +32,10 @@
             <span class="search-ico" aria-hidden="true">⌕</span>
             <input type="text" placeholder="Pesquisar Encomendas" id="searchInput">
         </div>
+                            <a class="btn-primary" style="text-decoration:none;"
+                       href="${pageContext.request.contextPath}/ConsultarFornecedorProdutosServlet">
+                      Encomendar
+                    </a>
         <button class="btn-primary" type="button">Filtrar</button>
         </div>
 
@@ -71,6 +75,7 @@
                   <td><%= e.getDataChegada() %></td>
                   <td><%= e.getCustoEnvio() %> €</td>
                   <td><%= e.getValorTotal() %> €</td>
+
                   <td>
                     <a class="btn-action btn-edit" style="text-decoration:none;"
                        href="${pageContext.request.contextPath}/DetalhesEncomendaServlet?id=<%= e.getIdMovimentos().getIdMovimentos() %>">
@@ -98,7 +103,7 @@
                 </tr>
               <% } } else { %>
                 <tr>
-                  <td colspan="13" style="text-align:center;">Nenhuma encomenda encontrada.</td>
+                  <td colspan="14" style="text-align:center;">Nenhuma encomenda encontrada.</td>
                 </tr>
               <% } %>
               </tbody>

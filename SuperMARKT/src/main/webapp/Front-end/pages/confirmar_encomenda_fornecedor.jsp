@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
 <%@ page import="model.Encomenda" %>
 <%@ page import="model.LinhaEnc" %>
@@ -58,7 +58,7 @@
               </div>
               <div class="search" style="max-width:200px;">
                 <label>Data Prevista Entrega</label>
-                <input type="date" name="data_prevista" required />
+                <input type="date" name="data_prevista" />
               </div>
             </div>
 
@@ -86,10 +86,10 @@
                       <div class="lote-item">
                         <span>Qtd:</span>
                         <input type="number" name="qtd_lote_<%= l.getIdLinhaOrder() %>" 
-                               value="<%= l.getQuantidade() %>" step="any" required 
+                               value="<%= l.getQuantidade() %>" step="1" min="1"
                                class="valor-lote" oninput="fazerSoma(this)" style="width:80px;">
                         <span>Val:</span>
-                        <input type="date" name="validade_<%= l.getIdLinhaOrder() %>" required>
+                        <input type="date" name="validade_<%= l.getIdLinhaOrder() %>">
                       </div>
                     </td>
                     <td style="text-align:center;">
@@ -154,17 +154,18 @@
         
         const div = document.createElement('div');
         div.className = 'lote-item';
-        div.innerHTML = `
-            <span>Qtd:</span>
-            <input type="number" name="qtd_lote_${idOriginal}_extra_${novoId}" 
-                   class="valor-lote" step="any" required 
-                   oninput="fazerSoma(this)" style="width:80px;">
-            <span>Val:</span>
-            <input type="date" name="validade_${idOriginal}_extra_${novoId}" required>
-            <button type="button" class="btn-remove-lote" onclick="removerLote(this)">✕</button>
-        `;
+        div.innerHTML =
+            '<span>Qtd:</span>' +
+            '<input type="number" name="qtd_lote_' + idOriginal + '_extra_' + novoId + '" ' +
+                   'class="valor-lote" step="1" min="1" required ' +
+                   'oninput="fazerSoma(this)" style="width:80px;">' +
+            '<span>Val:</span>' +
+            '<input type="date" name="validade_' + idOriginal + '_extra_' + novoId + '" required>' +
+            '<button type="button" class="btn-remove-lote" onclick="removerLote(this)">✕</button>';
         
         container.appendChild(div);
+        const novoInputQtd = div.querySelector('.valor-lote');
+        if (novoInputQtd) novoInputQtd.focus();
     }
 
     function removerLote(botao) {
@@ -177,10 +178,24 @@
 
     // Validação Final antes de submeter
     document.getElementById('formConfirmar').addEventListener('submit', function(e) {
+        const usouCsv = fileInput.files.length > 0;
         const erros = document.querySelectorAll('.caixa-soma.erro');
         if (erros.length > 0) {
             e.preventDefault();
             alert("Atenção: As quantidades totais dos lotes não correspondem à meta da encomenda!");
+            return;
+        }
+
+        // Sem CSV, exigir validade manual em todos os lotes
+        if (!usouCsv) {
+            const inputsValidade = document.querySelectorAll("input[name^='validade_']");
+            for (const input of inputsValidade) {
+                if (!input.value || input.value.trim() === "") {
+                    e.preventDefault();
+                    alert("Preencha a validade de todos os lotes ou use o CSV.");
+                    return;
+                }
+            }
         }
     });
 

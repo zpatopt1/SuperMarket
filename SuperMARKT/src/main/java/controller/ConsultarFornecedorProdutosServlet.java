@@ -1,4 +1,4 @@
-package controller;
+﻿package controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,6 +28,9 @@ public class ConsultarFornecedorProdutosServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         FornecedorProdutoDAO dao = new FornecedorProdutoDAO();
+        String idFornFilter = request.getParameter("id_fornecedor");
+        String idEnc = request.getParameter("id_encomenda");
+        
         LocalDAO daolocal = new LocalDAO();
         List<Local> locais = daolocal.getAllLocais();
         List<FornecedorProduto> lista = dao.getAll();
@@ -37,6 +40,8 @@ public class ConsultarFornecedorProdutosServlet extends HttpServlet {
         request.setAttribute("fornecedores", fornecedores);
         request.setAttribute("produtos", produtos);
         request.setAttribute("locais", locais);
+        request.setAttribute("idFornFilter", idFornFilter);
+        request.setAttribute("idEncExistente", idEnc);
         request.getRequestDispatcher("/Front-end/pages/fornecedor_produtos.jsp").forward(request, response);
     }
 
@@ -93,30 +98,41 @@ public class ConsultarFornecedorProdutosServlet extends HttpServlet {
                     p.setIdProduto(idProd);
                     linha.setProduto(p);
                     linha.setQuantidade(qtd);
-                    linha.setPrecoEncomenda(preco * qtd);
+                    linha.setPrecoEncomenda(preco);
                     linhas.add(linha);
                 }
 
-                // 2. Criar objeto Movimento
-                Movimentos mov = new Movimentos();
-                // Assume que guardaste o funcionário na sessão no Login
-                Funcionario func = (Funcionario) request.getSession().getAttribute("utilizadorLogado"); 
-                mov.setFuncionario(func);
-                mov.setStatus("Pendente");
+                String idEncExistenteStr = request.getParameter("id_encomenda_existente");
+                boolean sucesso;
 
-                // 3. Criar objeto Encomenda
-                Encomenda enc = new Encomenda();
-                Fornecedor forn = new Fornecedor();
-                // O ID do fornecedor deve vir de um campo hidden ou do primeiro item
-                forn.setIdFornecedor(Integer.parseInt(request.getParameter("id_fornecedor_comum")));
-                enc.setIdFornecedor(forn);
-                
-                Local local = new Local();
-                local.setIdLocal(Integer.parseInt(request.getParameter("id_local"))); 
-                enc.setIdLocal(local);
+                if (idEncExistenteStr != null && !idEncExistenteStr.isEmpty() && !idEncExistenteStr.equals("0")) {
+                    // MODO EDIÇÃO: Adicionar itens a uma encomenda que já existe
+                    int idEncExistente = Integer.parseInt(idEncExistenteStr);
+                    sucesso = daoEnc.adicionarLinhasAEncomendaExistente(idEncExistente, linhas);
+                    
+                    if (sucesso) {
+                        // Redireciona de volta para os detalhes da encomenda para visualizar os novos itens
+                        response.sendRedirect(request.getContextPath() + "/DetalhesEncomendaServlet?id=" + idEncExistente);
+                        return;
+                    }
+                } else {
+                    // MODO CRIAÇÃO: Lógica original para criar nova encomenda e movimento
+                    Movimentos mov = new Movimentos();
+                    Funcionario func = (Funcionario) request.getSession().getAttribute("utilizadorLogado"); 
+                    mov.setFuncionario(func);
+                    mov.setStatus("Pendente");
 
-                // 4. Executar a transação
-                boolean sucesso = daoEnc.finalizarEncomendaCompleta(mov, enc, linhas);
+                    Encomenda enc = new Encomenda();
+                    Fornecedor forn = new Fornecedor();
+                    forn.setIdFornecedor(Integer.parseInt(request.getParameter("id_fornecedor_comum")));
+                    enc.setIdFornecedor(forn);
+                    
+                    Local local = new Local();
+                    local.setIdLocal(Integer.parseInt(request.getParameter("id_local"))); 
+                    enc.setIdLocal(local);
+
+                    sucesso = daoEnc.finalizarEncomendaCompleta(mov, enc, linhas);
+                }
 
                 if (sucesso) {
                     request.setAttribute("mensagem", "Encomenda efetuada com sucesso!");

@@ -76,6 +76,11 @@
                       Quantidade <%= "quantidade".equals(orderBy) ? ("ASC".equals(orderDir) ? "▲" : "▼") : "" %>
                     </a>
                   </th>
+                  <th class="<%= "proxima_validade".equals(orderBy) ? "active" : "" %>">
+                    <a href="?idProduto=<%= idProduto %>&idLocal=<%= idLocal %>&orderBy=proxima_validade&orderDir=<%= ("proxima_validade".equals(orderBy) && "ASC".equals(orderDir)) ? "DESC" : "ASC" %>">
+                      Próxima Validade <%= "proxima_validade".equals(orderBy) ? ("ASC".equals(orderDir) ? "▲" : "▼") : "" %>
+                    </a>
+                  </th>
                   <th>Gerir Zonas</th>
                   <th>Ações</th>
                 </tr>
@@ -97,6 +102,7 @@
                     %>
                     <span class="badge-qty <%= badgeClass %>"><%= q %></span>
                   </td>
+                  <td><%= s.getProximaValidade() != null ? s.getProximaValidade() : "-" %></td>
                  <td>
                 <%
                     List<Zona> zonasLinha = s.getZonas();
@@ -133,7 +139,7 @@
                 <%   }
                    } else { %>
                 <tr>
-                  <td colspan="6" style="text-align:center;">Nenhum registo de stock local encontrado.</td>
+                  <td colspan="7" style="text-align:center;">Nenhum registo de stock local encontrado.</td>
                 </tr>
                 <% } %>
               </tbody>

@@ -1,4 +1,4 @@
-package controller;
+﻿package controller;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -34,7 +34,8 @@ public class DetalhesEncomendaServlet extends HttpServlet {
 
         EncomendaDAO dao = new EncomendaDAO();
 
-        request.setAttribute("linhas", dao.getLinhasEncomenda(id));    
+        request.setAttribute("linhas", dao.getLinhasEncomenda(id));
+        request.setAttribute("encomenda", dao.getEncomendaById(id));
 
         request.getRequestDispatcher(
             "/Front-end/pages/linhas_encomenda.jsp"
@@ -43,9 +44,23 @@ public class DetalhesEncomendaServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            int idEncomenda = Integer.parseInt(request.getParameter("id_encomenda"));
+            int idLinha = Integer.parseInt(request.getParameter("id_linhaenc"));
+            int quantidade = Integer.parseInt(request.getParameter("quantidade"));
+
+            EncomendaDAO dao = new EncomendaDAO();
+            boolean ok = dao.atualizarQuantidadeLinhaEncomenda(idEncomenda, idLinha, quantidade);
+            if (ok) {
+                request.getSession().setAttribute("mensagemSucesso", "Quantidade atualizada.");
+            } else {
+                request.getSession().setAttribute("mensagemErro", "Nao foi possivel atualizar a quantidade.");
+            }
+            response.sendRedirect(request.getContextPath() + "/DetalhesEncomendaServlet?id=" + idEncomenda);
+        } catch (Exception e) {
+            response.sendRedirect(request.getContextPath() + "/EncomendasServlet");
+        }
 	}
 
 }

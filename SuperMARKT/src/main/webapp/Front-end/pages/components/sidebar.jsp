@@ -1,68 +1,71 @@
-<%@ page import="model.Funcionario" %>
-  <% Funcionario user=(Funcionario) session.getAttribute("utilizadorLogado"); String role="" ; if (user !=null &&
-    user.getIdFuncao() !=null && user.getIdFuncao().getDescricao() !=null) {
-    role=user.getIdFuncao().getDescricao().toLowerCase(); } boolean isAdmin="administrador" .equals(role); boolean
-    isRepositor="repositor" .equals(role) || isAdmin; boolean isCaixa="caixa" .equals(role) || isAdmin; %>
-    <aside class="sidebar">
-      <div class="brand">
-        <a href="${pageContext.request.contextPath}/DashboardServlet">
-          <div class="logo">S</div>
-        </a>
-        <a href="${pageContext.request.contextPath}/DashboardServlet">
-          <div class="name">SuperMart</div>
-        </a>
-        <button id="toggleBtn-inside" class="toggle-btn left">
-          <img src="${pageContext.request.contextPath}/Front-end/assets/sidebar-2.svg" alt="Toggle Sidebar"
-            width="32px">
-        </button>
+ï»¿<%@ page import="model.Funcionario" %>
+<%
+  Funcionario user = (Funcionario) session.getAttribute("utilizadorLogado");
+  String role = "";
+  if (user != null && user.getIdFuncao() != null && user.getIdFuncao().getDescricao() != null) {
+    role = user.getIdFuncao().getDescricao().toLowerCase();
+  }
+  boolean isAdmin = "administrador".equals(role);
+  boolean isRepositor = "repositor".equals(role) || isAdmin;
+  boolean isCaixa = "caixa".equals(role) || isAdmin;
+%>
+
+<aside class="sidebar">
+  <div class="brand">
+    <a href="${pageContext.request.contextPath}/DashboardServlet">
+      <div class="logo">S</div>
+    </a>
+    <a href="${pageContext.request.contextPath}/DashboardServlet">
+      <div class="name">SuperMart</div>
+    </a>
+    <button id="toggleBtn-inside" class="toggle-btn left">
+      <img src="${pageContext.request.contextPath}/Front-end/assets/sidebar-2.svg" alt="Toggle Sidebar" width="32px">
+    </button>
+  </div>
+
+  <nav class="nav">
+    <% if (isAdmin) { %>
+      <div class="nav-section">
+        <div class="nav-label">Dashboard</div>
+        <a class="nav-item" href="${pageContext.request.contextPath}/DashboardServlet">Dashboard</a>
       </div>
-      <nav class="nav">
-        <div class="nav-section">
-          <% if (isAdmin) { %>
-            <div class="nav-label">Dashboard</div>
-            <a class="nav-item" href="${pageContext.request.contextPath}/DashboardServlet">Dashboard</a>
-        </div>
-        <% } %>
+    <% } %>
 
-          <div class="nav-section">
-            <% if (isRepositor) { %>
-              <div class="nav-label">Gestao de Produtos</div>
-              <a class="nav-item" href="${pageContext.request.contextPath}/ImportarProdutosServlet">Importar CSV</a>
-              <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarProdutosServlet">Produtos</a>
-              <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarCategoriaServlet">Categorias</a>
-              <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarFornecedoresServlet">Fornecedores</a>
-              <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarFornecedorProdutosServlet">Produtos Fornecedores</a>
-              <a class="nav-item" href="${pageContext.request.contextPath}/GestaoEspacosServlet">Gestao de Espaços</a>
-              <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarStockLocalServlet">Stock</a>
-              <a class="nav-item" href="${pageContext.request.contextPath}/TransferirStockServlet">Transferir Stock</a>
-              <a class="nav-item" href="${pageContext.request.contextPath}/EncomendasServlet">Encomendas</a>
-              
-              <% } %>
-          </div>
+    <% if (isRepositor) { %>
+      <div class="nav-section">
+        <div class="nav-label">Gestao de Produtos</div>
+        <a class="nav-item" href="${pageContext.request.contextPath}/ImportarProdutosServlet">Importar CSV</a>
+        <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarProdutosServlet">Produtos</a>
+        <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarCategoriaServlet">Categorias</a>
+        <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarFornecedoresServlet">Fornecedores</a>
+        <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarFornecedorProdutosServlet">Encomendar e Produtos do Fornecedores</a>
+        <a class="nav-item" href="${pageContext.request.contextPath}/GestaoEspacosServlet">Gestao de Espacos</a>
+        <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarStockLocalServlet">Stock</a>
+        <a class="nav-item" href="${pageContext.request.contextPath}/TransferirStockServlet">Transferir Stock</a>
+        <a class="nav-item" href="${pageContext.request.contextPath}/EncomendasServlet">Encomendas</a>
+      </div>
+    <% } %>
 
-          <% if (isCaixa) { %>
-            <div class="nav-section">
-              <div class="nav-label">Vendas</div>
-              <a class="nav-item" href="/SuperMARKT/Front-end/pages/vendas.jsp">Iniciar Venda</a>
-              <a class="nav-item" href="/SuperMARKT/Front-end/pages/reembolso.jsp">Reembolso</a>
-              <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarClientesServlet">Clientes</a>
-            </div>
-            <% } %>
+    <% if (isCaixa) { %>
+      <div class="nav-section">
+        <div class="nav-label">Vendas</div>
+        <a class="nav-item" href="${pageContext.request.contextPath}/Front-end/pages/vendas.jsp">Iniciar Venda</a>
+        <a class="nav-item" href="${pageContext.request.contextPath}/Front-end/pages/reembolso.jsp">Reembolso</a>
+        <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarClientesServlet">Clientes</a>
+      </div>
+    <% } %>
 
+    <% if (isAdmin) { %>
+      <div class="nav-section">
+        <div class="nav-label">Sistema</div>
+        <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarUtilizadoresServlet">Gestao de Utilizadores</a>
+      </div>
+    <% } %>
+  </nav>
 
-              <% if (isAdmin) { %>
-                <div class="nav-section">
-                  <div class="nav-label">Sistema</div>
-                  <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarUtilizadoresServlet">Gestao de
-                    Utilizadores</a>
-                   <%-- <a class="nav-item" href="/SuperMARKT/Front-end/pages/admin/promocoes.jsp">Gerir Promocoes</a> --%>
-                  <% } %>
-                </div>
+  <button class="logout" onclick="location.href='${pageContext.request.contextPath}/logout'">
+    Terminar Sessao
+  </button>
+</aside>
 
-      </nav>
-
-      <button class="logout" onclick="location.href='${pageContext.request.contextPath}/logout'">
-        Terminar Sessao
-      </button>
-    </aside>
-    <script type="module" src="/SuperMARKT/Front-end/js/pages/dashboard.js"></script>
+<script type="module" src="${pageContext.request.contextPath}/Front-end/js/pages/dashboard.js"></script>

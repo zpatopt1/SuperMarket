@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <% request.setAttribute("seccao", "Fornecedor Produtos"); %>
 <%@ page import="java.util.List" %>
 <%@ page import="model.FornecedorProduto" %>
@@ -36,7 +36,10 @@
         </div>
         <div>
             <button class="btn-secondary" type="button" id="btnLimparSelecao">Limpar seleção</button>
-            <button class="btn-primary" type="button" onclick="abrirModalConfirmar()">Criar Encomenda</button>
+            <% String idEnc = (String) request.getAttribute("idEncExistente"); %>
+            <button class="btn-primary" type="button" onclick="abrirModalConfirmar()">
+                <%= (idEnc != null && !idEnc.isEmpty() && !idEnc.equals("0")) ? "Adicionar à Encomenda #" + idEnc : "Criar Encomenda" %>
+            </button>
             <button class="btn-primary" type="button" onclick="abrirModalAdd()">Adicionar Novo Produto</button>
         </div>
       </div>
@@ -50,6 +53,7 @@
         <form id="formEncomenda" action="${pageContext.request.contextPath}/ConsultarFornecedorProdutosServlet" method="post">
           <input type="hidden" name="action" value="encomendar">
           <input type="hidden" name="id_fornecedor_comum" id="id_fornecedor_comum">
+          <input type="hidden" name="id_encomenda_existente" value="<%= (idEnc != null && !idEnc.equals("0")) ? idEnc : "" %>">
           <input type="hidden" id="id_local" name="id_local">
           <table id="fornecedorProdutosTable" class="table">
             <thead>
@@ -215,6 +219,22 @@
 
 
 <script>
+  // Auto-filtro quando vem da página de detalhes da encomenda
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const filterId = "<%= (request.getAttribute("idFornFilter") != null) ? request.getAttribute("idFornFilter") : "" %>";
+    if (filterId && filterId !== "0") {
+        document.getElementById("id_fornecedor_comum").value = filterId;
+        const rows = document.querySelectorAll('#fornecedorProdutosTable tbody tr');
+        rows.forEach(row => {
+            const idRow = row.cells[2].innerText.trim();
+            if (idRow !== filterId) {
+                row.style.display = 'none';
+            }
+        });
+        console.log("Filtro automático aplicado para o fornecedor: " + filterId);
+    }
+  });
+
   function atualizarFornecedorComum(idFornecedorClicado) {
     const checkboxes = document.querySelectorAll('input[name="selected_produtos"]');
     const inputFornecedorComum = document.getElementById("id_fornecedor_comum");
@@ -312,6 +332,16 @@
 	        alert("Selecione pelo menos um produto.");
 	        return;
 	    }
+
+	    // Se estivermos em modo de "Adicionar a Encomenda", salta a escolha do local
+	    const idEncExistente = document.querySelector('input[name="id_encomenda_existente"]').value;
+	    if (idEncExistente && idEncExistente !== "" && idEncExistente !== "0") {
+	        if (confirm("Deseja adicionar estes itens à encomenda #" + idEncExistente + "?")) {
+	            document.getElementById("formEncomenda").submit();
+	        }
+	        return;
+	    }
+
 	    document.getElementById("modalConfirmar").style.display = "flex";
   }
   function fecharModalConfirmar() { document.getElementById("modalConfirmar").style.display = "none" }

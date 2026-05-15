@@ -250,7 +250,11 @@
 
               <div class="input-group full-width">
                 <label>Tipo</label>
-                <input type="text" id="modal_tipo_local" name="tipo_local" />
+                <select id="modal_tipo_local" name="tipo_local" required style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                  <option value="">-- Selecione --</option>
+                  <option value="Loja">Loja</option>
+                  <option value="Armazem">Armazem</option>
+                </select>
               </div>
 
               <div class="button-group full-width">
@@ -274,7 +278,11 @@
 
               <div class="input-group full-width">
                 <label>Tipo (ex: Loja, Armazém)</label>
-                <input type="text" name="tipo_local" />
+                <select name="tipo_local" required style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                  <option value="">-- Selecione --</option>
+                  <option value="Loja">Loja</option>
+                  <option value="Armazem">Armazem</option>
+                </select>
               </div>
 
               <div class="button-group full-width">
