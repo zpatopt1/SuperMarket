@@ -408,7 +408,28 @@ import model.Produto;
 			}
 			return count;
 		}
+		
+		
+		public boolean reduzirStock(int idProduto, int quantidadeVendida) {
+		    
+		    String sql = "UPDATE stock_local SET quantidade = quantidade - ? WHERE id_produto = ?";
 
+		    try (Connection conn = DBconnection.getConnection();
+		         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+		        stmt.setInt(1, quantidadeVendida);
+		        stmt.setInt(2, idProduto);
+		        
+		        int rows = stmt.executeUpdate();
+		        return rows > 0;
+
+		    } catch (Exception e) {
+		        System.out.println("Erro ao reduzir stock: " + e.getMessage());
+		        e.printStackTrace();
+		        return false;
+		    }
+		}
+		
 		public int getProdutosBaixoStock() {
 			int count = 0;
 			String sql = "SELECT COUNT(*) FROM (SELECT id_produto, SUM(quantidade) as total_qty FROM stock_local GROUP BY id_produto HAVING total_qty < 10) as baixo_stock";

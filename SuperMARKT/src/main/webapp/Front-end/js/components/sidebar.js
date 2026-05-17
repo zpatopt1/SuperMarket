@@ -16,11 +16,14 @@ export function activateSidebar() {
 
 	// Ao clicar em qualquer toggle, abre/fecha a sidebar
 	[toggleBtn, toggleBtnInside].forEach(btn => {
-	    btn?.addEventListener('click', () => {
-	        sidebar.classList.toggle('open');
-	        document.body.classList.toggle('sidebar-open');
-	    });
+	    if (btn) {
+	        btn.addEventListener('click', () => {
+	            sidebar.classList.toggle('open');
+	            document.body.classList.toggle('sidebar_open');
+	        });
+	    }
 	});
+	    
 	}
 	
 /* 

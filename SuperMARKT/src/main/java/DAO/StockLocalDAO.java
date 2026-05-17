@@ -14,19 +14,16 @@ import model.Zona;
 
 public class StockLocalDAO {
 
-    private static final String STOCK_SELECT_BASE =
-            "SELECT s.quantidade, " +
-            "(SELECT MIN(sl.data_validade) FROM stock_lote sl " +
-            " WHERE sl.id_produto = s.id_produto AND sl.id_local = s.id_local " +
-            " AND sl.data_validade IS NOT NULL AND sl.quantidade > 0 " +
-            " AND sl.data_validade >= CURDATE()) AS proxima_validade, " +
-            "p.id_produto, p.nome, p.marca, p.unidade_medida, p.cod_barras, p.preco, " +
-            "c.id_categoria, c.nome AS nome_categoria, c.descricao AS desc_categoria, " +
-            "l.id_local, l.nome AS local_nome, l.tipo_local " +
-            "FROM stock_local s " +
-            "INNER JOIN produto p ON s.id_produto = p.id_produto " +
-            "INNER JOIN categoria c ON p.id_categoria = c.id_categoria " +
-            "INNER JOIN `local` l ON s.id_local = l.id_local";
+	private static final String STOCK_SELECT_BASE = 
+		    "SELECT s.quantidade, " +
+		    "NULL AS proxima_validade, " +
+		    "p.id_produto, p.nome, p.marca, p.unidade_medida, p.cod_barras, p.preco, " +
+		    "c.id_categoria, c.nome AS nome_categoria, c.descricao AS desc_categoria, " +
+		    "l.id_local, l.nome AS local_nome, l.tipo_local " +
+		    "FROM stock_local s " +
+		    "INNER JOIN produto p ON s.id_produto = p.id_produto " +
+		    "INNER JOIN categoria c ON p.id_categoria = c.id_categoria " +
+		    "INNER JOIN `local` l ON s.id_local = l.id_local";
 
     public StockLocal selectStock(int idProduto, int idLocal) {
         String sql = "SELECT s.quantidade, " +

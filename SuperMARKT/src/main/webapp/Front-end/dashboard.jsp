@@ -10,8 +10,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/Front-end/styles/styles.css" />
-  <!-- Chart.js -->
+  
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
     /* Estilos Premium Injetados */
@@ -165,17 +167,13 @@
 <body>
   <div class="app">
 
-    <!-- Sidebar -->
-	<jsp:include page="/Front-end/pages/components/sidebar.jsp" />
+    <jsp:include page="/Front-end/pages/components/sidebar.jsp" />
 
-    <!-- Main -->
     <main class="main">
- 	<!-- Topbar -->
  	<jsp:include page="/Front-end/pages/components/topbar.jsp" />
 
       <section class="content">
         
-        <!-- Banner da Loja -->
         <div style="margin-bottom: 24px; position: relative; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);">
             <img src="${pageContext.request.contextPath}/Front-end/assets/loja.png" alt="Interior do Supermercado" style="width: 100%; height: 160px; object-fit: cover; display: block;" />
             <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to right, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0.1) 100%); display: flex; flex-direction: column; justify-content: center; padding: 0 30px;">
@@ -184,7 +182,6 @@
             </div>
         </div>
 
-        <!-- KPIs Premium -->
         <div class="kpis">
           <div class="kpi">
             <div class="kpi-label">Produtos Registados</div>
@@ -206,7 +203,6 @@
 
         <div class="grid grid-top" style="margin-top: 24px;">
           
-          <!-- Gráfico Interativo -->
           <section class="card">
             <div class="card-head simple">
               <h2>Distribuição por Categoria</h2>
@@ -216,7 +212,6 @@
             </div>
           </section>
 
-          <!-- Alertas de Baixo Stock Modernizados -->
           <section class="card">
             <div class="card-head simple">
               <h2>Ação Necessária (Rutura Iminente)</h2>
@@ -265,7 +260,6 @@
   
   <script type="module" src="${pageContext.request.contextPath}/Front-end/js/pages/dashboard.js"></script>
   
-  <!-- Inicialização do Gráfico -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
         const ctx = document.getElementById('categoriaChart').getContext('2d');
@@ -328,6 +322,59 @@
                 }
             }
         });
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        
+        const estadoVenda = urlParams.get('venda');
+        if (estadoVenda === 'sucesso') {
+            const numFatura = urlParams.get('fatura'); 
+            Swal.fire({
+                title: 'Venda Finalizada!',
+                text: 'A venda foi registada com sucesso. NºFatura: #' + (numFatura ? numFatura : 'N/A'),
+                icon: 'success',
+                confirmButtonColor: '#10b981',
+                confirmButtonText: 'Concluir'
+            });
+            window.history.replaceState(null, null, window.location.pathname);
+            
+        } else if (estadoVenda === 'erro') {
+            Swal.fire({
+                title: 'Ops...',
+                text: 'Ocorreu um erro ao registar a venda no sistema.',
+                icon: 'error',
+                confirmButtonColor: '#ef4444',
+                confirmButtonText: 'Tentar Novamente'
+            });
+            window.history.replaceState(null, null, window.location.pathname);
+        }
+
+        
+        const estadoReembolso = urlParams.get('reembolso');
+        if (estadoReembolso === 'sucesso') {
+            Swal.fire({
+                title: 'Reembolso Concluído!',
+                text: 'A fatura foi cancelada e o stock devolvido ao armazém.',
+                icon: 'success',
+                confirmButtonColor: '#3b82f6', 
+                confirmButtonText: 'OK'
+            });
+            window.history.replaceState(null, null, window.location.pathname);
+            
+        } else if (estadoReembolso === 'erro') {
+            Swal.fire({
+                title: 'Falha no Reembolso',
+                text: 'Não foi possível encontrar a fatura ou processar o reembolso.',
+                icon: 'error',
+                confirmButtonColor: '#ef4444',
+                confirmButtonText: 'Verificar ID'
+            });
+            window.history.replaceState(null, null, window.location.pathname);
+        }
     });
   </script>
 </body>

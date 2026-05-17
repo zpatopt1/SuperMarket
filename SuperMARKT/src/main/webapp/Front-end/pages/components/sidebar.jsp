@@ -1,4 +1,4 @@
-﻿<%@ page import="model.Funcionario" %>
+<%@ page import="model.Funcionario" %>
 <%
   Funcionario user = (Funcionario) session.getAttribute("utilizadorLogado");
   String role = "";
@@ -49,8 +49,8 @@
     <% if (isCaixa) { %>
       <div class="nav-section">
         <div class="nav-label">Vendas</div>
-        <a class="nav-item" href="${pageContext.request.contextPath}/Front-end/pages/vendas.jsp">Iniciar Venda</a>
-        <a class="nav-item" href="${pageContext.request.contextPath}/Front-end/pages/reembolso.jsp">Reembolso</a>
+        <a class="nav-item" href="${pageContext.request.contextPath}/RegistarVenda">Iniciar Venda</a>
+        <a class="nav-item" href="${pageContext.request.contextPath}/DevolucaoServlet">Reembolso</a>
         <a class="nav-item" href="${pageContext.request.contextPath}/ConsultarClientesServlet">Clientes</a>
       </div>
     <% } %>
